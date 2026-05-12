@@ -1,902 +1,4520 @@
 [
-  {
-    "time": 1778121728746,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.7,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778121613737,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.95,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778121389438,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.04,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778121179300,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.05,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778121038874,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 4.53,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.04
-  },
-  {
-    "time": 1778120922898,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 12.07,
-    "model_category": "GLM-5.1",
-    "cost": 0.12
-  },
-  {
-    "time": 1778120655453,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 18.38,
-    "model_category": "GLM-5.1",
-    "cost": 0.18
-  },
-  {
-    "time": 1778120357793,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 10,
-    "model_category": "GLM-5.1",
-    "cost": 0.1
-  },
-  {
-    "time": 1778120162682,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.49,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778119846297,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.07,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778119242314,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.89,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778118816370,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 5.53,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.05
-  },
-  {
-    "time": 1778065279285,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 3.5,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.03
-  },
-  {
-    "time": 1778065114885,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.82,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778065021180,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.5,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778064921286,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.55,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778064861420,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.41,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778064709845,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.63,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778064231717,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 3.05,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.03
-  },
-  {
-    "time": 1778063556308,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.83,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778063054693,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.59,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778062620668,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.69,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778059063134,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.96,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778058702834,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.68,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778058382698,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 3.64,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.03
-  },
-  {
-    "time": 1778057565440,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.5,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778057038106,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.82,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778056670661,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.48,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778056480318,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.92,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778055567719,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.7,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778054645492,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.03,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778054336849,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.3,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778053969414,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.85,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778053543676,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.72,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778053441398,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.34,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778053144961,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.63,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778052819591,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 4.25,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.04
-  },
-  {
-    "time": 1778052550698,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.12,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778052536451,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.21,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778052488463,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.21,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778052415516,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.2,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778052327152,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.31,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778052028333,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.17,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778051830411,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 4.84,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.04
-  },
-  {
-    "time": 1778051126022,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.94,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778050874629,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 3.34,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.03
-  },
-  {
-    "time": 1778050616415,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.02,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778050282079,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.87,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778050187575,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.28,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778049522508,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 58.23,
-    "model_category": "GLM-5.1",
-    "cost": 0.58
-  },
-  {
-    "time": 1778048944513,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 8.61,
-    "model_category": "GLM-5.1",
-    "cost": 0.08
-  },
-  {
-    "time": 1778048223334,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 37.12,
-    "model_category": "GLM-5.1",
-    "cost": 0.37
-  },
-  {
-    "time": 1778038764510,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.74,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778038526304,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.12,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778038348578,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.7,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778037640630,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.96,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778037572666,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.46,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778037400663,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.92,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778036894641,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.81,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778036562793,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.16,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778036536230,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.16,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778036270366,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 0.32,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0
-  },
-  {
-    "time": 1778034325002,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.73,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778033755356,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.71,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778033065225,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 8.16,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.08
-  },
-  {
-    "time": 1778032846832,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 9.23,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.09
-  },
-  {
-    "time": 1778031859483,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.8,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778031449204,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.73,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778031176038,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.42,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1778030984514,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.93,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1778030657231,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.98,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1777988251609,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 15.89,
-    "model_category": "Ultimate",
-    "cost": 0.15
-  },
-  {
-    "time": 1777817967283,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 60.24,
-    "model_category": "Ultimate",
-    "cost": 0.6
-  },
-  {
-    "time": 1777817145172,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 28.09,
-    "model_category": "Ultimate",
-    "cost": 0.28
-  },
-  {
-    "time": 1777816262006,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 144.71,
-    "model_category": "Ultimate",
-    "cost": 1.44
-  },
-  {
-    "time": 1777814781274,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 41.86,
-    "model_category": "Ultimate",
-    "cost": 0.41
-  },
-  {
-    "time": 1777813952859,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 66.54,
-    "model_category": "Ultimate",
-    "cost": 0.66
-  },
-  {
-    "time": 1777812561971,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 44.91,
-    "model_category": "Ultimate",
-    "cost": 0.44
-  },
-  {
-    "time": 1777811699928,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 15.81,
-    "model_category": "Ultimate",
-    "cost": 0.15
-  },
-  {
-    "time": 1777811219524,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 30.63,
-    "model_category": "Ultimate",
-    "cost": 0.3
-  },
-  {
-    "time": 1777540378576,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.19,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1777536912761,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 52.98,
-    "model_category": "Ultimate",
-    "cost": 0.52
-  },
-  {
-    "time": 1777535543407,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 181.18,
-    "model_category": "Ultimate",
-    "cost": 1.81
-  },
-  {
-    "time": 1777533001890,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 10.09,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.1
-  },
-  {
-    "time": 1777529671811,
-    "source": "IDE",
-    "operation": "Repo Wiki",
-    "kind": "Not Charged",
-    "credits": 3.25,
-    "model_category": "Auto",
-    "cost": 0.03
-  },
-  {
-    "time": 1777528444497,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.3,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1777523038073,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 1.04,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.01
-  },
-  {
-    "time": 1777521080917,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 2.4,
-    "model_category": "Qwen3.6-Plus",
-    "cost": 0.02
-  },
-  {
-    "time": 1777518892714,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 192.13,
-    "model_category": "Ultimate",
-    "cost": 1.92
-  },
-  {
-    "time": 1777518868674,
-    "source": "IDE",
-    "operation": "Repo Wiki",
-    "kind": "Not Charged",
-    "credits": 2.64,
-    "model_category": "Auto",
-    "cost": 0.02
-  },
-  {
-    "time": 1777518402955,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 59.32,
-    "model_category": "Ultimate",
-    "cost": 0.59
-  },
-  {
-    "time": 1777518312218,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 4.86,
-    "model_category": "Ultimate",
-    "cost": 0.04
-  },
-  {
-    "time": 1777518181443,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 9.32,
-    "model_category": "Ultimate",
-    "cost": 0.09
-  },
-  {
-    "time": 1777518006854,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 34.71,
-    "model_category": "Ultimate",
-    "cost": 0.34
-  },
-  {
-    "time": 1777516973542,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 33.76,
-    "model_category": "Ultimate",
-    "cost": 0.33
-  },
-  {
-    "time": 1777515824590,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 14.96,
-    "model_category": "Ultimate",
-    "cost": 0.14
-  },
-  {
-    "time": 1777515658381,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 31.95,
-    "model_category": "Ultimate",
-    "cost": 0.31
-  },
-  {
-    "time": 1777515031174,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 7.11,
-    "model_category": "Ultimate",
-    "cost": 0.07
-  },
-  {
-    "time": 1777514968038,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 18.11,
-    "model_category": "Ultimate",
-    "cost": 0.18
-  },
-  {
-    "time": 1777513593911,
-    "source": "IDE",
-    "operation": "Agent",
-    "kind": "Charged",
-    "credits": 24.06,
-    "model_category": "Ultimate",
-    "cost": 0.24
-  }
+    {
+        "time": 1778315595601,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.07,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778315301714,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.45,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778315075818,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.89,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778314450284,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.31,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778314065638,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.43,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778313817116,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.07,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778313243227,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.44,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778312983037,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.87,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778312557633,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.1,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778312207166,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.08,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778311888411,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.72,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778311186528,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.44,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1778309825654,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.33,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778309543403,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.47,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778309211901,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.83,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778305950156,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.2,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778298378545,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.54,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778298086191,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.69,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778297891114,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778297074325,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.27,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1778296704974,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.74,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778295956528,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.94,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778295888986,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.2,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778294388504,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.98,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778293191862,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.21,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1778292444769,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.64,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778291992000,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778290550635,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.33,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778289786477,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.48,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778236267680,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.05,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778236036507,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.52,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778235868100,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778235519900,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778235326780,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.08,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778235022719,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778234617949,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.75,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778232811003,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.57,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.07
+    },
+    {
+        "time": 1778232484198,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.91,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778232442466,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.4,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778232314811,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778231887369,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.18,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778231472406,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.29,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778231041839,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.91,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778230712949,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778230454832,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.18,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778230308568,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.98,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778229946344,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.07,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778227828409,
+        "source": "CLI",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.36,
+        "model_category": "Lite",
+        "cost": 0
+    },
+    {
+        "time": 1778227828409,
+        "source": "CLI",
+        "operation": "Agent",
+        "kind": "Not Charged",
+        "credits": 0.08,
+        "model_category": "Lite",
+        "cost": 0
+    },
+    {
+        "time": 1778227419948,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.94,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.1
+    },
+    {
+        "time": 1778226575523,
+        "source": "CLI",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.16,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1778226575523,
+        "source": "CLI",
+        "operation": "Agent",
+        "kind": "Not Charged",
+        "credits": 0.04,
+        "model_category": "Auto",
+        "cost": 0
+    },
+    {
+        "time": 1778224988074,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.41,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778224261495,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778224109485,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.71,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778223768346,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.79,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778223418289,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.86,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778204420102,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.35,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778203379893,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.71,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778145436527,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.08,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778144730651,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.02,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778143420761,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.74,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1778143107748,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778142516441,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.65,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778142301251,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.84,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778142076148,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.21,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778140012205,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 58.23,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.58
+    },
+    {
+        "time": 1778138911552,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 46.65,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.46
+    },
+    {
+        "time": 1778138355658,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 13.34,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.13
+    },
+    {
+        "time": 1778138213023,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.58,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778137655450,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.77,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778137155702,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.54,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778136750072,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.57,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1778134719381,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.88,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778134654760,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.65,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778133807861,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.16,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778126076222,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.22,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778125970231,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.4,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778125847213,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.35,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778125432124,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.58,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778125208981,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.26,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778124873745,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.02,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778123524418,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.57,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778123059001,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.96,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778122951611,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.04,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778122483710,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.77,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778122382298,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.72,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778122163067,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.32,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778122078989,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.98,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778121728746,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778121613737,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.95,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778121389438,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.04,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778121179300,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.05,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778121038874,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.53,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778120922898,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 12.07,
+        "model_category": "GLM-5.1",
+        "cost": 0.12
+    },
+    {
+        "time": 1778120655453,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 18.38,
+        "model_category": "GLM-5.1",
+        "cost": 0.18
+    },
+    {
+        "time": 1778120357793,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10,
+        "model_category": "GLM-5.1",
+        "cost": 0.1
+    },
+    {
+        "time": 1778120162682,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.49,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778119846297,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.07,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778119242314,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.89,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778118816370,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5.53,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.05
+    },
+    {
+        "time": 1778065279285,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.5,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778065114885,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.82,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778065021180,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.5,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778064921286,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.55,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778064861420,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.41,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778064709845,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.63,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778064231717,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.05,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778063556308,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.83,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778063054693,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.59,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778062620668,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.69,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778059063134,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.96,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778058702834,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.68,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778058382698,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.64,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778057565440,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.5,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778057038106,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.82,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778056670661,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.48,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778056480318,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.92,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778055567719,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778054645492,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778054336849,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778053969414,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.85,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778053543676,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.72,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778053441398,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.34,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778053144961,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.63,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778052819591,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.25,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778052550698,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.12,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778052536451,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.21,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778052488463,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.21,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778052415516,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.2,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778052327152,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.31,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778052028333,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.17,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778051830411,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.84,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1778051126022,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.94,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778050874629,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.34,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1778050616415,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.02,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778050282079,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.87,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778050187575,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778049522508,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 58.23,
+        "model_category": "GLM-5.1",
+        "cost": 0.58
+    },
+    {
+        "time": 1778048944513,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.61,
+        "model_category": "GLM-5.1",
+        "cost": 0.08
+    },
+    {
+        "time": 1778048223334,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 37.12,
+        "model_category": "GLM-5.1",
+        "cost": 0.37
+    },
+    {
+        "time": 1778038764510,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.74,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778038526304,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.12,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778038348578,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778037640630,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.96,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778037572666,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778037400663,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.92,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778036894641,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.81,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778036562793,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.16,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778036536230,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.16,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778036270366,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.32,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1778034325002,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.73,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778033755356,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.71,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778033065225,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.16,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.08
+    },
+    {
+        "time": 1778032846832,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.23,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.09
+    },
+    {
+        "time": 1778031859483,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.8,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778031449204,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.73,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778031176038,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.42,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1778030984514,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.93,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1778030657231,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.98,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777988251609,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.89,
+        "model_category": "Ultimate",
+        "cost": 0.15
+    },
+    {
+        "time": 1777817967283,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 60.24,
+        "model_category": "Ultimate",
+        "cost": 0.6
+    },
+    {
+        "time": 1777817145172,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 28.09,
+        "model_category": "Ultimate",
+        "cost": 0.28
+    },
+    {
+        "time": 1777816262006,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 144.71,
+        "model_category": "Ultimate",
+        "cost": 1.44
+    },
+    {
+        "time": 1777814781274,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 41.86,
+        "model_category": "Ultimate",
+        "cost": 0.41
+    },
+    {
+        "time": 1777813952859,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 66.54,
+        "model_category": "Ultimate",
+        "cost": 0.66
+    },
+    {
+        "time": 1777812561971,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 44.91,
+        "model_category": "Ultimate",
+        "cost": 0.44
+    },
+    {
+        "time": 1777811699928,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.81,
+        "model_category": "Ultimate",
+        "cost": 0.15
+    },
+    {
+        "time": 1777811219524,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 30.63,
+        "model_category": "Ultimate",
+        "cost": 0.3
+    },
+    {
+        "time": 1777540378576,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.19,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777536912761,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 52.98,
+        "model_category": "Ultimate",
+        "cost": 0.52
+    },
+    {
+        "time": 1777535543407,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 181.18,
+        "model_category": "Ultimate",
+        "cost": 1.81
+    },
+    {
+        "time": 1777533001890,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.09,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.1
+    },
+    {
+        "time": 1777529671811,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.25,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777528444497,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777523038073,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.04,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777521080917,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.4,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777518892714,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 192.13,
+        "model_category": "Ultimate",
+        "cost": 1.92
+    },
+    {
+        "time": 1777518868674,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.64,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1777518402955,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 59.32,
+        "model_category": "Ultimate",
+        "cost": 0.59
+    },
+    {
+        "time": 1777518312218,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.86,
+        "model_category": "Ultimate",
+        "cost": 0.04
+    },
+    {
+        "time": 1777518181443,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.32,
+        "model_category": "Ultimate",
+        "cost": 0.09
+    },
+    {
+        "time": 1777518006854,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 34.71,
+        "model_category": "Ultimate",
+        "cost": 0.34
+    },
+    {
+        "time": 1777516973542,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 33.76,
+        "model_category": "Ultimate",
+        "cost": 0.33
+    },
+    {
+        "time": 1777515824590,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 14.96,
+        "model_category": "Ultimate",
+        "cost": 0.14
+    },
+    {
+        "time": 1777515658381,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 31.95,
+        "model_category": "Ultimate",
+        "cost": 0.31
+    },
+    {
+        "time": 1777515031174,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.11,
+        "model_category": "Ultimate",
+        "cost": 0.07
+    },
+    {
+        "time": 1777514968038,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 18.11,
+        "model_category": "Ultimate",
+        "cost": 0.18
+    },
+    {
+        "time": 1777513593911,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 24.06,
+        "model_category": "Ultimate",
+        "cost": 0.24
+    },
+    {
+        "time": 1777512866981,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 47.28,
+        "model_category": "Ultimate",
+        "cost": 0.47
+    },
+    {
+        "time": 1777512627020,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 24.15,
+        "model_category": "Ultimate",
+        "cost": 0.24
+    },
+    {
+        "time": 1777459897063,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 28.36,
+        "model_category": "Ultimate",
+        "cost": 0.28
+    },
+    {
+        "time": 1777459224368,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.62,
+        "model_category": "Ultimate",
+        "cost": 0.04
+    },
+    {
+        "time": 1777458973346,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 16.71,
+        "model_category": "Ultimate",
+        "cost": 0.16
+    },
+    {
+        "time": 1777457313634,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 17.27,
+        "model_category": "Ultimate",
+        "cost": 0.17
+    },
+    {
+        "time": 1777456911023,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 19.09,
+        "model_category": "Ultimate",
+        "cost": 0.19
+    },
+    {
+        "time": 1777455255389,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 129.62,
+        "model_category": "Ultimate",
+        "cost": 1.29
+    },
+    {
+        "time": 1777452255219,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.29,
+        "model_category": "Ultimate",
+        "cost": 0.15
+    },
+    {
+        "time": 1777452251717,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.51,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777450450872,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 5.08,
+        "model_category": "Auto",
+        "cost": 0.05
+    },
+    {
+        "time": 1777450347251,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.43,
+        "model_category": "Ultimate",
+        "cost": 0.04
+    },
+    {
+        "time": 1777448067784,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 46.66,
+        "model_category": "Ultimate",
+        "cost": 0.46
+    },
+    {
+        "time": 1777447745982,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.16,
+        "model_category": "Ultimate",
+        "cost": 0.1
+    },
+    {
+        "time": 1777446850290,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.06,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777444935676,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 0.64,
+        "model_category": "Auto",
+        "cost": 0
+    },
+    {
+        "time": 1777444709355,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.85,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777433526860,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.52,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1777432818698,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777432409657,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.32,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777432141101,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.37,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777431695494,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.05,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777431411005,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.02,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777430781079,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.58,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777430574871,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.15,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777430389675,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.14,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777430014657,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.69,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1777429142893,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.52,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.09
+    },
+    {
+        "time": 1777428136892,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.62,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.06
+    },
+    {
+        "time": 1777427118935,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 25.67,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.25
+    },
+    {
+        "time": 1777373790308,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.4,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777373753782,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 17.8,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.17
+    },
+    {
+        "time": 1777372283903,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.29,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.06
+    },
+    {
+        "time": 1777372056014,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.21,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.04
+    },
+    {
+        "time": 1777371380140,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 18.06,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.18
+    },
+    {
+        "time": 1777371010052,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.4,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1777370194562,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 7.52,
+        "model_category": "Auto",
+        "cost": 0.07
+    },
+    {
+        "time": 1777370183525,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.61,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1777369652211,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.78,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777369485269,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.75,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777369264004,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.79,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777368388080,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 5.2,
+        "model_category": "Auto",
+        "cost": 0.05
+    },
+    {
+        "time": 1777367219406,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 26.46,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.26
+    },
+    {
+        "time": 1777366824323,
+        "source": "IDE",
+        "operation": "Quest Mode",
+        "kind": "Charged",
+        "credits": 1.78,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777363676178,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 36.68,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.36
+    },
+    {
+        "time": 1777362722804,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 11.64,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.11
+    },
+    {
+        "time": 1777362336282,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.65,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777361733986,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.44,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777360922453,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777360802753,
+        "source": "IDE",
+        "operation": "Quest Mode",
+        "kind": "Charged",
+        "credits": 1.12,
+        "model_category": "GLM-5.1",
+        "cost": 0.01
+    },
+    {
+        "time": 1777359451764,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.51,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777357252763,
+        "source": "IDE",
+        "operation": "Quest Mode",
+        "kind": "Charged",
+        "credits": 14.45,
+        "model_category": "GLM-5.1",
+        "cost": 0.14
+    },
+    {
+        "time": 1777356330366,
+        "source": "IDE",
+        "operation": "Quest Mode",
+        "kind": "Charged",
+        "credits": 4.89,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1777348581111,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 4.93,
+        "model_category": "Auto",
+        "cost": 0.04
+    },
+    {
+        "time": 1777345348275,
+        "source": "IDE",
+        "operation": "Quest Mode",
+        "kind": "Charged",
+        "credits": 567.45,
+        "model_category": "GLM-5.1",
+        "cost": 5.67
+    },
+    {
+        "time": 1777344979747,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 6.98,
+        "model_category": "Auto",
+        "cost": 0.06
+    },
+    {
+        "time": 1777342908201,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 17.88,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.17
+    },
+    {
+        "time": 1777341875676,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.09,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777284357324,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.72,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.02
+    },
+    {
+        "time": 1777278741199,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.85,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.04
+    },
+    {
+        "time": 1777277673169,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.4,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.04
+    },
+    {
+        "time": 1777277616026,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 92.96,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.92
+    },
+    {
+        "time": 1777277565240,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.57,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.03
+    },
+    {
+        "time": 1777277530674,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.83,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.03
+    },
+    {
+        "time": 1777277070122,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.38,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.06
+    },
+    {
+        "time": 1777272410644,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 16.98,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.16
+    },
+    {
+        "time": 1777271045498,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 13.17,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.13
+    },
+    {
+        "time": 1777260580088,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 0.65,
+        "model_category": "Auto",
+        "cost": 0
+    },
+    {
+        "time": 1777259078892,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.2,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777258919380,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.11,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777258876338,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.1,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777258640922,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.24,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777258512201,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.53,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777255094048,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.96,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777253808921,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 21.84,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.21
+    },
+    {
+        "time": 1777252983392,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 4.02,
+        "model_category": "Auto",
+        "cost": 0.04
+    },
+    {
+        "time": 1777252621780,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.35,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777214521343,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.87,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.08
+    },
+    {
+        "time": 1777214469995,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.43,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.02
+    },
+    {
+        "time": 1777214404657,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.13,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.01
+    },
+    {
+        "time": 1777214377970,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.57,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0
+    },
+    {
+        "time": 1777213557775,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 14.31,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.14
+    },
+    {
+        "time": 1777213460664,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.02,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.06
+    },
+    {
+        "time": 1777213057840,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 27.15,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.27
+    },
+    {
+        "time": 1777212516202,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 33.84,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.33
+    },
+    {
+        "time": 1777211619379,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 28.41,
+        "model_category": "DeepSeek-V4-Pro",
+        "cost": 0.28
+    },
+    {
+        "time": 1777208375012,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.18,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777208200060,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.06,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777111574303,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.78,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1777111144952,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.44,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777110730018,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.98,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1777110507886,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777110262915,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1777109301594,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.86,
+        "model_category": "GLM-5.1",
+        "cost": 0.01
+    },
+    {
+        "time": 1777108237147,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5,
+        "model_category": "GLM-5.1",
+        "cost": 0.05
+    },
+    {
+        "time": 1777107735291,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.65,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1777107614902,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.89,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1777107065675,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.58,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1777106465204,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.16,
+        "model_category": "GLM-5.1",
+        "cost": 0.08
+    },
+    {
+        "time": 1777105854101,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 31.38,
+        "model_category": "GLM-5.1",
+        "cost": 0.31
+    },
+    {
+        "time": 1777105507673,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 25.43,
+        "model_category": "GLM-5.1",
+        "cost": 0.25
+    },
+    {
+        "time": 1777105453227,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.04,
+        "model_category": "GLM-5.1",
+        "cost": 0.06
+    },
+    {
+        "time": 1777105289172,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.84,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1777003174531,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 13.95,
+        "model_category": "GLM-5.1",
+        "cost": 0.13
+    },
+    {
+        "time": 1777002923648,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.12,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1777002461722,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 14.07,
+        "model_category": "GLM-5.1",
+        "cost": 0.14
+    },
+    {
+        "time": 1777002236725,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.5,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1777001918520,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5.42,
+        "model_category": "GLM-5.1",
+        "cost": 0.05
+    },
+    {
+        "time": 1777001634033,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.11,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1777001465222,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.3,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1777001212282,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.65,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1777001032463,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.75,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1777000573417,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 1.42,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1776999668045,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 31.4,
+        "model_category": "GLM-5.1",
+        "cost": 0.31
+    },
+    {
+        "time": 1776998773096,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.53,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776998631437,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.35,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776998237772,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.26,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776998042537,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776996943003,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.93,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.06
+    },
+    {
+        "time": 1776996822225,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776996681989,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.32,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776996219978,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.59,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776995630604,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.06,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776995376467,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.07,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776993639330,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.4,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.1
+    },
+    {
+        "time": 1776993373408,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 5.05,
+        "model_category": "Auto",
+        "cost": 0.05
+    },
+    {
+        "time": 1776944116089,
+        "source": "QoderWork",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.25,
+        "model_category": "Standard",
+        "cost": 0
+    },
+    {
+        "time": 1776944101652,
+        "source": "QoderWork",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.78,
+        "model_category": "Standard",
+        "cost": 0.03
+    },
+    {
+        "time": 1776940250877,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.02,
+        "model_category": "GLM-5.1",
+        "cost": 0.15
+    },
+    {
+        "time": 1776939823248,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.48,
+        "model_category": "GLM-5.1",
+        "cost": 0.06
+    },
+    {
+        "time": 1776939291413,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 18.47,
+        "model_category": "GLM-5.1",
+        "cost": 0.18
+    },
+    {
+        "time": 1776938533581,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 13.36,
+        "model_category": "GLM-5.1",
+        "cost": 0.13
+    },
+    {
+        "time": 1776938172903,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.65,
+        "model_category": "GLM-5.1",
+        "cost": 0.08
+    },
+    {
+        "time": 1776937727499,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 16.96,
+        "model_category": "GLM-5.1",
+        "cost": 0.16
+    },
+    {
+        "time": 1776936651503,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 45.51,
+        "model_category": "GLM-5.1",
+        "cost": 0.45
+    },
+    {
+        "time": 1776936285970,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.96,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776936039058,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.44,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776935413193,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 17.26,
+        "model_category": "GLM-5.1",
+        "cost": 0.17
+    },
+    {
+        "time": 1776935057330,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.22,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776934837005,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.7,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776933406291,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.49,
+        "model_category": "GLM-5.1",
+        "cost": 0.15
+    },
+    {
+        "time": 1776932676915,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.52,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776932417013,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.71,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776931291840,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.56,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776929491072,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 5.51,
+        "model_category": "Auto",
+        "cost": 0.05
+    },
+    {
+        "time": 1776929234367,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 27.53,
+        "model_category": "GLM-5.1",
+        "cost": 0.27
+    },
+    {
+        "time": 1776927909252,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 48.7,
+        "model_category": "GLM-5.1",
+        "cost": 0.48
+    },
+    {
+        "time": 1776927691122,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.35,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776926432681,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 18.49,
+        "model_category": "GLM-5.1",
+        "cost": 0.18
+    },
+    {
+        "time": 1776926101676,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.46,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776919473564,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 16.92,
+        "model_category": "GLM-5.1",
+        "cost": 0.16
+    },
+    {
+        "time": 1776919210088,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5.73,
+        "model_category": "GLM-5.1",
+        "cost": 0.05
+    },
+    {
+        "time": 1776919048150,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.77,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776918513959,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.46,
+        "model_category": "GLM-5.1",
+        "cost": 0.08
+    },
+    {
+        "time": 1776917567257,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 53.1,
+        "model_category": "GLM-5.1",
+        "cost": 0.53
+    },
+    {
+        "time": 1776916733139,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 12.52,
+        "model_category": "GLM-5.1",
+        "cost": 0.12
+    },
+    {
+        "time": 1776915787010,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 33.96,
+        "model_category": "GLM-5.1",
+        "cost": 0.33
+    },
+    {
+        "time": 1776914854721,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 11.74,
+        "model_category": "GLM-5.1",
+        "cost": 0.11
+    },
+    {
+        "time": 1776913759555,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 36.18,
+        "model_category": "GLM-5.1",
+        "cost": 0.36
+    },
+    {
+        "time": 1776913583320,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.76,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776913379721,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.84,
+        "model_category": "GLM-5.1",
+        "cost": 0.06
+    },
+    {
+        "time": 1776912938249,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.15,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776912909336,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.08,
+        "model_category": "GLM-5.1",
+        "cost": 0.1
+    },
+    {
+        "time": 1776912523818,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.65,
+        "model_category": "GLM-5.1",
+        "cost": 0.1
+    },
+    {
+        "time": 1776912174333,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 8.41,
+        "model_category": "GLM-5.1",
+        "cost": 0.08
+    },
+    {
+        "time": 1776910418078,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 19.77,
+        "model_category": "GLM-5.1",
+        "cost": 0.19
+    },
+    {
+        "time": 1776909920841,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.39,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776907883857,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.07,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776907406766,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 32.52,
+        "model_category": "GLM-5.1",
+        "cost": 0.32
+    },
+    {
+        "time": 1776849124798,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5.06,
+        "model_category": "GLM-5.1",
+        "cost": 0.05
+    },
+    {
+        "time": 1776846941774,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.99,
+        "model_category": "GLM-5.1",
+        "cost": 0.15
+    },
+    {
+        "time": 1776844030390,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.43,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776842979239,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 27.9,
+        "model_category": "GLM-5.1",
+        "cost": 0.27
+    },
+    {
+        "time": 1776841705672,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 65.37,
+        "model_category": "GLM-5.1",
+        "cost": 0.65
+    },
+    {
+        "time": 1776840657941,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 12.51,
+        "model_category": "GLM-5.1",
+        "cost": 0.12
+    },
+    {
+        "time": 1776840141034,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.06,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776839308708,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 10.54,
+        "model_category": "GLM-5.1",
+        "cost": 0.1
+    },
+    {
+        "time": 1776838815493,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 19.6,
+        "model_category": "GLM-5.1",
+        "cost": 0.19
+    },
+    {
+        "time": 1776838664816,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.12,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776838543190,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.69,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776838274729,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.69,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776837346598,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.5,
+        "model_category": "GLM-5.1",
+        "cost": 0.01
+    },
+    {
+        "time": 1776837173272,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.56,
+        "model_category": "GLM-5.1",
+        "cost": 0.01
+    },
+    {
+        "time": 1776829627206,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 1.79,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1776828580612,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.29,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776827826665,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 1.01,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1776827397408,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.98,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776826029037,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.91,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776825455555,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 25.83,
+        "model_category": "GLM-5.1",
+        "cost": 0.25
+    },
+    {
+        "time": 1776825332092,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 6.17,
+        "model_category": "GLM-5.1",
+        "cost": 0.06
+    },
+    {
+        "time": 1776824362412,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.27,
+        "model_category": "GLM-5.1",
+        "cost": 0.15
+    },
+    {
+        "time": 1776823471508,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 23.59,
+        "model_category": "GLM-5.1",
+        "cost": 0.23
+    },
+    {
+        "time": 1776823111701,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.57,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776823019291,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.75,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776766447560,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 87.71,
+        "model_category": "GLM-5.1",
+        "cost": 0.87
+    },
+    {
+        "time": 1776765656970,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 23.19,
+        "model_category": "GLM-5.1",
+        "cost": 0.23
+    },
+    {
+        "time": 1776765350452,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 11.27,
+        "model_category": "GLM-5.1",
+        "cost": 0.11
+    },
+    {
+        "time": 1776764915736,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 14.98,
+        "model_category": "GLM-5.1",
+        "cost": 0.14
+    },
+    {
+        "time": 1776764531997,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.68,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776764262797,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.71,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776759644997,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.58,
+        "model_category": "GLM-5.1",
+        "cost": 0
+    },
+    {
+        "time": 1776759545394,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.98,
+        "model_category": "GLM-5.1",
+        "cost": 0
+    },
+    {
+        "time": 1776758305820,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 118,
+        "model_category": "GLM-5.1",
+        "cost": 1.18
+    },
+    {
+        "time": 1776757458714,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 15.97,
+        "model_category": "GLM-5.1",
+        "cost": 0.15
+    },
+    {
+        "time": 1776757116880,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 11.67,
+        "model_category": "GLM-5.1",
+        "cost": 0.11
+    },
+    {
+        "time": 1776756570083,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.44,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776756359238,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.85,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776756061105,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.79,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776755437724,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.52,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776753119312,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.5,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776752351957,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.85,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776744728041,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.74,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776743292636,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.92,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776743023654,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.33,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776742917901,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.33,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776741549304,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.19,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776740864529,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776740603690,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.62,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776740164409,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.7,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776739940563,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.84,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776738045478,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 5.17,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.05
+    },
+    {
+        "time": 1776737636666,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.14,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776734556282,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.31,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776679196895,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.23,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776679019946,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.49,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776678745748,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.05,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776678536044,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776678205726,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.77,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776677884269,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.89,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776677528662,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.02,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776676986101,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.8,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776667555486,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 1.49,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1776667342357,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.61,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776667048463,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.03,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776666270934,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 11.84,
+        "model_category": "GLM-5.1",
+        "cost": 0.11
+    },
+    {
+        "time": 1776658553250,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 1.97,
+        "model_category": "Auto",
+        "cost": 0.01
+    },
+    {
+        "time": 1776657090132,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.28,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776656779839,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 13.46,
+        "model_category": "GLM-5.1",
+        "cost": 0.13
+    },
+    {
+        "time": 1776656305986,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 20.06,
+        "model_category": "GLM-5.1",
+        "cost": 0.2
+    },
+    {
+        "time": 1776655862927,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 12.47,
+        "model_category": "GLM-5.1",
+        "cost": 0.12
+    },
+    {
+        "time": 1776655467568,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.26,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776655245418,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.69,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776654779813,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.8,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776654606401,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.44,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776654505534,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.44,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776653955713,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.39,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776653872507,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.79,
+        "model_category": "GLM-5.1",
+        "cost": 0.03
+    },
+    {
+        "time": 1776653653714,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.79,
+        "model_category": "GLM-5.1",
+        "cost": 0.04
+    },
+    {
+        "time": 1776653465799,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 12.18,
+        "model_category": "GLM-5.1",
+        "cost": 0.12
+    },
+    {
+        "time": 1776653274720,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.07,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776652876002,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.33,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776652652642,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.43,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776651231832,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.27,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776651160262,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.11,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776650955318,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.45,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776650939997,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.1,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776650565465,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.22,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776650110999,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.55,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776648767282,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.25,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776576181496,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 7.12,
+        "model_category": "GLM-5.1",
+        "cost": 0.07
+    },
+    {
+        "time": 1776575954452,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 9.7,
+        "model_category": "GLM-5.1",
+        "cost": 0.09
+    },
+    {
+        "time": 1776575146671,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.81,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776574742477,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.84,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776574584094,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.79,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776574326033,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.59,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776574236466,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.43,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776573866139,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.62,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776573779255,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 3.8,
+        "model_category": "Auto",
+        "cost": 0.03
+    },
+    {
+        "time": 1776573747068,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.88,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776421169253,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.22,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776420897070,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.01,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776419643840,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.99,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776419168578,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.64,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776419071252,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.52,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776418907532,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.65,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776418370828,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.66,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776418134745,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.65,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776417843841,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.92,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776417781048,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.51,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776417626694,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.3,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776417383754,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776416436249,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.26,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776416043213,
+        "source": "IDE",
+        "operation": "Repo Wiki",
+        "kind": "Not Charged",
+        "credits": 2.3,
+        "model_category": "Auto",
+        "cost": 0.02
+    },
+    {
+        "time": 1776415989525,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.9,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776415690281,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.14,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776415669137,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.21,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776415230416,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.68,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776415025444,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.53,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776414487902,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.13,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776414274457,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.89,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776414075198,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.46,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776413455278,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.06,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776412679306,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.86,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776412233125,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.68,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776411891079,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.31,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776411428228,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.88,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776410851083,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 3.58,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.03
+    },
+    {
+        "time": 1776410459366,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.83,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776410245731,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.75,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776409891866,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.88,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776409654535,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.53,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776409227015,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.74,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.02
+    },
+    {
+        "time": 1776408220180,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.28,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776407914078,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.18,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776406814373,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 4.69,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.04
+    },
+    {
+        "time": 1776393227566,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.23,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776392947659,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.27,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776392404742,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 1.09,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0.01
+    },
+    {
+        "time": 1776392200240,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 2.27,
+        "model_category": "GLM-5.1",
+        "cost": 0.02
+    },
+    {
+        "time": 1776342329973,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.42,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776342109400,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.31,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776341049920,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.14,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    },
+    {
+        "time": 1776340851803,
+        "source": "IDE",
+        "operation": "Agent",
+        "kind": "Charged",
+        "credits": 0.2,
+        "model_category": "Qwen3.6-Plus",
+        "cost": 0
+    }
 ]

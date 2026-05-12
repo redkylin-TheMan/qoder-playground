@@ -31,6 +31,35 @@
           </div>
         </div>
 
+        <!-- 每日统计表格 -->
+        <div class="card">
+          <h2 class="section-title">📅 每日统计</h2>
+          <div class="table-container">
+            <table class="daily-stats-table">
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>使用次数</th>
+                  <th>总 Credits</th>
+                  <th>平均 Credits</th>
+                  <th>最大单次</th>
+                  <th>最小单次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="day in dailyStats" :key="day.date">
+                  <td>{{ day.date }}</td>
+                  <td>{{ day.count }}</td>
+                  <td>{{ day.total.toFixed(2) }}</td>
+                  <td>{{ day.avg.toFixed(2) }}</td>
+                  <td>{{ day.max.toFixed(2) }}</td>
+                  <td>{{ day.min.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- 筛选器 -->
         <div class="card">
           <div class="filter-section">
@@ -111,6 +140,47 @@ const avgCredits = computed(() => {
 const maxCredits = computed(() => {
   if (filteredData.value.length === 0) return 0;
   return Math.max(...filteredData.value.map((item) => item.credits));
+});
+
+// 每日统计
+const dailyStats = computed(() => {
+  const data = filteredData.value;
+  const dailyMap = new Map();
+
+  data.forEach((item) => {
+    const date = new Date(item.time);
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+    if (!dailyMap.has(dateKey)) {
+      dailyMap.set(dateKey, {
+        date: dateKey,
+        count: 0,
+        total: 0,
+        max: 0,
+        min: Infinity,
+        credits: [],
+      });
+    }
+
+    const dayData = dailyMap.get(dateKey);
+    dayData.count++;
+    dayData.total += item.credits;
+    dayData.max = Math.max(dayData.max, item.credits);
+    dayData.min = Math.min(dayData.min, item.credits);
+    dayData.credits.push(item.credits);
+  });
+
+  // 计算平均值并转换为数组，按日期排序
+  const stats = Array.from(dailyMap.values()).map((day) => ({
+    date: day.date,
+    count: day.count,
+    total: day.total,
+    avg: day.total / day.count,
+    max: day.max,
+    min: day.min === Infinity ? 0 : day.min,
+  }));
+
+  return stats.sort((a, b) => new Date(b.date) - new Date(a.date));
 });
 
 const timeRangeText = computed(() => {
@@ -401,6 +471,59 @@ onMounted(() => {
 .chart-container {
   height: 500px;
   margin-top: 24px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #667eea;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.daily-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.daily-stats-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.daily-stats-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.daily-stats-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #333;
+}
+
+.daily-stats-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.daily-stats-table tbody tr:hover {
+  background-color: #f5f7fa;
+}
+
+.daily-stats-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .loading {
