@@ -260,9 +260,23 @@ class JinglunSDK:
         ]
         self.dll.Routon_APDU.restype = ctypes.c_int
 
+        if hasattr(self.dll, "Routon_RepeatRead"):
+            self.dll.Routon_RepeatRead.argtypes = [ctypes.c_bool]
+            self.dll.Routon_RepeatRead.restype = ctypes.c_int
+
         if hasattr(self.dll, "Routon_ShutDownAntenna"):
             self.dll.Routon_ShutDownAntenna.argtypes = []
             self.dll.Routon_ShutDownAntenna.restype = ctypes.c_int
+
+        self.enable_repeat_read(True)
+
+    def enable_repeat_read(self, enabled: bool) -> Dict[str, Any]:
+        if not hasattr(self.dll, "Routon_RepeatRead"):
+            return {"supported": False, "enabled": False}
+        ret = self.dll.Routon_RepeatRead(bool(enabled))
+        if ret != 1:
+            raise JinglunError("REPEAT_READ_FAILED", "设置连续读身份证失败。", ret)
+        return {"supported": True, "enabled": bool(enabled)}
 
     def health(self) -> Dict[str, Any]:
         data = environment_health()
@@ -303,6 +317,7 @@ class JinglunSDK:
                 self.current_port = None
                 raise JinglunError("OPEN_DEVICE_FAILED", f"打开读卡器端口 {port} 失败。", ret)
 
+            self.enable_repeat_read(True)
             self.opened = True
             self.current_port = int(port)
             return {"opened": True, "port": self.current_port, "deviceType": device_type, "index": index}

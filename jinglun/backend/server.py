@@ -3,8 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 import mimetypes
-import socket
-import struct
 import sys
 import threading
 import time
@@ -13,7 +11,7 @@ import webbrowser
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Dict, Optional
 
 from jinglun_sdk import JinglunError, assert_runtime_ready, environment_health, get_sdk
 
@@ -22,6 +20,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 WEB_DIR = ROOT_DIR / "web"
 HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
+LOCAL_ALLOWED_ORIGINS = ("http://127.0.0.1", "http://localhost")
 
 
 def _json_bytes(payload: Dict[str, Any]) -> bytes:
@@ -59,10 +58,19 @@ class JinglunHandler(BaseHTTPRequestHandler):
     server_version = "JinglunBrowser/1.0"
 
     def log_message(self, fmt: str, *args: Any) -> None:
-        sys.stdout.write("[%s] %s\n" % (self.log_date_time_string(), fmt % args))
+        line = "[%s] %s" % (self.log_date_time_string(), fmt % args)
+        if sys.stdout:
+            sys.stdout.write(line + "\n")
+        control = getattr(self.server, "control", None)
+        if control and hasattr(control, "append_log"):
+            control.append_log(line)
 
     def end_headers(self) -> None:
-        self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1")
+        origin = self.headers.get("Origin", "")
+        if origin.startswith(LOCAL_ALLOWED_ORIGINS):
+            self.send_header("Access-Control-Allow-Origin", origin)
+        else:
+            self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.send_header("X-Content-Type-Options", "nosniff")
@@ -128,6 +136,31 @@ class JinglunHandler(BaseHTTPRequestHandler):
                 except JinglunError as exc:
                     health["sdkLoadError"] = exc.to_dict()
             return health
+
+        if method == "GET" and route == "/api/service/status":
+            control = getattr(self.server, "control", None)
+            if control and hasattr(control, "status"):
+                return control.status()
+            return {
+                "running": True,
+                "host": self.server.server_address[0],
+                "port": self.server.server_address[1],
+            }
+
+        if method == "POST" and route == "/api/service/show-status":
+            control = getattr(self.server, "control", None)
+            if control and hasattr(control, "show_status"):
+                control.show_status()
+                return {"shown": True}
+            return {"shown": False}
+
+        if method == "POST" and route == "/api/service/shutdown":
+            control = getattr(self.server, "control", None)
+            if control and hasattr(control, "shutdown"):
+                control.shutdown()
+                return {"stopping": True}
+            threading.Thread(target=self.server.shutdown, daemon=True).start()
+            return {"stopping": True}
 
         sdk = get_sdk()
 
@@ -206,11 +239,14 @@ class JinglunHandler(BaseHTTPRequestHandler):
         self.wfile.write(content)
 
 
-def bind_server(preferred_port: int) -> ThreadingHTTPServer:
+def bind_server(preferred_port: int, control: Optional[Any] = None) -> ThreadingHTTPServer:
     last_error: Optional[OSError] = None
     for port in range(preferred_port, preferred_port + 10):
         try:
-            return ThreadingHTTPServer((HOST, port), JinglunHandler)
+            httpd = ThreadingHTTPServer((HOST, port), JinglunHandler)
+            httpd.control = control
+            httpd.started_at = time.time()
+            return httpd
         except OSError as exc:
             last_error = exc
     raise RuntimeError(f"无法绑定 {HOST}:{preferred_port}-{preferred_port + 9}：{last_error}")
