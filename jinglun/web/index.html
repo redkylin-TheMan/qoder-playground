@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>精伦 iDR210 浏览器读卡</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <h1>精伦 iDR210 浏览器读卡</h1>
+        <p id="serviceLine">服务状态检测中</p>
+      </div>
+      <div class="header-actions">
+        <button id="refreshHealth" type="button">检测服务</button>
+        <button id="detectDevices" type="button">检测设备</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="status-band" aria-label="运行状态">
+        <div class="status-item">
+          <span>Python</span>
+          <strong id="pythonStatus">--</strong>
+        </div>
+        <div class="status-item">
+          <span>SDK</span>
+          <strong id="sdkStatus">--</strong>
+        </div>
+        <div class="status-item">
+          <span>HID</span>
+          <strong id="hidStatus">--</strong>
+        </div>
+        <div class="status-item">
+          <span>部标</span>
+          <strong id="standardStatus">--</strong>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="sidebar">
+          <div class="panel">
+            <h2>设备连接</h2>
+            <label>
+              <span>端口</span>
+              <input id="portInput" type="number" min="1" value="1001">
+            </label>
+            <label>
+              <span>设备类型</span>
+              <select id="deviceTypeInput">
+                <option value="auto">自动</option>
+                <option value="hid">HID</option>
+                <option value="standard">部标</option>
+              </select>
+            </label>
+            <label>
+              <span>索引</span>
+              <input id="deviceIndexInput" type="number" min="1" value="1">
+            </label>
+            <div class="button-row">
+              <button id="openDevice" type="button">打开设备</button>
+              <button id="closeDevice" type="button" class="secondary">关闭设备</button>
+            </div>
+            <p id="deviceMessage" class="message"></p>
+          </div>
+
+          <div class="panel">
+            <h2>返回信息</h2>
+            <pre id="debugOutput">{}</pre>
+          </div>
+        </aside>
+
+        <section class="content">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="idCard" type="button">身份证</button>
+            <button class="tab" data-tab="nfc" type="button">NFC</button>
+          </div>
+
+          <section id="idCardPanel" class="tab-panel active">
+            <div class="panel">
+              <div class="panel-heading">
+                <h2>证件读取</h2>
+                <button id="readIdCard" type="button">读取身份证</button>
+              </div>
+              <p id="idMessage" class="message"></p>
+              <div id="idFields" class="field-grid"></div>
+            </div>
+
+            <div class="image-grid">
+              <figure>
+                <figcaption>头像</figcaption>
+                <div class="image-box"><img id="headPhoto" alt="头像"></div>
+              </figure>
+              <figure>
+                <figcaption>正面</figcaption>
+                <div class="image-box"><img id="frontCopy" alt="身份证正面"></div>
+              </figure>
+              <figure>
+                <figcaption>反面</figcaption>
+                <div class="image-box"><img id="backCopy" alt="身份证反面"></div>
+              </figure>
+            </div>
+          </section>
+
+          <section id="nfcPanel" class="tab-panel">
+            <div class="panel nfc-grid">
+              <div>
+                <h2>寻卡</h2>
+                <div class="button-row">
+                  <button id="findNfc" type="button">寻卡</button>
+                  <button id="readNfcSn" type="button">读卡号</button>
+                </div>
+                <p id="nfcMessage" class="message"></p>
+              </div>
+
+              <div class="form-block">
+                <h2>区块读写</h2>
+                <div class="compact-grid">
+                  <label>
+                    <span>扇区</span>
+                    <input id="sidInput" type="number" min="0" value="0">
+                  </label>
+                  <label>
+                    <span>块号</span>
+                    <input id="bidInput" type="number" min="0" value="0">
+                  </label>
+                  <label>
+                    <span>密钥类型</span>
+                    <select id="keyTypeInput">
+                      <option value="A">KeyA</option>
+                      <option value="B">KeyB</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>密钥</span>
+                    <input id="keyInput" type="text" value="FFFFFFFFFFFF" spellcheck="false">
+                  </label>
+                </div>
+                <label>
+                  <span>写入数据</span>
+                  <input id="writeDataInput" type="text" placeholder="16字节HEX，例如 00112233445566778899AABBCCDDEEFF" spellcheck="false">
+                </label>
+                <label class="checkbox-line">
+                  <input id="allowTrailerInput" type="checkbox">
+                  <span>允许写入扇区尾块</span>
+                </label>
+                <div class="button-row">
+                  <button id="readBlock" type="button">读取块</button>
+                  <button id="writeBlock" type="button">写入块</button>
+                </div>
+              </div>
+
+              <div class="form-block">
+                <h2>CPU 卡 APDU</h2>
+                <label>
+                  <span>APDU</span>
+                  <textarea id="apduInput" rows="4" spellcheck="false" placeholder="00A4040000"></textarea>
+                </label>
+                <button id="sendApdu" type="button">发送 APDU</button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
