@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSDK Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+        document.write(
+            "<link type='text/css' href='../demo.css?version=" +
+            new Date().getTime() +
+            "' rel='stylesheet' />"
+        );
+        document.title = "WebSDK Demo";
+    </script>
+</head>
+
+<body style="width: 2000px; height: 2000px">
+<div class="left">
+    <div id="divPlugin" class="plugin"></div>
+
+    <fieldset class="login">
+        <legend>Login</legend>
+        <table cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td class="tt">IP Address</td>
+                <td>
+                    <input id="loginip" type="text" class="txt" value="10.67.59.143" />
+                </td>
+                <!-- <td><input id="loginip" type="text" class="txt" value="10.41.203.83" /></td> -->
+                <td class="tt">Port Number</td>
+                <td><input id="port" type="text" class="txt" value="80" /></td>
+            </tr>
+            <tr>
+                <td class="tt">Username</td>
+                <td>
+                    <input id="username" type="text" class="txt" value="admin" />
+                </td>
+                <td class="tt">Password</td>
+                <td>
+                    <input id="password" type="password" class="txt" value="sdk123456" />
+                </td>
+                <!-- <td><input id="password" type="password" class="txt" value="abcd1234" /></td> -->
+            </tr>
+            <tr>
+                <td class="tt">Device Port</td>
+                <td colspan="2">
+                    <input id="deviceport" type="text" class="txt" disabled>(Optional Parameter)</td>
+                <td>
+                    Window Split Number&nbsp;
+                    <select class="sel2" onchange="changeWndNum(this.value);">
+                        <option value="1" selected>1x1</option>
+                        <option value="2">2x2</option>
+                        <option value="3">3x3</option>
+                        <option value="4">4x4</option>
+                        <option value="1*2">1x2</option>
+                        <option value="2*1">2x1</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">RTSP Port</td>
+                <td colspan="3">
+                    <input id="rtspport" type="text" class="txt" disabled>(Optional Parameter)</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="button" class="btn2" value="Login (HTTP)" title="Login HTTP Device" onclick="clickLogin(1);" />
+                    <input type="button" class="btn2" value="Login (HTTPS)" title="Login HTTPS Device" onclick="clickLogin(2);" />
+                    <input type="button" class="btn2" value="Logout" onclick="clickLogout();" />
+                    <input type="button" class="btn2" value="Get Basic Info" onclick="clickGetDeviceInfo();" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Logged-in Devices</td>
+                <td>
+                    <select id="ip" class="sel" onchange="getChannelInfo();getDevicePort();"></select>
+                </td>
+                <td class="tt">Channel List</td>
+                <td>
+                    <select id="channels" class="sel"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="btnStartPlayback" type="button" class="btn2" value="Start Preview" onclick="clickStartRealPlay();" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Stop Preview" onclick="clickStopRealPlay();" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Set Text Overlay" onclick="setTextOverlay();" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Destroy Plugin" onclick="destroyPlugin();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" class="btn2" value="Hide Plugin" onclick="hidPlugin();" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Show Plugin" onclick="showPlugin();" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Stop All Video Playback" title="Stop All Video Playback" onclick="stopAllPlay();" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="ipchannel">
+        <legend>Digital Channels</legend>
+        <table width="100%" cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Get Digital Channel List" onclick="clickGetDigitalChannelInfo();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="digitaltdiv">
+                        <table id="digitalchannellist" class="digitalchannellist" cellpadding="0" cellspacing="0" border="0"></table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="localconfig">
+        <legend>Local Configuration</legend>
+        <table cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td class="tt">Playback Performance</td>
+                <td>
+                    <select id="netsPreach" name="netsPreach" class="sel">
+                        <option value="0">Shortest Delay</option>
+                        <option value="1">Good Real-Time</option>
+                        <option value="2">Balanced</option>
+                        <option value="3">Best Smoothness</option>
+                    </select>
+                </td>
+                <td class="tt">Image Size</td>
+                <td>
+                    <select id="wndSize" name="wndSize" class="sel">
+                        <option value="0">Fill</option>
+                        <option value="1">4:3</option>
+                        <option value="2">16:9</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Rule Information</td>
+                <td>
+                    <select id="ivsMode" name="ivsMode" class="sel">
+                        <option value="0">Disabled</option>
+                        <option value="1">Enabled</option>
+                    </select>
+                </td>
+                <td class="tt">Overlay POS Info</td>
+                <td>
+                    <select id="osdPosInfo" name="osdPosInfo" class="sel">
+                        <option value="0">Disabled</option>
+                        <option value="1">Enabled</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Recording File Pack Size</td>
+                <td>
+                    <select id="packSize" name="packSize" class="sel">
+                        <option value="0">256MB</option>
+                        <option value="1">512MB</option>
+                        <option value="2">1GB</option>
+                    </select>
+                </td>
+                <td class="tt">Protocol Type</td>
+                <td>
+                    <select id="protocolType" name="protocolType" class="sel">
+                        <option value="0">TCP</option>
+                        <option value="2">UDP</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Snapshot File Format</td>
+                <td>
+                    <select id="captureFileFormat" name="captureFileFormat" class="sel">
+                        <option value="0">JPEG</option>
+                        <option value="1">BMP</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Stream Key</td>
+                <td colspan="3">
+                    <input id="secretKey" type="password" class="txt" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Recording File Save Path</td>
+                <td colspan="3">
+                    <input id="recordPath" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('recordPath', 0);" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Playback Download Save Path</td>
+                <td colspan="3">
+                    <input id="downloadPath" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('downloadPath', 0);" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Preview Snapshot Save Path</td>
+                <td colspan="3">
+                    <input id="previewPicPath" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('previewPicPath', 0);" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Playback Snapshot Save Path</td>
+                <td colspan="3">
+                    <input id="playbackPicPath" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('playbackPicPath', 0);" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Playback Clip Save Path</td>
+                <td colspan="3">
+                    <input id="playbackFilePath" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('playbackFilePath', 0);" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="button" class="btn" value="Get" onclick="clickGetLocalCfg();" />&nbsp;<input type="button" class="btn" value="Set" onclick="clickSetLocalCfg();" />&nbsp;&nbsp;After modifying parameters, refresh the interface for changes to take effect.
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+<div class="left">
+    <fieldset class="preview">
+        <legend>Preview</legend>
+        <table cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td class="tt">Stream Type</td>
+                <td>
+                    <select id="streamtype" class="sel">
+                        <option value="1">Main Stream</option>
+                        <option value="2">Sub Stream</option>
+                        <option value="3">Third Stream</option>
+                        <option value="4">Transcoded Stream</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Volume</td>
+                <td>
+                    <input type="text" id="volume" class="txt" value="50" maxlength="3" />&nbsp;<input type="button" class="btn" value="Set" onclick="clickSetVolume();" />(Range: 0~100)
+                </td>
+                <td>
+                    <input type="button" class="btn" value="Open Sound" onclick="clickOpenSound();" />
+                    <input type="button" class="btn" value="Close Sound" onclick="clickCloseSound();" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Intercom Channel</td>
+                <td>
+                    <select id="audiochannels" class="sel"></select>
+                    <input type="button" class="btn" value="Get Channel" onclick="clickGetAudioInfo();" />
+                </td>
+                <td>
+                    <input type="button" class="btn" value="Start Intercom" onclick="clickStartVoiceTalk();" />
+                    <input type="button" class="btn" value="Stop Intercom" onclick="clickStopVoiceTalk();" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="button" class="btn" value="Snapshot" onclick="clickCapturePic('preview');" />
+                    <input type="button" class="btn" value="Upload Snapshot" onclick="clickCapturePicData();" />
+                    <input type="button" class="btn" value="Start Recording" onclick="clickStartRecord('realplay');" />
+                    <input type="button" class="btn" value="Stop Recording" onclick="clickStopRecord('realplay');" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="button" class="btn2" value="Enable Electronic Zoom" onclick="clickEnableEZoom();" />
+                    <input type="button" class="btn2" value="Disable Electronic Zoom" onclick="clickDisableEZoom();" />
+                    <input type="button" class="btn2" value="Enable 3D Zoom" onclick="clickEnable3DZoom();" />
+                    <input type="button" class="btn2" value="Disable 3D Zoom" onclick="clickDisable3DZoom();" />
+                    <input id="fullbtn" type="button" class="btn" value="Fullscreen" onclick="clickFullScreen();" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="draw">
+        <legend>Draw</legend>
+        <table cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Enable Drawing" onclick="clickEnableDraw();" />
+                    <input type="button" class="btn" value="Disable Drawing" onclick="clickDisableDraw();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Shape ID：<input id="snapId" type="text" class="txt" /> Name：<input id="snapName" type="text" class="txt" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Add Shape" onclick="clickAddSnapPolygon()" />
+                    <input type="button" class="btn" value="Delete Shape" onclick="clickDelSnapPolygon()" />
+                    <input type="button" class="btn" value="Get Shapes" onclick="clickGetSnapPolygon()" />
+                    <input type="button" class="btn" value="Set Shapes" onclick="clickSetSnapPolygon()" />
+                    <input type="button" class="btn" value="Clear Shapes" onclick="clickDelAllSnapPolygon()" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="ptz">
+        <legend>Pan/Tilt Control</legend>
+        <table cellpadding="0" cellspacing="3" border="0" class="left">
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Top Left" onmousedown="mouseDownPTZControl(5);" onmouseup="mouseUpPTZControl();" />
+                    <input type="button" class="btn" value="Up" onmousedown="mouseDownPTZControl(1);" onmouseup="mouseUpPTZControl();" />
+                    <input type="button" class="btn" value="Top Right" onmousedown="mouseDownPTZControl(7);" onmouseup="mouseUpPTZControl();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Left" onmousedown="mouseDownPTZControl(3);" onmouseup="mouseUpPTZControl();" />
+                    <input type="button" class="btn" value="Auto" onclick="mouseDownPTZControl(9);" />
+                    <input type="button" class="btn" value="Right" onmousedown="mouseDownPTZControl(4);" onmouseup="mouseUpPTZControl();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" class="btn" value="Bottom Left" onmousedown="mouseDownPTZControl(6);" onmouseup="mouseUpPTZControl();" />
+                    <input type="button" class="btn" value="Down" onmousedown="mouseDownPTZControl(2);" onmouseup="mouseUpPTZControl();" />
+                    <input type="button" class="btn" value="Bottom Right" onmousedown="mouseDownPTZControl(8);" onmouseup="mouseUpPTZControl();" />
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="3" border="0" class="left">
+            <tr>
+                <td class="tt">Pan/Tilt Speed</td>
+                <td>
+                    <select id="ptzspeed" class="sel">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4" selected>4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Preset Point Number</td>
+                <td><input id="preset" type="text" class="txt" value="1" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" class="btn" value="Set" onclick="clickSetPreset();" />
+                    <input type="button" class="btn" value="Call" onclick="clickGoPreset();" />
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="3" border="0" class="left">
+            <tr>
+                <td class="tt">
+                    <input type="button" class="btn2" value="Zoom In" onmousedown="PTZZoomIn()" onmouseup="PTZZoomStop()" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Zoom Out" onmousedown="PTZZoomout()" onmouseup="PTZZoomStop()" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">
+                    <input type="button" class="btn2" value="Focus In" onmousedown="PTZFocusIn()" onmouseup="PTZFoucusStop()" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Focus Out" onmousedown="PTZFoucusOut()" onmouseup="PTZFoucusStop()" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">
+                    <input type="button" class="btn2" value="Iris In" onmousedown="PTZIrisIn()" onmouseup="PTZIrisStop()" />
+                </td>
+                <td>
+                    <input type="button" class="btn2" value="Iris Out" onmousedown="PTZIrisOut()" onmouseup="PTZIrisStop()" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="playback">
+        <legend>Playback</legend>
+        <table width="100%" cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td class="tt">Stream Type</td>
+                <td>
+                    <select id="record_streamtype" class="sel">
+                        <option value="1">Main Stream</option>
+                        <option value="2">Sub Stream</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Start Time</td>
+                <td>
+                    <input id="starttime" type="text" class="txt" value="2013-12-10 00:00:00" />(Time Format: YYYY-MM-DD HH:MM:SS)
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">End Time</td>
+                <td>
+                    <input id="endtime" type="text" class="txt" value="2013-12-11 23:59:59" />
+                    <input type="button" class="btn" value="Search" onclick="clickRecordSearch(0);" />
+                    <input type="button" class="btn" value="Stop Download" onclick="clickStopDownload();" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Download Start Time by Time</td>
+                <td>
+                    <input id="downloadstarttime" type="text" class="txt" value="2013-12-10 00:00:00" />(Time Format: YYYY-MM-DD HH:MM:SS)
+                </td>
+            </tr>
+            <tr>
+                <td class="tt">Download End Time by Time</td>
+                <td>
+                    <input id="downloadendtime" type="text" class="txt" value="2013-12-11 23:59:59" />
+                    <input type="button" class="btn" value="Download" onclick="clickStartDownloadRecordByTime();" />(Not Supported by Camera)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="searchdiv" class="searchdiv">
+                        <table id="searchlist" class="searchlist" cellpadding="0" cellspacing="0" border="0"></table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" class="btn2" value="Start Playback" onclick="clickStartPlayback();" />
+                    <input type="button" class="btn2" value="Stop Playback" onclick="clickStopPlayback();" />
+                    <input id="btnReverse" type="button" class="btn" value="Reverse" onclick="clickReversePlayback();" />
+                    <input type="button" class="btn" value="Single Frame" onclick="clickFrame();" />
+                    <input id="transstream" type="checkbox" class="vtop" />&nbsp;Enable Transcoded Stream
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" class="btn" value="Pause" onclick="clickPause();" />
+                    <input type="button" class="btn" value="Resume" onclick="clickResume();" />
+                    <input type="button" class="btn" value="Slow Motion" onclick="clickPlaySlow();" />
+                    <input type="button" class="btn" value="Fast Forward" onclick="clickPlayFast();" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" class="btn" value="Snapshot" onclick="clickCapturePic('playback');" />
+                    <input type="button" class="btn2" value="Start Clip" onclick="clickStartRecord('playback');" />
+                    <input type="button" class="btn2" value="Stop Clip" onclick="clickStopRecord('playback');" />
+                    <input type="button" class="btn2" value="OSD Time" onclick="clickGetOSDTime();" />&nbsp;<input id="osdtime" type="text" class="txt" readonly />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="maintain">
+        <legend>System Maintenance</legend>
+        <table width="100%" cellpadding="0" cellspacing="3" border="0">
+            <tr>
+                <td>
+                    <input type="button" id="checkVersion" class="btn2" value="Check Plugin Version" onclick="clickCheckPluginVersion();" />
+                    <input type="button" class="btn2" style="width: 120px" value="Restore Default Settings (Basic)" onclick="clickRestoreDefault();" />
+                    <input type="button" class="btn2" style="width: 120px" value="Restore Full Default Settings" onclick="clickRestoreFullDefault();" />
+                    <input type="button" class="btn2" value="Restart Device" onclick="restart();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="upgradeFile" type="text" class="txt" />&nbsp;<input type="button" class="btn" value="Browse" onclick="clickOpenFileDlg('upgradeFile', 1);" />&nbsp;<input type="button" class="btn2" value="Upgrade" onclick="clickStartUpgrade();" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+<div class="left">
+    <fieldset class="operate">
+        <legend>Operation Information</legend>
+        <div id="opinfo" class="opinfo"></div>
+    </fieldset>
+    <fieldset class="callback">
+        <legend>Event Callback Information</legend>
+        <div id="cbinfo" class="cbinfo"></div>
+    </fieldset>
+</div>
+</body>
+<script src="../jquery-1.7.1.min.js"></script>
+<script id="videonode" src="../codebase/webVideoCtrl.js"></script>
+<script src="demo.js"></script>
+</html>

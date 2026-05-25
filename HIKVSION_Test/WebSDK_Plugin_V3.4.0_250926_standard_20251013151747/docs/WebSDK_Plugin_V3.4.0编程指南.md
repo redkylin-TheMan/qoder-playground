@@ -1,0 +1,1928 @@
+**WebSDK_Plugin V3.4.0**
+
+**Programming Guide**
+
+Statement
+
+Thank you very much for buying our products. If you have any questions or need, please feel free to contact us.
+
+- We have tried our best to ensure the integrity and accuracy of the manual, but there may be technical inaccuracies, inconsistencies with product functions and operations or printing errors. If you have any questions or disputes, please take our final interpretation as the standard.
+- The product and manual will be updated in real time without further notice.
+- The contents of this manual are only for users' reference and guidance. Please refer to the actual content of the development kit.
+
+Content List
+
+[Statement I](#_Toc195278867)
+
+[Content List II](#_Toc195278868)
+
+[1 Brief introduction 1](#_Toc195278869)
+
+[1.1 Introduction 1](#_Toc195278870)
+
+[1.2 Support Device 1](#_Toc195278871)
+
+[1.3 Runtime Environment 1](#_Toc195278872)
+
+[2 Version update 2](#_Toc195278873)
+
+[3 Error code and description 4](#_Toc195278874)
+
+[3.1 An exception event code 4](#_Toc195278875)
+
+[3.2 Error code 4](#_Toc195278876)
+
+[4 Order of function calls 6](#_Toc195278877)
+
+[5 function declaration 7](#_Toc195278878)
+
+[5.1 Play the plugin initialization 7](#_Toc195278879)
+
+[5.1.1 Play plugin initialization (includes plugin event registration) 7](#_Toc195278880)
+
+[5.1.2 Embed the playback plugin 8](#_Toc195278881)
+
+[5.2 Get device information 8](#_Toc195278882)
+
+[5.2.1 Log in to the device 8](#_Toc195278883)
+
+[5.2.2 Log out of the device 9](#_Toc195278884)
+
+[5.2.3 Get basic information about the device 9](#_Toc195278885)
+
+[5.2.4 Obtain the analog channel 10](#_Toc195278886)
+
+[5.2.5 Get digital channels 10](#_Toc195278887)
+
+[5.2.6 Get zero channels 11](#_Toc195278888)
+
+[5.2.7 Video search 11](#_Toc195278889)
+
+[5.2.8 Get the voice intercom channel 12](#_Toc195278890)
+
+[5.2.9 Get the port 13](#_Toc195278891)
+
+[5.3 Play Control 13](#_Toc195278892)
+
+[5.3.1 Start preview/replay 13](#_Toc195278893)
+
+[5.3.2 Start previewing 14](#_Toc195278894)
+
+[5.3.3 Start playback 14](#_Toc195278895)
+
+[5.3.4 Start reversing 15](#_Toc195278896)
+
+[5.3.5 Stop playing 16](#_Toc195278897)
+
+[5.3.6 Stop all playback 16](#_Toc195278898)
+
+[5.3.7 A single frame 16](#_Toc195278899)
+
+[5.3.8 Pause 17](#_Toc195278900)
+
+[5.3.9 Resume playback 17](#_Toc195278901)
+
+[5.3.10 Slow down the playback 17](#_Toc195278902)
+
+[5.3.11 Speed up playback 17](#_Toc195278903)
+
+[5.3.12 Get the OSD time 18](#_Toc195278904)
+
+[5.3.13 Turn on the sound 18](#_Toc195278905)
+
+[5.3.14 Turn off the sound 18](#_Toc195278906)
+
+[5.3.15 Set the volume 18](#_Toc195278907)
+
+[5.3.16 Screenshot 19](#_Toc195278908)
+
+[5.3.17 Capture the image and return the binary data of the image 19](#_Toc195278909)
+
+[5.3.18 Image segmentation 19](#_Toc195278910)
+
+[5.4 Recording 20](#_Toc195278911)
+
+[5.4.1 Start the video 20](#_Toc195278912)
+
+[5.4.2 Stop the video 20](#_Toc195278913)
+
+[5.5 Video download 20](#_Toc195278914)
+
+[5.5.1 Start downloading 20](#_Toc195278915)
+
+[5.5.2 Start downloading by time 21](#_Toc195278916)
+
+[5.5.3 Obtain the video download status 21](#_Toc195278917)
+
+[5.5.4 Obtain the video download progress 21](#_Toc195278918)
+
+[5.5.5 Stop video downloads 21](#_Toc195278919)
+
+[5.6 Voice intercom 22](#_Toc195278920)
+
+[5.6.1 Start the voice intercom 22](#_Toc195278921)
+
+[5.6.2 Stop the voice intercom 22](#_Toc195278922)
+
+[5.7 CCTV control 22](#_Toc195278923)
+
+[5.7.1 PTZ control 22](#_Toc195278924)
+
+[5.7.2 Set up preset points 22](#_Toc195278925)
+
+[5.7.3 Call the preset point 23](#_Toc195278926)
+
+[5.8 image multiplication 23](#_Toc195278927)
+
+[5.8.1 Turn on the electronic amplifier 23](#_Toc195278928)
+
+[5.8.2 Turn off the electronic amplifier 23](#_Toc195278929)
+
+[5.8.3 Enable 3D zoom 23](#_Toc195278930)
+
+[5.8.4 Close 3D zoom 24](#_Toc195278931)
+
+[5.8.5 Play in full screen 24](#_Toc195278932)
+
+[5.9 Maintenance 24](#_Toc195278933)
+
+[5.9.1 Restore default parameters 24](#_Toc195278934)
+
+[5.9.2 Reboot 24](#_Toc195278935)
+
+[5.9.3 Start upgrading 25](#_Toc195278936)
+
+[5.9.4 Get the upgrade status 25](#_Toc195278937)
+
+[5.9.5 Get the upgrade progress 25](#_Toc195278938)
+
+[5.9.6 Stop Upgrading 25](#_Toc195278939)
+
+[5.10 Plugin information maintenance 26](#_Toc195278940)
+
+[5.10.1 Compare plugin versions 26](#_Toc195278941)
+
+[5.10.2 Get the local configuration parameters of the plug-in 26](#_Toc195278942)
+
+[5.10.3 Set the local configuration parameters for the plug-in 27](#_Toc195278943)
+
+[5.10.4 Get the information of the playback window 27](#_Toc195278944)
+
+[5.11 Window polygon drawing 27](#_Toc195278945)
+
+[5.11.1 Enable/disable drawing 27](#_Toc195278946)
+
+[5.11.2 Set the drawing mode 27](#_Toc195278947)
+
+[5.11.3 Set polygon information 28](#_Toc195278948)
+
+[5.11.4 Get polygon information 28](#_Toc195278949)
+
+[5.11.5 Clear polygon information 28](#_Toc195278950)
+
+[5.12 Additional 29](#_Toc195278951)
+
+[5.12.1 Select a folder or file path 29](#_Toc195278952)
+
+[5.12.2 Get the last error code 29](#_Toc195278953)
+
+[5.12.3 Send HTTP request 29](#_Toc195278954)
+
+[5.12.4 Get additional information 29](#_Toc195278955)
+
+[5.12.5 Reset the size of the plug-in 30](#_Toc195278956)
+
+[5.12.6 Destroy video plug-ins 30](#_Toc195278957)
+
+[5.12.7 Hide the video plugin window 30](#_Toc195278958)
+
+[5.12.8 Displays the video plugin window 30](#_Toc195278959)
+
+# Brief introduction
+
+## Introduction
+
+WebSDK provides user integration in the form of JavaScript interface, and supports preview, playback, pan control and other functions on the web page. WebSDK only supports B/S web development, not C/S development.
+
+## Support Device
+
+WebSDK Supports a variety of devices, including DVR, NVR, DVS, network camera, network dome, etc., which need to support ISAPI protocol.
+
+## Runtime Environment
+
+Operating system: Windows7, Windows8, Windows10, Windows11
+
+Browser:
+
+Chrome57+, Firefox52+,32-bit browser
+
+Chrome57+, Firefox52+,64-bit browser
+
+# Version update
+
+**V 3.4.0**
+
+1.  Known issues fixed.
+
+**V 3.3.3**
+
+1.  Supports video window to follow the scroll of the web page.
+2.  Update the plug-in certificate.
+
+**V 3.3.0**
+
+1.  Improve the support for non-IE browsers and no longer support IE browsers.
+2.  Improve the preview and playback performance, where the resolution and number of channels are limited as follows: The maximum resolution is 2400W (if multiple preview and playback channels are supported, the sum of the resolutions shall not exceed 2400W), and the maximum number of channels for simultaneous preview and playback is 16.
+3.  Supports voice intercom, only one intercom can be opened at the same time on the same computer.
+
+**V 1.1.1**
+
+1.  Add support for plug-in free browsers.
+2.  Add an interface to judge the support for browser plug-ins (I_SupportNoPlugin).
+3.  Add asynchronous interface: Open the selection box (I2_OpenFileDlg), add the interface for obtaining binary data of image resources without plug-in (I2_CapturePicData), add the interface for downloading by time (I_StartDownloadRecordByTime), add the interface for setting drawing information (I2_SetSnapPolygonInfo), and add the interface for asynchronous upgrade (I2_StartUpgrade).
+4.  Parameter import and export add sensitive information encryption.
+
+**V 1.1.0**
+
+1.  Add a polygon interface (I_SetSnapDrawMode, I_SetSnapPolygonInfo, I_GetSnapPolygonInfo, I_ClearSnapInfo) to the video window.
+2.  Add the device capture interface (I_DeviceCapturePic).
+3.  The plug-in initialization interface (I_InitPlugin) adds optional parameters (iPackageType, cbRemoteConfig, cbDoubleClickWnd, cbInitPluginComplete), where cbInitPluginComplete must be defined when used.
+4.  Add the interface (I_SetPackageType), set the recording/editing, download file packaging format.
+5.  Supports search, playback and download of subcode stream video files.
+6.  Support the development package to be loaded and used by requirejs and seajs.
+7.  The IP Server/HiDDNS parsing interface (I_GetIPInfoByMode) is supported only by the 32-bit development kit with remote configuration library.
+8.  Removal of residual defects:
+
+- Fix IE11 browser multi-tab page close web plug-in crash problem
+- Fixed the problem of failure to obtain 256 channel information in synchronous request
+- Fix playback failure on some DS-8632N-I8 devices
+
+**V 1.0.9**
+
+1.  Check whether the plug-in has installed the interface (I_CheckPluginInstall) and add return value-2.
+2.  The plug-in initialization interface (I_InitPlugin) is added with the attribute bWndFull.
+3.  Add HTTP request interface (I_SendHTTPRequest).
+
+**V 1.0.5**
+
+1.  Change the remote configuration library to non-modal call mode (I_RemoteConfig) to avoid the Firefox browser opening the remote configuration library and getting stuck.
+2.  The remote configuration interface (I_RemoteConfig) is extended to add language selection parameters, which currently support Chinese and English.
+3.  Add support for summary authentication.
+4.  Fix IE11 bug that prevents 3D zooming
+
+**V 1.0.4**
+
+1.  The operation interface of the cloud platform (I_PTZControl) is redesigned, and the focus, zoom and aperture functions are added to the interface. Parameters are added to indicate whether the current operation is start or stop.
+2.  Increase the transcoding stream and support transcoding playback.
+3.  When the HTTP status is changed to 404, a BUG may occur in which the interface has no return value.
+4.  Fixed some BUGS that prevented preview of older PSIA devices
+
+**V 1.0.3**
+
+1.  Add private protocol streaming (shttp), including preview, playback, and rewind. When the local configuration protocol is TCP, private protocol streaming is used by default.
+
+**V 1.0.2**
+
+1.  Fixed a BUG that prevented some devices from obtaining the RTSP port
+
+**V 1.0.1**
+
+- Modify the HTTP interaction process to solve some BUGS that cannot be logged in by old version devices
+- Fixes the BUG that prevents NVR from calling preset points
+
+**V 1.0.0**
+
+- This version of the development kit supports synchronous/asynchronous, cross-domain CGI commands (PSIA/ISAPI), but supports some basic commands, device basic information, channel acquisition, pan-tilt control, etc.
+- The playback mode is currently only supported by rtsp over tcp and rtsp over udp
+
+# Error code and description
+
+## An exception event code
+
+The exception event callback is handled in the callback function passed by the user. The first parameter is the event code (playback exception, playback stop, and disk space insufficient), and the second parameter is the window number in which the event occurred.
+
+**Event name**
+
+**code**
+
+**explain**
+
+PLUGIN_EVENTTYPE_PLAYABNORMAL
+
+3002
+
+Playback is abnormal
+
+PLUGIN_EVENTTYPE_PLAYBACKSTOP
+
+3003
+
+Playback stopped
+
+PLUGIN_EVENTTYPE_NOFREESPACE
+
+3004
+
+Insufficient disk space (video)
+
+PLUGIN_EVENTTYPE_AUDIOTALKFAIL
+
+5000
+
+Voice intercom failure
+
+## Error code
+
+The error code is obtained by calling the I_GetLastError interface and belongs to the lowest level error code. There is no error code for the upper-layer logic error.
+
+**Macro definition of error code**
+
+**Error code**
+
+**Description**
+
+PLUGIN_ERROR_NOERROR
+
+0
+
+No Error
+
+PLUGIN_ERROR_LOAD_RTSP_FAILED
+
+1
+
+Failed to load the rtsp library
+
+PLUGIN_ERROR_LOAD_PLAYCTRL_FAILED
+
+2
+
+Failed to load the playback library
+
+PLUGIN_ERROR_LOAD_SYSTRANSFORM_FAILED
+
+3
+
+Failed to load the trans-package library
+
+PLUGIN_ERROR_LOAD_HTTPCLIENT_FAILED
+
+4
+
+Failed to load the http library
+
+PLUGIN_ERROR_PARAMETER_ERROR
+
+5
+
+parameter error
+
+PLUGIN_ERROR_ORDER_ERROR
+
+6
+
+The call sequence is incorrect
+
+PLUGIN_ERROR_ALLOC_RESOURCE_FAILED
+
+7
+
+Failed to allocate resources
+
+PLUGIN_ERROR_NOT_INITLIB
+
+8
+
+No initialization
+
+PLUGIN_ERROR_OPERTION_NOSUPPORT
+
+9
+
+Operation is not supported
+
+PLUGIN_ERROR_OPENFILE_ERROR
+
+10
+
+Failed to open the file
+
+PLUGIN_ERROR_WRITEFILE_ERROR
+
+11
+
+Failed to write file
+
+PLUGIN_ERROR_READFILE_ERROR
+
+12
+
+Failure to read file
+
+PLUGIN_ERROR_INIT_HPR_FAILED
+
+13
+
+Initialization of hpr library failed
+
+PLUGIN_ERROR_AUDIO_MONOPOLIZED
+
+14
+
+The sound card is exclusive
+
+PLUGIN_ERROR_CREATE_SOCKET_ERROR
+
+15
+
+Failed to create socket
+
+PLUGIN_ERROR_NETWORK_CONNECT_FAILED
+
+16
+
+connection fail
+
+PLUGIN_ERROR_NETWORK_SEND_ERROR
+
+17
+
+The message was sent unsuccessfully
+
+PLUGIN_ERROR_NETWORK_RECV_ERROR
+
+18
+
+take defeat
+
+PLUGIN_ERROR_NETWORK_SEND_TIMEOUT
+
+19
+
+Send timeout
+
+PLUGIN_ERROR_NETWORK_RECV_TIMEOUT
+
+20
+
+receive timeout
+
+PLUGIN_ERROR_NETWORK_RESOLVE_FAILED
+
+21
+
+Domain name resolution error
+
+PLUGIN_ERROR_XML_PARSE_ERROR
+
+22
+
+XML parsing error
+
+PLUGIN_ERROR_XML_NODE_ERROR
+
+23
+
+XML node error
+
+PLUGIN_ERROR_NO_EXCEL_DRIVER_ERROR
+
+24
+
+The Excel driver is not installed
+
+PLUGIN_ERROR_PARSE_URL_FAILED
+
+25
+
+The URL was not parsed
+
+PLUGIN_ERROR_LOADRTSPSDKPROC_ERROR
+
+26
+
+No rtsp interface address found
+
+PLUGIN_ERROR_LOADPLAYERSDKPROC_ERROR
+
+27
+
+No playlist library interface address is found
+
+PLUGIN_ERROR_LOADSYSTRANSFORMPROC_ERROR
+
+28
+
+Unable to find the interface address of the transpackage library
+
+PLUGIN_ERROR_LOADHTTPSDKPROC_ERROR
+
+29
+
+Can't find the interface address of the http library
+
+PLUGIN_ERROR_START_WAVEIN_FAILED
+
+30
+
+The audio capture failed
+
+PLUGIN_ERROR_START_WAVEOUT_FAILED
+
+31
+
+Failed to start audio playback
+
+PLUGIN_ERROR_INIT_G722_CODEC_FAILED
+
+32
+
+Failed to initialize G722 codec
+
+PLUGIN_ERROR_NOT_ENOUGH_DISK_FREESPACE
+
+33
+
+Disk space is insufficient
+
+PLUGIN_ERROR_FILE_ALREADY_EXIST
+
+34
+
+The document already exists
+
+# Order of function calls
+
+![图片1](data:image/png;base64,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kcB1vadqa2v9Cg5+V1CCquoq8vLysEFisqkrpGxwbVR4E93gBnb+KjB+d1JwUzvvtaqqagry8wGDa60fmAwGl1rXJZHIC2+EV+u6kTYZqqqqyMsvSLVHZBt27LHHNrv33nuPWbFihUJMA2ITYtq3b3/6ySef3DIc+CfSiAQBpKioGO/zIE1GFSR1511Ir7x48/rjVJzUvWaC0GEtZP67MkBhYWFqmZH1pH0fWUewvDA8+SWUaFu88TCOV/FJzY0xFscN2u6tNRhIHCygSZMmoAAjjcTo0aPzHnjggROAq3Ldlq1ZbELM2rVrDz3ooINSn+gr0ghFx7Kkulkir2edK/o5RdHl2Mj39a+vzsu2wR/rtClt2vQer/T1ZASvIHClr0v3iZHGYciQISQSiXZACbqLb73iEmJ279GjR17Pnj1z3Q6R2KnvpL/JYSAzgGxUWzbtNZHG6LjjjkveddddRwG357otW6u4hJj+gwcPzlMVRkREGouhQ4cWdOnSZc/58+crxNQjLiGmpHfv3kUqI4uISGNRUlKC67p9ct2OrVksQkynTp16duzYUX3hIiLSaHTs2JF169a1z3U7tmaxCDGO43RTiBERkcakU6dOrFmzRvcVaUAsQkx1dXX30tJS3n777Vw3RUREZItZt25dE6AQWJvrtmyNYlHaKC4uLk8mk/lkuZpTRERkW1VdXd101apVvYDSXLdFNt1svGvlRUREGhOd/xqga5ZFREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJYUYkRERCSWFGJEREQklhRiREREJJbyct0A2Sgdgf65boSIyGa0HJiS60ZIPCjExEi79u3HtWzZanBxcXFNrtsiIrI5fP75lKLamppuwIJct0W2fgoxMWJINP3jLXcUDR+xd66bIiKyWWy/XffVSxYvLsx1OyQeNCZGREREYkkhRkRERGJJIUZERERiSSFGREREYkkhRkRERGJJIUZERERiSSFGREREYkkhRkRERGJJIUZkI1n//wbCh/e/+qbN/rINXljPvJvCa1M9C67H/7I+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kkKMiIiIxJJCjIiIiMSSQozItsT6X2xumyEisiUoxIhsQ6wBsBiT65aIiGx+CjEiMWciX71HKsFECzIW671SX8BpoHpjTHT5qYlNlkfaAk32aaLTmvWsW0SkPvrYAZEYMwawXjixQOob70VjvR/DcGPAYLEmmhoc77nw/3VTjtc95fqv+BHEWH+pFhvpv3KMgw2W1EBCsf66ve+CVoqIbDhVYmKlNtcNkK2EAYyxfpAIWLB+fDAWrAvGiyb4VRhrSQscHpewsmKzB4n07imLEwk7dZZnXS9AEay7LhvkllTianiDpdGo+/4UqZ9CjEjcWJv6lxsWMGydSdK/CUJPpLvJph42CBRB6SbLKr0pLBZwg5ls3QqKV7RxvUDlRqerKwhYyjAisikUYkRiprq6mkULFrBo4UIWLVzIyhUrqT8FGL795mvef++/uMb4nT+prqWosDvKwPfz5/HaKy+lv5qWQwzffPM1773336y1lrDQQmqh0776irffeistz6QKMjboG9uAPSAi4lGIEYkTa5k+41t+durx/OXWm/nLrTczccL41DBb4z/84GCBRQsXMnvWjFTVI/xn701rjElNbb0gsXLlCr784vP0VRvjz+uln2C5qc6qYCkmTEQ2MrK3qLg5rdu0yRjZ6y2r1q/cqCQjIhtDA3tF4sQPHCP3HcXFl14ZPl1aOocfvv+eb7+ZRs+evWnatCmfffoxBx1yOACrV63iiccfBQtHHzOWJk0K+PCD95n82ads138A++43CozhzfGvMXvmDLp17xFZJ5TNKWXRooV8983XABw15pjw5TmzZlFZWcHAQTvw7TfTSCbz6dW7N2+89gpzy0rZcchOJPLyaN26DdZaykpLWbhgAd98PZVmzYoYPeZonEQCawzGVSVGRDacKjEiMTR50qfcfcdt3H3HbcyY/h1lc2bz4P13s8uuw7jtlt8zdeqX9OzVmwfuuwuAtya8weAddgTggfvuYtKkz3jrzTc48qijmfTZJ3z44Qd8+MH7TBj/OiP2HsnkSZ9G1mYoLZ3Nn/94IzvsOARjDPfdc2f46uzZM/nqyy8A+HraVGbNnM7bb03gg/f/y4i99+X5555l8mefUDpnNl98PpnS2bO5587bGLrzLkye9CkfffB+lsuzRUTWT5UYkRjq3r2EffcfBUC79u354fv57LXPvgwctAM7DB7C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)
+
+# function declaration
+
+## Play the plugin initialization
+
+### Play plugin initialization (includes plugin event registration)
+
+function: I_InitPlugin(options)
+
+function: Initialize the various properties of the plug-in
+
+Parameter: options Optional parameter object:
+
+iWndowType Split screen type: 1-1\*1,2-2\*2,3-3\*3,4-4\*4 The default value is 1, single picture
+
+bWndFull Double click full screen in one window, default support, true (support), false (do not support). (The maximum display value is 4\*4 division, if the number exceeds 4, return 16 division)
+
+bDebugMode JS debugging mode, console prints debugging information, true (on), false (off)
+
+cbSelWnd The event callback function selected in the window contains only one string parameter with the value XML
+
+cbEvent The plug-in event callback function has three parameters. The first parameter is the event type, and the second parameter is the window number (this callback is not supported without plug-ins)
+
+cbDoubleClickWnd Double-click the callback function in the window, there are two parameters, the first parameter is the window number, the second parameter is whether to full screen (this callback is not supported without plug-ins)
+
+cbInitPluginComplete The callback for the completion of the plug-in initialization must be defined
+
+iTopHeight The maximum height of the plugin window relative to the visible area of the browser, preventing the plugin window from covering the top elements of the page when scrolling. The default is 0
+
+Return value: Promise object
+
+explain: cbSelWnd is the callback function for the window selection event. The user can pass in the function, and the development kit will automatically call this function after selecting the window. The parameter is an XML in the following format:
+
+<?xml version="1.0"?>
+
+<RealPlayInfo>
+
+<SelectWnd>0</SelectWnd> // The window number of the event to trigger, starting from 0
+
+</RealPlayInfo>
+
+cbEvent is the exception event callback function of the plug-in. It has two parameters. The first parameter is the event type (the specific value is explained in the exception event callback), and the second parameter is the window number of the event that triggers the event.
+
+### Embed the playback plugin
+
+function: I_InsertOBJECTPlugin(szContainerID)
+
+function: Insert the playback plugin into the HTML DOM element
+
+parameter: szContainerID The ID of the plugin container, an HTML DOM element
+
+Return value: Promise object
+
+## Get device information
+
+### Log in to the device
+
+function: I_Login(szIP, iPrototocol, iPort, szUserName, szPassword, options)
+
+function: Log in to the device
+
+Parameter: szIP The IP address of the device
+
+iPrototocol HTTP protocol, 1 means HTTP protocol and 2 means HTTPS protocol
+
+iPort Enter the http/https port number of the device, and select different ports for incoming traffic according to the iPrototocol
+
+szUserName Enter the user name
+
+szPassword User password
+
+options Optional parameter object:
+
+success The callback function is successfully called with a parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: Call this function to log in the device. If the login is successful, that is, http/https protocol is selected, the selected protocol and device will be used for interaction in the future. If the interaction is successful, the user success callback function will be called; if the interaction fails, the failure callback function will be called.
+
+instance:
+
+WebVideoCtrl.I_Login(szIP, 1, szPort, szUsername, szPassword, {
+
+success: function (xmlDoc) {// Successful callback function
+
+        showOPInfo (szIP + "Login successful!");
+
+        $("#ip").prepend("<option value='" + szIP + "'>" + szIP + "</option>");
+
+        setTimeout(function () {
+
+           $("#ip").val(szIP);
+
+           getChannelInfo();
+
+        }, 10);
+
+    },
+
+error: function() {// The failed callback function
+
+showOPInfo (szIP + "Login failed!");
+
+    }
+
+});
+
+### Log out of the device
+
+function: I_Logout(szDeviceIdentify)
+
+function: Log out of the device
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+Return value: Promise object
+
+### Get basic information about the device
+
+function: I_GetDeviceInfo(szDeviceIdentify, options)
+
+function: Get basic information about the device
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+success The callback function is successfully called with a parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will successfully call the callback function. The first parameter of the callback function is the XML of the device information. If the call fails, the failure callback function will be called.
+
+The XML format is as follows:
+
+<DeviceInfo>
+
+<deviceName></deviceName> // Device name
+
+<deviceID></deviceID> // equipment ID
+
+<deviceType></deviceType> // Device type (may be empty)
+
+<model></model> // equipment number
+
+<serialNumber></serialNumber> // Device serial number
+
+<macAddress></macAddress> // Device MAC address
+
+<firmwareVersion></firmwareVersion> // Device master control version
+
+<firmwareReleasedDate></firmwareReleasedDate> // Main control version code time
+
+<encoderVersion></encoderVersion> // Device code version
+
+<encoderReleasedDate></encoderReleasedDate> // Device code version time
+
+</DeviceInfo>
+
+### Obtain the analog channel
+
+function: I_GetAnalogChannelInfo(szDeviceIdentify, options)
+
+function: Obtain analog channel information
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+success The callback function is successfully called with one parameter indicating the XML content to return.
+
+error There is a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will successfully call the callback function. The first parameter of the callback function is the XML of the channel information. If the call fails, the callback function will be called.
+
+The XML format is as follows:
+
+<VideoInputChannelList>
+
+<VideoInputChannel>
+
+<id></id> // channel ID
+
+<inputPort></inputPort> // number of channel
+
+<videoInputEnabled></videoInputEnabled> // Enables or disables
+
+<name></name> // Channel name
+
+<videoFormat></videoFormat> // Channel mode
+
+</VideoInputChannel>
+
+</VideoInputChannelList>
+
+### Get digital channels
+
+function: I_GetDigitalChannelInfo(szDeviceIdentify, options)
+
+function: Obtain digital channel information
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+success The callback function is successfully called with a parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will successfully call the callback function, and the first parameter of the callback function is the XML of channel information. If the call fails, the callback function will be called.
+
+The XML format is as follows:
+
+<InputProxyChannelStatusList>
+
+<InputProxyChannelStatus>
+
+<id></id> // The ID of the channel
+
+<sourceInputPortDescriptor>
+
+<proxyProtocol></proxyProtocol> // Access protocol
+
+<addressingFormatType></addressingFormatType> //IP address type
+
+<ipAddress></ipAddress> //IP address
+
+<managePortNo></managePortNo> // Manage the port number
+
+<srcInputPort></srcInputPort> // IP channel number
+
+<userName></userName> // Access user name
+
+<streamType></streamType> // Code stream type
+
+<online></online> // Online (true/false)
+
+</sourceInputPortDescriptor>
+
+</InputProxyChannelStatus>
+
+</InputProxyChannelStatusList>
+
+### Get zero channels
+
+function: I_GetZeroChannelInfo(szDeviceIdentify, options)
+
+function: Obtain zero channel information
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+success The callback function is successfully called with a parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will call the callback function successfully. The first parameter of the callback function is the XML of channel information. If the call fails, the failure callback function will be called.
+
+The XML format is as follows:
+
+<ZeroVideoChannelList>
+
+<ZeroVideoChannel>
+
+<id>1</id> // channel ID
+
+<enabled>true</enabled> // Enables or disables
+
+<inputPort>1</inputPort> // Channel ID
+
+</ZeroVideoChannel>
+
+</ZeroVideoChannelList>
+
+### Video search
+
+function: I_RecordSearch(szDeviceIdentify, iChannelID, szStartTime, szEndTime, options)
+
+function: Video search
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+iChannelID channel ID
+
+szStartTime Start time: such as 2013-12-23 00:00:00
+
+szEndTime End time: such as 2013-12-23 23:59:59
+
+options Optional parameter object:
+
+iSearchPos The location of the search video (default is 0), where 0 indicates the first to 40 results returned, 40 indicates the 40th to 80th results returned, and so on
+
+success The callback function is successfully called with a parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+iStreamType Stream type 1-main stream, 2-sub-stream, default main stream
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will successfully call the callback function. The first parameter of the callback function is the XML of the video recording information. If the call fails, the failure callback function will be called.
+
+pay attention to: The video search results return up to 40 results at a time. If the number of results exceeds 40, the user needs to call the interface multiple times and set a search location.
+
+The XML format is as follows:
+
+<CMSearchResult>
+
+<responseStatus>true</responseStatus>
+
+<responseStatusStrg>MORE</responseStatusStrg>
+
+// Use this flag to determine whether to continue searching. OK indicates that the search is complete
+
+<numOfMatches>40</numOfMatches> // The number of video clips returned by this search
+
+<matchList>
+
+<searchMatchItem>
+
+<trackID>101</trackID> // The ID of the video
+
+<startTime>2013-12-23T03:06:58Z</startTime> // The start time of the video
+
+<endTime>2013-12-23T03:16:57Z</endTime> // End time of recording
+
+<playbackURI>rtsp://172.9.4.222/Streaming/tracks/101/?starttime=20131223T030658Z&amp;endtime=20131223T031657Z&amp;name=02000000076000101&amp;size=115665012</playbackURI>/\*This node contains information such as the start time, end time, name, and size of the video. When downloading the video, this value needs to be passed\*/
+
+<metadataDescriptor>motion</metadataDescriptor>/\*Video type: timing-timed video, motion-motion detection video, motionOrAlarm-motion detection or alarm, motionAndAlarm-alarm and motion detection, manual-manual video, smart-intelligent\*/
+
+</searchMatchItem>
+
+</matchList>
+
+</CMSearchResult>
+
+### Get the voice intercom channel
+
+function: I_GetAudioInfo(szDeviceIdentify, options)
+
+function: Obtain voice intercom channel information
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+success The callback function is successfully called with one parameter indicating the XML content returned.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: If the interaction is successful, the call user will successfully call the callback function. The first parameter of the callback function is the XML of the voice intercom channel information. If the call fails, the callback function will be called.
+
+The XML format is as follows:
+
+<TwoWayAudioChannelList>
+
+<TwoWayAudioChannel>
+
+<id></id> // channel ID
+
+<enabled></enabled> // Whether to enable voice intercom
+
+<audioCompressionType></audioCompressionType> // Audio coding
+
+</TwoWayAudioChannel>
+
+</TwoWayAudioChannelList>
+
+### Get the port
+
+function: I_GetDevicePort (szDeviceIdentify)
+
+function: Get the port
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+Return value: Promise object
+
+explain: The interaction is successful. The first parameter of the Promise's resolve callback function is a port object, which is formatted as follows:
+
+{
+
+iDevicePort: 8000, // Service port
+
+iHttpPort: 80, //http port
+
+iRtspPort: 554 //RTSP port
+
+}
+
+## Play Control
+
+### Start preview/replay
+
+function: I_StartPlay (szDeviceIdentify, options)
+
+function: Start preview/replay
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+iWndIndex Play window, if not passed, the current selected window is used by default (window 0 is selected by default)
+
+szUrl Preview or replay url, format: rtsp://10.19.166.137:554/dac/realplay/8E93887C-0916-40CD-A0B6-FF0057FAE2D21/MAIN/TCP?streamform=rtp
+
+startTime The replay start time is required only when the replay starts. Format: 20210413T191007Z
+
+szEndTime The playback end time is required only when the playback is started. Format: 20210413T191007Z
+
+Return value: Promise object
+
+explain: This function can only be called after the login device is completed.
+
+### Start previewing
+
+function: I_StartRealPlay(szDeviceIdentify, options)
+
+function: Start previewing
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+iWndIndex Play window, if not passed, the current selected window is used by default (window 0 is selected by default)
+
+iStreamType Stream type 1-main stream, 2-sub-stream. The main stream is used by default for preview
+
+iChannelID The broadcast channel number, default channel 1
+
+bZeroChannel Whether to play zero channel, default is false
+
+iPort The RTSP port number can be selected to transmit. If not, the development kit will automatically determine the RTSP port of the device
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+explain: This function can only be called after the login device is completed.
+
+### Start playback
+
+function: I_StartPlayback(szDeviceIdentify, options)
+
+function: Start playback
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+iWndIndex Play window, if not passed, the current selected window is used by default (window 0 is selected by default)
+
+szStartTime The start time is set to 00:00:00 on the same day by default. The format is as follows: 2013-12-23 00:00:00
+
+szEndTime End time, by default, is 23:59:59 on the day, in the format of 2013-12-23 23:59:59
+
+iChannelID The broadcast channel number, default channel 1
+
+iPort The RTSP port number can be selected to transmit. If not, the
+
+development kit will automatically determine the RTSP port of the device. If this parameter is passed, the transcoding playback will be performed according to the encoding parameters in this object (transcode playback requires device support, if not supported, do not pass this parameter).
+
+iStreamType Stream type 1-main stream, 2-sub-stream, default main stream
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+explain: This interface is a time-based playback interface. The development kit currently only supports time-based playback, not file-based playback. However, users can search for the video and then play back according to the start and end times of the video. The time must be entered in strict accordance with the format shown in the instructions.
+
+oTransCodeParam is a json object in the following format:
+
+{
+
+TransFrameRate: "16",
+
+TransResolution: "2",
+
+TransBitrate: "23"
+
+}
+
+**TransFrameRate represents the frame rate**
+
+Range of values: 0-all, 5-1, 6-2, 7-4, 8-6, 9-8, 10-10,11-12,12-16,13-20,14-15,15-18,16-22,255-automatic (consistent with source)
+
+**TransResolution Represents resolution**
+
+Value range: 1-CIF (352\*288/352\*240),2-QCIF (176\*144/176\*120),3-4CIF (704\*576/704\*480) or D1 (720\*576/720\*486),255-Auto (use current bitstream resolution)
+
+**TransBitrate represents the bit rate**
+
+Range: 2-32K,3-48k,4-64K,5-80K,6-96K,7-128K,8-160k,9-192K,10-224K,11-256K,12-320K,13-384K,14-448K,15-512K,16-640K,17-768K,18-896K,19-1024K,20-1280K,21-1536K,22-1792K,23-2048K,24-3072K,25-4096K,26-8192K,255-automatic (consistent with source)
+
+### Start reversing
+
+function: I_ReversePlayback(szDeviceIdentify, options)
+
+function: Start reversing
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object:
+
+iWndIndex Play window, if not passed, the current selected window is used by default (window 0 is selected by default)
+
+szStartTime The start time is set to 00:00:00 on the same day by default. The format is as follows: 2013-12-23 00:00:00
+
+szEndTime End time, by default, is 23:59:59 on the day. The format is 2013-12-23 23:59:59
+
+iChannelID The broadcast channel number, default channel 1
+
+iPort The RTSP port number can be selected to transmit. If not, the development kit will automatically determine the RTSP port of the device
+
+iStreamType Stream type 1-main stream, 2-sub-stream, default main stream
+
+Return value: Promise object
+
+explain: Reverse playback starts from the end time passed in the interface. The reverse playback function is not supported by many devices for the time being. If you call the reverse playback interface, it will return failure.
+
+### Stop playing
+
+function: I_Stop(options)
+
+function: Stop playing (this function is used to stop preview and stop playback)
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback window can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Stop all playback
+
+function: I_StopAllPlay ()
+
+function: Stop all playback (preview or replay)
+
+Parameters: None
+
+Return value: Promise object
+
+### A single frame
+
+function: I_Frame(options)
+
+function: One frame is played at a time, one frame of data is played each time it is called. It can be called when playing back and rewinding
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Pause
+
+function: I_Pause(options)
+
+function: It can be called when the play, replay and rewind are suspended
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback window can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Resume playback
+
+function: I_Resume(options)
+
+function: Resume playback, which restores the playback status from single frame/pause to normal playback status
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Slow down the playback
+
+function: I_PlaySlow(options)
+
+function: Slow down the playback, each call, the playback speed is reduced by one level, the plug-in supports up to 1/16 times to 16 times, the device itself may also have restrictions
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Speed up playback
+
+function: I_PlayFast(options)
+
+function: Accelerate playback, each call increases the playback speed by one level, up to 1/16 times to 16 times,
+
+and the device itself may have limitations.
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Get the OSD time
+
+function: I_GetOSDTime(options)
+
+function: The OSD time of the current stream being played can be used to create playback progress
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success The callback function is successfully called with one parameter indicating the OSD time.
+
+error Fail the callback function
+
+Return value: Promise object
+
+explain: The interaction is successful. The first parameter of the resolve callback function of Promise is OSD time, which is in the format of 2023-03-30 12:10:15
+
+### Turn on the sound
+
+function: I_OpenSound(iWndIndex)
+
+function: Turn on the sound
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected
+
+window is operated
+
+Return value: Promise object
+
+### Turn off the sound
+
+function: I_CloseSound(iWndIndex)
+
+function: Turn off the sound
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+### Set the volume
+
+function: I_SetVolume(iVolume, iWndIndex)
+
+function: Set the volume, volume range: 0-100
+
+Parameter: iVolume Volume
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+### Screenshot
+
+function: I_CapturePic(szPicName, options)
+
+function: Capture preview/playback images and save them to the local PC. The path is saved in the local parameter
+
+Parameter: szPicName Image file name
+
+options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+Note: The image format of the captured image is related to the file name passed in the interface call: if the file
+
+name has.bmp suffix, the bmp image will be captured; if not, it will be jpg. The image saving path is obtained
+
+through I_GetLocalCfg().
+
+### Capture the image and return the binary data of the image
+
+function: I_CapturePicData(options)
+
+function: No plug-in to obtain image resource binary data,
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+Note: The interaction is successful, and the first parameter of the resolve callback function of Promise is the binary
+
+data of the captured image.
+
+### Image segmentation
+
+function: I_ChangeWndNum(iWndType)
+
+function: Modify the image segmentation type
+
+Parameter: iWndType Image segmentation type: 1-1\*1,2-2\*2,3-3\*3,4-4\*4 (the maximum display value is 4\*4
+
+segmentation, if the number exceeds 4, return 16 segmentation)
+
+Return value: Promise object
+
+## Recording
+
+### Start the video
+
+function: I_StartRecord(szFileName, options)
+
+function: Preview/playback the video, save the video to the PC, and the path is in the local parameter configuration
+
+Parameter: szFileName Name of video file
+
+options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+### Stop the video
+
+function: I_StopRecord(options)
+
+function: Stop the video
+
+Parameter: options Optional parameter object:
+
+iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+success Successful callback function
+
+error Fail the callback function
+
+Return value: Promise object
+
+## Video download
+
+### Start downloading
+
+function: I_StartDownloadRecord(szDeviceIdentify, szPlaybackURI, szFileName, options)
+
+function: By calling this interface, you can download the video stored in the device
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szPlaybackURI Video URL, which can be obtained from video search
+
+szFileName To download the video, name the video
+
+options Optional parameter object:
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the Promise's resolve callback function is a download ID
+
+greater than or equal to 0.
+
+### Start downloading by time
+
+Function: I_StartDownloadRecordByTime (szDeviceIdentify, szPlaybackURI, szFileName, szStartTime, szEndTime, options)
+
+function: By calling this interface, you can download the video stored in the device, which requires the support of device capabilities
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szPlaybackURI Video URL, which is available in video search
+
+szFileName To download the video, name the video
+
+szStartTime Start time
+
+szEndTime End time
+
+options Optional parameter object:
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the Promise's resolve callback function is a download ID
+
+greater than or equal to 0.
+
+### Obtain the video download status
+
+function: I_GetDownloadStatus(iDownloadID)
+
+function: Get the download status to determine whether the download is in progress
+
+Parameter: iDownloadID Download the ID and start downloading the value returned by the interface
+
+Return value: Promise object
+
+Note: The interaction is successful, and the first parameter of the Promise's resolve callback function is 0.
+
+### Obtain the video download progress
+
+function: I_GetDownloadProgress(iDownloadID)
+
+function: Observe the progress of video recording and downloading
+
+Parameter: iDownloadID Download the ID and start downloading the value returned by the interface
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the Promise's resolve callback function is a download
+
+progress greater than or equal to 0.
+
+### Stop video downloads
+
+function: I_StopDownloadRecord(iDownloadID)
+
+function: Stop video downloads
+
+Parameter: iDownloadID Download the ID and start downloading the value returned by the interface
+
+Return value: Promise object
+
+## Voice intercom
+
+### Start the voice intercom
+
+function: I_StartVoiceTalk(szDeviceIdentify, iAudioChannel)
+
+function: Start voice intercom and support audio coding formats: AAC, AACLD, ADPCM, G711(A/U), G722_1, G726, MP2, MP3, Opus. Note: After changing the audio coding format, you need to re-deploy the device to obtain the device information.
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+iAudioChannel Voice intercom channel
+
+Return value: Promise object
+
+### Stop the voice intercom
+
+function: I_StopVoiceTalk()
+
+function: Stop the voice intercom
+
+Parameters: None
+
+Return value: Promise object
+
+## CCTV control
+
+### PTZ control
+
+function: I_PTZControl(iPTZIndex, bStop, options)
+
+function: Pan-tilt direction control
+
+Parameter: iPTZIndex Operation type (1-up, 2-down, 3-left, 4-right, 5-upper left, 6-lower left, 7-upper right, 8-lower right, 9-spin, 10-focus +, 11-focus-, 12-F focus +, 13-focus-, 14-aperture +, 15-aperture-)
+
+bStop Whether to stop the iPTZIndex specified operation, true|false
+
+options Optional parameter object
+
+iWndIndex Window number, which is the currently selected window by default
+
+iPTZSpeed The speed of the cloud platform is 4 by default
+
+Return value: Promise object
+
+### Set up preset points
+
+function: I_SetPreset(iPresetID, options)
+
+function: Set up preset points
+
+Parameter: iPresetID Predefined point ID
+
+options Optional parameter object
+
+iWndIndex Window number, which is the currently selected window by default
+
+Return value: Promise object
+
+### Call the preset point
+
+function: I_GoPreset(iPresetID, options)
+
+function: Call the preset point
+
+Parameter: iPresetID Predefined point ID
+
+options Optional parameter object
+
+iWndIndex Window number, which is the currently selected window by default
+
+Return value: Promise object
+
+## image multiplication
+
+### Turn on the electronic amplifier
+
+function: I_EnableEZoom(iWndIndex)
+
+function: Turn on the electronic amplifier
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected
+
+window is operated
+
+Return value: Promise object
+
+### Turn off the electronic amplifier
+
+function: I_DisableEZoom(iWndIndex)
+
+function: Turn off the electronic amplification
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+### Enable 3D zoom
+
+function: I_Enable3DZoom(iWndIndex)
+
+function: Enable 3D zoom
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+### Close 3D zoom
+
+function: I_Disable3DZoom(iWndIndex)
+
+function: Close 3D zoom
+
+Parameter: iWndIndex The window number of the playback can be omitted, indicating that the current selected window is operated
+
+Return value: Promise object
+
+### Play in full screen
+
+function: I_FullScreen(bFull)
+
+function: Play in full screen
+
+Parameter: bFull Whether to be full screen: true-full screen false-exit full screen
+
+Return value: Promise object
+
+## Maintenance
+
+### Restore default parameters
+
+function: I_RestoreDefault(szDeviceIdentify, szMode,options)
+
+function: Restore the device's default parameters
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szMode Recovery type: basic-simple recovery full-complete recovery
+
+options Optional parameter object
+
+success The callback function is successfully called with a parameter indicating the XML content returned.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+explain: After the default parameters are restored, the device needs to be restarted. A full restoration of the default parameters will restore all user information to the default values of the device.
+
+### Reboot
+
+function: I_Restart(szDeviceIdentify, options)
+
+function: The device is rebooted
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+options Optional parameter object
+
+success The callback function is successfully called with one parameter indicating the XML content to return.
+
+error The callback function for failure has a parameter that indicates the error message
+
+Return value: Promise object
+
+Note: Success indicates that the device has started to restart.
+
+### Start upgrading
+
+function: I_StartUpgrade(szDeviceIdentify, szFileName)
+
+function: Start the upgrade. After the upgrade is complete, the device needs to be restarted
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szFileName Update the file path
+
+Return value: Promise object
+
+### Get the upgrade status
+
+function: I_UpgradeStatus()
+
+function: Get the status of the upgrade to determine whether the upgrade is in progress
+
+Parameters: None
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the resolve of Promise is a flag indicating whether the upgrade is taking place. It is of type bool, and true indicates that the upgrade is taking place
+
+### Get the upgrade progress
+
+function: I_UpgradeProgress()
+
+function: Get the progress of the upgrade
+
+Parameters: None
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the resolve of Promise is the upgrade progress, which is an integer from 0 to 100
+
+### Stop Upgrading
+
+function: I_StopUpgrade()
+
+function: Stop escalating
+
+Parameters: None
+
+Return value: Promise object
+
+## Plugin information maintenance
+
+### Compare plugin versions
+
+function: I_CheckPluginVersion()
+
+Function: Compare the version of the plug-in, and also check whether the plug-in is installed. The plug-in should be checked before it is embedded
+
+parameter: not have
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the resolve of Promise is a mark indicating whether the plug-in needs to be upgraded. true indicates that there is a new version to be upgraded, and false indicates that the latest version has been installed and does not need to be upgraded
+
+### Get the local configuration parameters of the plug-in
+
+function: I_GetLocalCfg()
+
+function: Get the local configuration parameters of the plug-in
+
+parameter: not have
+
+Return value: Promise object
+
+explain: If the interaction is successful, the first parameter of Promise's resolve is the local configuration parameter of the plug-in (in json format), which is as follows:
+
+{
+
+"captureFileFormat": "0", // capture format, 0: JPEG, 1: BMP
+
+"capturePath": "C: \\\\Users\\\\test\\\\HCWebSDKPlugin\\\\CaptureFiles", // Preview screenshot save path
+
+"downloadPath": "C: \\\\Users\\\\ test \\\\HCWebSDKPlugin\\\\DownloadFiles", // the path where the playback is downloaded and saved
+
+"ivsMode": "0", // Rule information
+
+"playbackFilePath": "C: \\\\Users\\\\ test \\\\HCWebSDKPlugin\\\\PlaybackFiles", // the path where the playback clip is saved
+
+"playbackPicPath": "C: \\\\Users\\\\ test \\\\HCWebSDKPlugin\\\\PlaybackPics", // the path where the replay screenshot is saved
+
+"protocolType": "2", // protocol type, 1: TCP, 2: UDP
+
+"recordPath": "C: \\\\Users\\\\ test \\\\HCWebSDKPlugin\\\\RecordFiles", // Preview video save path
+
+"secretKey": "", // The secret key of the bitstream
+
+"buffNumberType": "", // playback performance, 0: the shortest delay, 1: good real-time performance, 2: balanced, 3: good fluency
+
+playWndType: "0", // image size, 0: full, 1: 4:3, 2: 16:9
+
+packgeSize: "0" // The size of the video file package, 0:256M,1:512M,2:1G
+
+"osdPosInfo": "0" // Add POS information, 0: disable, 1: enable
+
+}
+
+### Set the local configuration parameters for the plug-in
+
+function: I_SetLocalCfg()
+
+function: Set the local configuration parameters for the plug-in
+
+parameter: oLocalCofing Configure the json object locally, and refer to the return value of I_GetLocalCfg for the format
+
+Return value: Promise object
+
+### Get the information of the playback window
+
+function: I_GetWindowStatus(iWndIndex)
+
+function: Get information about the current window
+
+Parameter: iWndIndex Window index
+
+Return value: success returns the window information object, failure returns null
+
+Note: Window information object:
+
+iIndex Window index
+
+szIP The IP address being played in the window
+
+iChannelID The channel number currently playing in the window
+
+iPlayStatus Window playback status: 0-no playback, 1-preview, 2-replay, 3-pause, 4-single frame, 5-reverse, 6-reverse pause
+
+## Window polygon drawing
+
+### Enable/disable drawing
+
+function: I_SetDrawStatus (bEnable)
+
+function: Enable/disable drawing
+
+parameter: bEnable true: Enabled false: Disabled
+
+Return value: Promise object
+
+### Set the drawing mode
+
+function: I_SetSnapDrawMode(iWndIndex, iMode)
+
+function: Set the playback mode
+
+parameter: iWndIndex Window index
+
+iMode Drawing mode, -1-stop drawing, 2-add polygon, 3-edit polygon
+
+Return value: Promise object
+
+### Set polygon information
+
+function: I_SetSnapPolygonInfo(iWndIndex, szInfo)
+
+function: Set polygon information
+
+parameter: iWndIndex Window index
+
+szInfo XML data, one or more polygons
+
+example:
+
+<?xml version='1.0' encoding='utf-8'?>
+
+<SnapPolygonList>
+
+<SnapPolygon>
+
+<id>" + szId + "</id> // Graphic ID\[1,32\]
+
+<polygonType>1</polygonType>// polygonType
+
+<PointNumMax>17</PointNumMax> // Maximum number of edges
+
+<MinClosed>4</MinClosed> // Minimum number of edges
+
+<tips># "+ szId +" # "+ szName +" </tips> // The name of the graphic
+
+<isClosed>false</isClosed> // Indicates that the polygon information interface is set
+
+<color><r>0</r><g>255</g><b>0</b></color> // Line color
+
+<pointList/>
+
+</SnapPolygon>
+
+< SnapPolygon>
+
+…
+
+</ SnapPolygon>
+
+</SnapPolygonList>
+
+Return value: Promise object
+
+### Get polygon information
+
+function: I_GetSnapPolygonInfo(iWndIndex)
+
+function: Get polygon information
+
+parameter: iWndIndex Window index
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of Promise's resolve is the xml data of the polygon
+
+### Clear polygon information
+
+function: I_ClearSnapInfo(iWndIndex)
+
+function: Clear polygon information
+
+parameter: iWndIndex Window index
+
+Return value: Promise object
+
+## Additional
+
+### Select a folder or file path
+
+function: I_OpenFileDlg(iType)
+
+function: Open the folder or file path
+
+parameter: iType Open type, 0 means folder, 1 means file
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the resolve of Promise is the path of the selected folder/file
+
+### Get the last error code
+
+function: I_GetLastError()
+
+function: Get the most recent error code
+
+parameter: not have
+
+Return value: Promise object
+
+Note: The interaction is successful. The first parameter of the resolve of Promise is the last error code
+
+### Send HTTP request
+
+function: I_SendHTTPRequest(szDeviceIdentify, szURI, options)
+
+function: Send HTTP request
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szURI ISAPI protocol
+
+options Optional parameter object
+
+type GET, POST, PUT, DELETE, default GET
+
+data: Data is default empty
+
+success The callback function is successfully called with one parameter indicating that the data should be returned.
+
+error The callback function for failure has a parameter that indicates the error message.
+
+Return value: Promise object
+
+Note: The interface can only be used after successful login.
+
+### Get additional information
+
+function: I_GetTextOverlay (szURI, szDeviceIdentify, options)
+
+function: Get additional information
+
+Parameter: szDeviceIdentify Device identifier (IP_Port)
+
+szURI ISAPI protocol
+
+options Optional parameter object
+
+success The callback function is successfully called with one parameter indicating the content of the returned request.
+
+error The callback function for failure has a parameter that indicates the error message.
+
+Return value: Promise object
+
+Note: The interface can only be used after successful login; the interaction is successful, and the first parameter of Promise's resolve is the content of the request return.
+
+### Reset the size of the plug-in
+
+function: I_Resize (iWidth, iHeight)
+
+function: Reset the size of the plug-in
+
+Parameter: iWidth Plugin width
+
+iHeight Plugin height
+
+Return value: Promise object
+
+Note: This is called after the size of the plugin container element changes.
+
+### Destroy video plug-ins
+
+function: I_DestroyPlugin()
+
+function: Destroy video plug-ins
+
+Parameters: None
+
+Return value: Promise object
+
+Note: This is called when the video plugin needs to be destroyed before closing the page.
+
+### Hide the video plugin window
+
+function: I_HidPlugin
+
+function: Hide the video plugin window
+
+Parameters: None
+
+Return value: Promise object
+
+Note: The video plug-in window is hidden. The plug-in will not be destroyed. It can be used to hide the plug-in frequently.
+
+### Displays the video plugin window
+
+function: I_ShowPlugin
+
+function: Displays the video plugin window
+
+Parameters: None
+
+Return value: Promise object
+
+Note: After hiding the plug-in, call it again when you want to display it.
