@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康评估与肌力训练</title>
+    <!-- 引入图标库 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff; /* 蓝色主色调 */
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 顶部导航 */
+        .header {
+            background-color: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .logo-area i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .device-status {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .device-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .device-item i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .status-connected {
+            color: var(--success-color);
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        /* 步骤条 */
+        .steps {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .step-item.active .step-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .step-item.completed .step-number {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .step-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .step-item.active .step-text {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* 分割线 */
+        .step-divider {
+            flex: 0 0 50px;
+            height: 2px;
+            background-color: #e9ecef;
+            margin: 0 10px;
+        }
+
+        .step-item.completed ~ .step-divider {
+            background-color: var(--success-color);
+        }
+
+        /* 主体内容网格 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        /* 左侧控制区 */
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .toggle-btn {
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .toggle-btn.inactive {
+            background-color: #e9ecef;
+            color: var(--text-secondary);
+        }
+
+        .body-part-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .part-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        .part-btn.active {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .part-btn i {
+            margin-right: 8px;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .setting-item:first-child {
+            margin-left: 0;
+        }
+        .setting-item:last-child {
+            margin-right: 0;
+        }
+
+        .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .value-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .value-display input {
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            width: 60px;
+            outline: none;
+        }
+
+        .adjust-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        /* 仪表盘模拟 */
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .gauge-arc {
+            width: 200px;
+            height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-bg {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(from -90deg, #e9ecef 0deg, #e9ecef 90deg, #28a745 90deg, #ffc107 180deg, #dc3545 270deg, #dc3545 360deg);
+            /* 简化模拟，实际应使用SVG或Canvas */
+            clip-path: inset(50% 0 0 0);
+            transform: rotate(180deg);
+        }
+
+        .gauge-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 90px;
+            background-color: #333;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(-45deg); /* 模拟指针位置 */
+            z-index: 2;
+        }
+
+        .gauge-center {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            background: #333;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .gauge-value {
+            position: absolute;
+            top: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .gauge-unit {
+            position: absolute;
+            top: 65px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .scale-markers {
+            display: flex;
+            justify-content: space-between;
+            width: 220px;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .safety-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* 底部按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--text-primary);
+            border: 1px solid #ddd;
+        }
+
+        /* 右侧结果区 */
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .result-value-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .result-unit {
+            font-size: 14px;
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
+
+        .result-trend {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .trend-arrow {
+            margin-right: 5px;
+        }
+
+        .trend-up {
+            color: var(--danger-color); /* 注意：图中体脂率下降是绿色，力量上升通常也是好的，但这里用红色表示数值变大 */
+        }
+        .trend-down {
+            color: var(--success-color);
+        }
+        .trend-neutral {
+            color: var(--primary-color);
+        }
+
+        /* 右侧大圆环 */
+        .big-circle-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .circle-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 10px solid #e9ecef;
+            border-top-color: var(--primary-color);
+            border-right-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .circle-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .circle-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* 结论区域 */
+        .conclusion-section {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .conclusion-item {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .conclusion-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #d4edda;
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .conclusion-text {
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .btn-enter-test {
+            width: 100%;
+            background-color: var(--success-color);
+            color: white;
+            margin-top: 15px;
+        }
+
+        /* 图表模拟 */
+        .chart-container {
+            height: 120px;
+            margin-top: 10px;
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        /* 简单的CSS折线图模拟 */
+        .fake-chart-line {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            height: 60px;
+            border-bottom: 1px solid #eee;
+            border-left: 1px solid #eee;
+        }
+
+        .line-path {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 2;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+
+        .bg-purple { background-color: #6f42c1; }
+        .bg-green { background-color: #28a745; }
+        .bg-blue { background-color: #17a2b8; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 顶部 Header -->
+        <header class="header">
+            <div class="logo-area">
+                <i class="fas fa-heartbeat"></i>
+                健康评估与肌力训练
+            </div>
+            <div class="device-status">
+                <div class="device-item"><i class="fas fa-weight"></i> 体重秤 <span class="status-connected"><i class="fas fa-check-circle"></i> 已连接</span></div>
+                <div class="device-item"><i class="fas fa-balance-scale"></i> 体脂秤 <span class="status-connected"><i class="fas fa-check-circle"></i> 已连接</span></div>
+                <div class="device-item"><i class="fas fa-dumbbell"></i> 拉力器 <span class="status-connected"><i class="fas fa-check-circle"></i> 已连接</span></div>
+                <div class="device-item"><i class="fas fa-tint"></i> 加压训练仪 <span class="status-connected"><i class="fas fa-check-circle"></i> 已连接</span></div>
+            </div>
+            <div class="user-info">
+                <div style="text-align: right; margin-right: 10px;">
+                    <div style="font-weight: bold;">张爷爷</div>
+                    <div style="font-size: 12px; color: #999;">ID: 880125</div>
+                </div>
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+            </div>
+            <div style="margin-left: 20px; color: #666; font-size: 14px;">
+                <div>2025-05-20 周二 10:30</div>
+                <div style="text-align: right;"><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
+            </div>
+        </header>
+
+        <!-- 步骤条 -->
+        <div class="steps">
+            <div class="step-item completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <div class="step-text">筛查评估</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <div class="step-text">发现风险</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <div class="step-text">生成建议</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-text">进入训练</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item active">
+                <div class="step-number">5</div>
+                <div class="step-text">复测对比</div>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="main-grid">
+
+            <!-- 左侧：控制面板 -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-tint"></i> 加压训练
+                </div>
+
+                <div class="control-header">
+                    <div>
+                        <span class="toggle-btn active"><i class="fab fa-bluetooth-b"></i> 蓝牙控制</span>
+                        <span class="toggle-btn inactive"><i class="fas fa-mouse-pointer"></i> 手动控制</span>
+                    </div>
+                    <div style="color: var(--success-color); font-size: 14px;">
+                        <i class="fas fa-check-circle"></i> 设备状态 已连接 &nbsp;&nbsp;
+                        <i class="fas fa-battery-three-quarters"></i> 85%
+                    </div>
+                </div>
+
+                <div class="body-part-selector">
+                    <div class="part-btn active"><i class="fas fa-hand-paper"></i> 上肢</div>
+                    <div class="part-btn"><i class="fas fa-running"></i> 下肢</div>
+                </div>
+
+                <div class="settings-row">
+                    <div class="setting-item">
+                        <span class="label">目标压力 (mmHg)</span>
+                        <div class="value-display">
+                            <button class="adjust-btn">-</button>
+                            <input type="text" value="160">
+                            <button class="adjust-btn">+</button>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 5px; text-align: center;">推荐 140-180 mmHg</div>
+                    </div>
+                    <div class="setting-item">
+                        <span class="label">压力上限 (mmHg)</span>
+                        <div class="value-display">
+                            <button class="adjust-btn">-</button>
+                            <input type="text" value="200">
+                            <button class="adjust-btn">+</button>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 5px; text-align: center;">安全上限</div>
+                    </div>
+                </div>
+
+                <div class="settings-row">
+                    <div class="setting-item" style="margin: 0 auto; width: 80%;">
+                        <span class="label">训练时长</span>
+                        <div class="value-display">
+                            <button class="adjust-btn">-</button>
+                            <input type="text" value="20:00">
+                            <button class="adjust-btn">+</button>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 5px; text-align: center;">推荐 15-30 分钟</div>
+                    </div>
+                </div>
+
+                <!-- 仪表盘 -->
+                <div class="gauge-container">
+                    <div class="gauge-arc">
+                        <div class="gauge-bg"></div>
+                        <div class="gauge-needle"></div>
+                        <div class="gauge-center"></div>
+                        <div class="gauge-value">160</div>
+                        <div class="gauge-unit">mmHg</div>
+                    </div>
+                    <div class="scale-markers">
+                        <span>0</span>
+                        <span>100</span>
+                        <span>150</span>
+                        <span>200</span>
+                        <span>250</span>
+                        <span>300</span>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span class="safety-tag"><i class="fas fa-check-circle"></i> 压力安全</span>
+                    </div>
+                </div>
+
+                <!-- 安全与按钮 -->
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; color: #666;">
+                    <div style="display: flex; align-items: center;"><i class="fas fa-stop-circle" style="color: var(--danger-color); margin-right: 5px;"></i> 急停 <span style="font-size: 10px; color: #999;">(紧急情况一键停止)</span></div>
+                    <div style="display: flex; align-items: center;"><i class="fas fa-undo" style="color: var(--warning-color); margin-right: 5px;"></i> 自动泄压 <span style="font-size: 10px; color: #999;">(训练结束自动泄压)</span></div>
+                    <div style="display: flex; align-items: center; color: var(--warning-color);"><i class="fas fa-exclamation-triangle" style="margin-right: 5px;"></i> 训练中不适请立即停止</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary"><i class="fas fa-play"></i> 开始训练</button>
+                    <button class="btn btn-outline"><i class="fas fa-stop"></i> 结束训练</button>
+                </div>
+            </div>
+
+            <!-- 右侧：结果与对比 -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i> 复测对比
+                    <span style="font-size: 12px; color: #999; margin-left: auto; font-weight: normal;">上次训练完成: 2025-05-06</span>
+                </div>
+
+                <div class="result-grid">
+                    <!-- 力量 -->
+                    <div class="result-card">
+                        <div class="result-label"><i class="fas fa-dumbbell"></i> 下肢力量 (kgf)</div>
+                        <div class="result-value-row">
+                            <div class="result-value" style="font-size: 20px; color: #666;">18.6</div>
+                            <div style="margin: 0 10px; color: #999;">→</div>
+                            <div class="result-value">22.1</div>
+                        </div>
+                        <div class="result-trend">
+                            <span style="font-size: 12px; color: #999;">评估时</span>
+                            <span style="margin: 0 10px;"></span>
+                            <span style="font-size: 12px; color: #999;">本次复测</span>
+                        </div>
+                    </div>
+
+                    <!-- 肌肉量 -->
+                    <div class="result-card">
+                        <div class="result-label"><i class="fas fa-bread-slice"></i> 肌肉量 (kg)</div>
+                        <div class="result-value-row">
+                            <div class="result-value" style="font-size: 20px; color: #666;">16.8</div>
+                            <div style="margin: 0 10px; color: #999;">→</div>
+                            <div class="result-value">17.5</div>
+                        </div>
+                        <div class="result-trend">
+                            <span style="font-size: 12px; color: var(--success-color);"><i class="fas fa-arrow-up trend-arrow"></i> 4.2%</span>
+                            <span style="color: #999; margin-left: 5px;">小幅提升</span>
+                        </div>
+                    </div>
+
+                    <!-- 体脂率 -->
+                    <div class="result-card">
+                        <div class="result-label"><i class="fas fa-percentage"></i> 体脂率 (%)</div>
+                        <div class="result-value-row">
+                            <div class="result-value" style="font-size: 20px; color: #666;">28.6</div>
+                            <div style="margin: 0 10px; color: #999;">→</div>
+                            <div class="result-value">27.3</div>
+                        </div>
+                        <div class="result-trend">
+                            <span style="font-size: 12px; color: var(--success-color);"><i class="fas fa-arrow-down trend-arrow"></i> 1.3%</span>
+                            <span style="color: #999; margin-left: 5px;">稳步下降</span>
+                        </div>
+                    </div>
+
+                    <!-- 提升幅度 -->
+                    <div class="result-card big-circle-card">
+                        <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">提升幅度</div>
+                        <div class="circle-container">
+                            <div>
+                                <div class="circle-value">↑18%</div>
+                            </div>
+                        </div>
+                        <div class="circle-label">较评估时提升</div>
+                    </div>
+                </div>
+
+                <!-- 趋势图表 -->
+                <div style="margin-top: 20px;">
+                    <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">趋势变化 (近 4 次)</div>
+                    <div class="chart-container">
+                        <!-- 简单的 SVG 模拟线条 -->
+                        <svg viewBox="0 0 400 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                            <!-- 网格线 -->
+                            <line x1="0" y1="25" x2="400" y2="25" stroke="#eee" stroke-width="1"/>
+                            <line x1="0" y1="50" x2="400" y2="50" stroke="#eee" stroke-width="1"/>
+                            <line x1="0" y1="75" x2="400" y2="75" stroke="#eee" stroke-width="1"/>
+
+                            <!-- 力量线 (紫色) -->
+                            <polyline points="0,70 100,65 200,60 300,40" class="line-path" stroke="#6f42c1"/>
+                            <!-- 肌肉线 (绿色) -->
+                            <polyline points="0,80 100,78 200,75 300,65" class="line-path" stroke="#28a745"/>
+                            <!-- 体脂线 (蓝色) -->
+                            <polyline points="0,30 100,32 200,40 300,50" class="line-path" stroke="#17a2b8"/>
+                        </svg>
+                        <div style="position: absolute; bottom: 5px; left: 10px; right: 10px; display: flex; justify-content: space-between; font-size: 10px; color: #999;">
+                            <span>评估时<br>04-20</span>
+                            <span>第1次<br>04-27</span>
+                            <span>第2次<br>05-04</span>
+                            <span>第3次<br>05-13</span>
+                            <span>本次复测<br>05-20</span>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item"><div class="legend-color bg-purple"></div>下肢力量 (kgf)</div>
+                        <div class="legend-item"><div class="legend-color bg-green"></div>肌肉量 (kg)</div>
+                        <div class="legend-item"><div class="legend-color bg-blue"></div>体脂率 (%)</div>
+                    </div>
+                </div>
+
+                <!-- 结论与建议 -->
+                <div class="conclusion-section">
+                    <div class="conclusion-item">
+                        <div class="conclusion-icon"><i class="fas fa-check"></i></div>
+                        <div class="conclusion-text">
+                            <strong>本次复测结论：</strong>训练有效，指标整体向好。下肢力量提升显著，建议继续保持训练频率。
+                        </div>
+                    </div>
+                    <div class="conclusion-item">
+                        <div class="conclusion-icon" style="background-color: #cce5ff; color: #004085;"><i class="fas fa-calendar-check"></i></div>
+                        <div class="conclusion-text">
+                            <strong>建议方案：</strong>建议继续 2 周训练，每周 3 次。
+                        </div>
+                    </div>
+                    <button class="btn btn-enter-test"><i class="fas fa-chart-bar"></i> 进入复测</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

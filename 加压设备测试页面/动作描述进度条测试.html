@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>运动倒计时组件</title>
+  <style>
+    /* 页面基础样式 - 仅用于展示效果 */
+    body {
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      /* 模拟运动软件的浅灰背景 */
+      background-color: #424242;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .component-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* --- 组件核心容器 --- */
+    .timer-widget {
+      display: flex;
+      align-items: center;
+      width: 460px;
+      /* 组件总宽度 */
+      height: 140px;
+      /* 组件总高度 */
+      position: relative;
+    }
+
+    /* --- 左侧：圆形计时器 --- */
+    .timer-left {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      z-index: 3;
+      /* 确保圆形在矩形背景之上（模拟差集间距） */
+      flex-shrink: 0;
+    }
+
+    /* 环形进度条轨道 (背景) */
+    .progress-ring-bg {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      /* 较宽的环形轨道，浅灰色 */
+      border: 12px solid #E0E0E0;
+      box-sizing: border-box;
+    }
+
+    /* 绿色进度条 (模拟) - 实际开发中可用 SVG 或 Conic Gradient */
+    .progress-ring-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      /* 使用圆锥渐变模拟进度 (这里模拟约 50%) */
+      background-image: conic-gradient(#00C885 0deg,
+          #00C885 200deg,
+          /* 绿色进度 */
+          transparent 180deg,
+          transparent 360deg);
+      /* 确保渐变在边框内部显示，或者覆盖边框 */
+      mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px));
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px));
+    }
+
+    /* 中心白色圆盘 (底盘) */
+    .timer-center-disk {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 116px;
+      /* 略小于外径，形成环宽 */
+      height: 116px;
+      background-color: #FFFFFF;
+      /* 纯白不透明 */
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+    }
+
+    /* 倒计时数字 */
+    .timer-number {
+      font-size: 42px;
+      font-weight: 700;
+      color: #00C885;
+      /* 与进度条同色的绿色 */
+      font-variant-numeric: tabular-nums;
+      /* 防止数字跳动 */
+    }
+
+    /* --- 右侧：文字信息区 --- */
+    .timer-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 112px;
+      /* 3:2 布局通过 flex-grow 或 固定高度比例实现 */
+      width: 320px;
+      position: relative;
+      margin-left: -18px;
+      /* 负边距让右侧进入圆形范围，再用 mask 做差集留缝 */
+      padding-left: 0;
+      box-sizing: border-box;
+      z-index: 1;
+      mask: radial-gradient(circle at -52px 50%, transparent 0 76px, #fff 77px);
+      -webkit-mask: radial-gradient(circle at -52px 50%, transparent 0 76px, #fff 77px);
+    }
+
+    /* 文字背景条状容器 */
+    .text-bg-strip {
+      display: none;
+    }
+
+    /* 文字内容层 */
+    .text-content {
+      position: relative;
+      z-index: 2;
+      /* 确保文字在背景条之上 */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      gap: 6px;
+      padding: 6px 0;
+      box-sizing: border-box;
+    }
+
+    /* 当前动作 (上 3/5) */
+    .current-action {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333333;
+      line-height: 1.2;
+      /* 模拟 3/5 高度占比 */
+      flex: 3;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+      padding: 0 18px 0 44px;
+      /* border: 1px solid rgba(255, 255, 255, 0.92); */
+      border-radius: 4px;
+      box-sizing: border-box;
+      background: linear-gradient(to right,
+          rgba(255, 255, 255, 0.82) 0%,
+          rgba(255, 255, 255, 0.82) 44%,
+          rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* 下一动作 (下 2/5) */
+    .next-action {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 1.2;
+      /* 模拟 2/5 高度占比 */
+      flex: 2;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+      padding: 0 18px 0 44px;
+      /* border: 1px solid rgba(255, 255, 255, 0.92); */
+      border-radius: 4px;
+      box-sizing: border-box;
+      background: linear-gradient(to right,
+          rgba(255, 255, 255, 0.82) 0%,
+          rgba(255, 255, 255, 0.82) 44%,
+          rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* --- 独立组件：生命体征与压力状态 --- */
+    .vital-widget {
+      display: flex;
+      align-items: center;
+      width: 460px;
+      height: 140px;
+      position: relative;
+    }
+
+    .vital-left {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background-color: #FFFFFF;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+      z-index: 3;
+      flex-shrink: 0;
+    }
+
+    .vital-ring-bg {
+      display: none;
+    }
+
+    .vital-ring-fill {
+      display: none;
+    }
+
+    .vital-center-disk {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .vital-label {
+      margin-bottom: 2px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666666;
+      line-height: 1;
+    }
+
+    .vital-number {
+      font-size: 38px;
+      font-weight: 700;
+      color: #FF5A7A;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .vital-unit {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #777777;
+      line-height: 1;
+    }
+
+    .vital-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 112px;
+      width: 320px;
+      position: relative;
+      margin-left: -18px;
+      box-sizing: border-box;
+      z-index: 1;
+      mask: radial-gradient(circle at -52px 50%, transparent 0 76px, #fff 77px);
+      -webkit-mask: radial-gradient(circle at -52px 50%, transparent 0 76px, #fff 77px);
+    }
+
+    .vital-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 6px;
+      padding: 6px 0;
+      box-sizing: border-box;
+    }
+
+    .vital-metric {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      min-height: 0;
+      padding: 0 18px 0 44px;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background: linear-gradient(to right,
+          rgba(255, 255, 255, 0.82) 0%,
+          rgba(255, 255, 255, 0.82) 44%,
+          rgba(255, 255, 255, 0) 100%);
+    }
+
+    .vital-metric-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555555;
+      white-space: nowrap;
+    }
+
+    .vital-metric-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333333;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .vital-metric-unit {
+      margin-left: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #666666;
+    }
+
+    /* --- 独立组件：双设备压力，无心率 --- */
+    .pressure-widget {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 500px;
+      height: 156px;
+      gap: 10px;
+    }
+
+    .pressure-half {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 245px;
+      height: 156px;
+      padding: 0 34px;
+      box-sizing: border-box;
+      background: linear-gradient(to right,
+          rgba(255, 255, 255, 0.86) 0%,
+          rgba(255, 255, 255, 0.86) 58%,
+          rgba(255, 255, 255, 0.44) 100%);
+      color: #333333;
+    }
+
+    .pressure-half:first-child {
+      align-items: flex-start;
+      border-radius: 78px 8px 8px 78px;
+    }
+
+    .pressure-half:last-child {
+      align-items: flex-end;
+      border-radius: 8px 78px 78px 8px;
+      background: linear-gradient(to left,
+          rgba(255, 255, 255, 0.86) 0%,
+          rgba(255, 255, 255, 0.86) 58%,
+          rgba(255, 255, 255, 0.44) 100%);
+    }
+
+    .pressure-name {
+      margin-bottom: 10px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #555555;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .pressure-value {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pressure-number {
+      font-size: 42px;
+      font-weight: 700;
+      color: #00A9D6;
+      line-height: 1;
+    }
+
+    .pressure-unit {
+      font-size: 15px;
+      font-weight: 600;
+      color: #666666;
+      line-height: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="component-stage">
+    <!-- 组件结构 -->
+    <div class="timer-widget">
+      <!-- 左侧：时间圆环 -->
+      <div class="timer-left">
+        <!-- SVG或CSS实现的环 -->
+        <div class="progress-ring-bg"></div>
+        <!-- 覆盖的绿色进度 (这里用CSS模拟) -->
+        <div class="progress-ring-fill"></div>
+
+        <!-- 中间白色底盘 -->
+        <div class="timer-center-disk">
+          <span class="timer-number">29</span>
+        </div>
+      </div>
+
+      <!-- 右侧：文字信息 -->
+      <div class="timer-right">
+        <!-- 渐变背景条 -->
+        <div class="text-bg-strip"></div>
+
+        <!-- 文字内容 -->
+        <div class="text-content">
+          <div class="current-action">合小臂上提</div>
+          <div class="next-action">下一个动作：合掌环游</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 独立状态组件 -->
+    <div class="vital-widget">
+      <div class="vital-left">
+        <div class="vital-center-disk">
+          <span class="vital-label">心率</span>
+          <span class="vital-number">86</span>
+          <span class="vital-unit">BPM</span>
+        </div>
+      </div>
+
+      <div class="vital-right">
+        <div class="vital-content">
+          <div class="vital-metric">
+            <span class="vital-metric-name">设备一压力</span>
+            <span class="vital-metric-value">38<span class="vital-metric-unit">kPa</span></span>
+          </div>
+          <div class="vital-metric">
+            <span class="vital-metric-name">设备二压力</span>
+            <span class="vital-metric-value">42<span class="vital-metric-unit">kPa</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 独立压力组件：无心率 -->
+    <div class="pressure-widget">
+      <div class="pressure-half">
+        <span class="pressure-name">设备一压力</span>
+        <span class="pressure-value">
+          <span class="pressure-number">38</span>
+          <span class="pressure-unit">kPa</span>
+        </span>
+      </div>
+      <div class="pressure-half">
+        <span class="pressure-name">设备二压力</span>
+        <span class="pressure-value">
+          <span class="pressure-number">42</span>
+          <span class="pressure-unit">kPa</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
