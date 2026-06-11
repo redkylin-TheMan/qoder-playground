@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLM 漫画翻译器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">GLM 漫画翻译器</span>
+            <span class="text-muted small">OCR + Translation</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row g-4">
+            <!-- 左侧：上传区域 -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <!-- 模式切换 Tab -->
+                        <ul class="nav nav-tabs card-header-tabs nav-sm" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-single" type="button">单张翻译</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-batch" type="button">批量上传</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-folder" type="button">文件夹</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+
+                            <!-- Tab 1: 单张上传 -->
+                            <div class="tab-pane fade show active" id="tab-single">
+                                <div id="drop-zone" class="drop-zone">
+                                    <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp" hidden>
+                                    <label for="file-input" class="drop-zone-label">
+                                        <div class="drop-zone-icon">Image</div>
+                                        <p>拖拽图片到此处</p>
+                                        <p class="text-muted small">或点击选择文件</p>
+                                        <p class="text-muted small">PNG / JPG / JPEG / BMP</p>
+                                    </label>
+                                </div>
+
+                                <div id="preview-container" class="mt-3 d-none">
+                                    <img id="image-preview" class="img-fluid rounded" alt="preview">
+                                    <button id="clear-btn" class="btn btn-sm btn-outline-danger mt-2">X Clear</button>
+                                </div>
+
+                                <button id="translate-btn" class="btn btn-primary w-100 mt-3" disabled>Translate</button>
+                            </div>
+
+                            <!-- Tab 2: 批量上传 -->
+                            <div class="tab-pane fade" id="tab-batch">
+                                <div id="batch-drop-zone" class="drop-zone">
+                                    <input type="file" id="batch-file-input" accept=".png,.jpg,.jpeg,.bmp" multiple hidden>
+                                    <label for="batch-file-input" class="drop-zone-label">
+                                        <div class="drop-zone-icon">Images</div>
+                                        <p>拖拽多张图片到此处</p>
+                                        <p class="text-muted small">或点击选择多个文件</p>
+                                        <p class="text-muted small">支持多选</p>
+                                    </label>
+                                </div>
+
+                                <div id="batch-file-list" class="mt-2 d-none">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span id="batch-count" class="small text-muted"></span>
+                                        <button id="batch-clear-btn" class="btn btn-sm btn-outline-danger">X Clear</button>
+                                    </div>
+                                    <ul id="batch-names" class="list-unstyled small mt-1"></ul>
+                                </div>
+
+                                <button id="batch-translate-btn" class="btn btn-primary w-100 mt-3" disabled>Batch Translate</button>
+                            </div>
+
+                            <!-- Tab 3: 文件夹路径 -->
+                            <div class="tab-pane fade" id="tab-folder">
+                                <div class="mb-3">
+                                    <label for="folder-path-input" class="form-label small">输入漫画图片文件夹路径：</label>
+                                    <input type="text" id="folder-path-input" class="form-control form-control-sm"
+                                           placeholder="例如: D:\manga\chapter01">
+                                    <div class="form-text small">将自动扫描文件夹中的图片，翻译结果输出到 translated 子目录</div>
+                                </div>
+                                <button id="folder-translate-btn" class="btn btn-primary w-100 mt-2">Folder Translate</button>
+                            </div>
+
+                        </div>
+
+                        <!-- 公共：语言选择 -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label for="source-lang" class="form-label small">Source</label>
+                                <select id="source-lang" class="form-select form-select-sm">
+                                    <option value="auto">Auto Detect</option>
+                                    <option value="ja" selected>Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="en">English</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="fr">French</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="de">German</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="target-lang" class="form-label small">Target</label>
+                                <select id="target-lang" class="form-select form-select-sm">
+                                    <option value="zh" selected>Chinese</option>
+                                    <option value="en">English</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="fr">French</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="de">German</option>
+                                    <option value="ru">Russian</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 进度条 -->
+                        <div id="progress-container" class="mt-3 d-none">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                <span id="progress-text" class="small">Processing...</span>
+                            </div>
+                            <div class="progress mt-2">
+                                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：结果区域 -->
+            <div class="col-lg-7">
+                <!-- 空状态 -->
+                <div id="empty-state" class="card">
+                    <div class="card-body text-center py-5 text-muted">
+                        <div style="font-size: 3rem;">Read</div>
+                        <p class="mt-3">Upload manga image and click translate</p>
+                    </div>
+                </div>
+
+                <!-- 单张结果展示 -->
+                <div id="result-area" class="d-none">
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Segments</span>
+                            <span id="lang-badge" class="badge bg-secondary"></span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="segments-table" class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px">#</th>
+                                            <th>Original</th>
+                                            <th style="width: 50px">Coord</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="segments-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">Translation</div>
+                        <div class="card-body">
+                            <pre id="translated-text" class="mb-0"></pre>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <a data-bs-toggle="collapse" href="#raw-text-collapse" class="text-decoration-none">
+                                Original Text (click to expand)
+                            </a>
+                        </div>
+                        <div id="raw-text-collapse" class="collapse">
+                            <div class="card-body">
+                                <pre id="raw-text" class="mb-0 small"></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button id="save-btn" class="btn btn-success flex-fill">Save Local</button>
+                        <button id="download-btn" class="btn btn-outline-primary flex-fill">Download</button>
+                    </div>
+
+                    <div id="save-toast" class="alert alert-success mt-2 d-none" role="alert"></div>
+                </div>
+
+                <!-- 批量/文件夹结果展示 -->
+                <div id="batch-result-area" class="d-none">
+                    <div class="card mb-3">
+                        <div class="card-header">Batch Results</div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Filename</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="batch-results-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="batch-summary" class="alert alert-info d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-muted small mt-5 mb-3">
+        GLM Manga Translator - Powered by Zhipu GLM API
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

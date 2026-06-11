@@ -1,0 +1,24 @@
+# 环境变量（含 API Key）
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 上传和输出目录
+uploads/
+outputs/
+
+# IDE
+.vscode/
+.idea/
+
+# 日志
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
