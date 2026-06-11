@@ -1,12 +1,14 @@
 ﻿param(
   [Parameter(Mandatory = $false)]
-  [string]$Port
+  [string]$Port,
+  [switch]$Kill
 )
 
 # 检查是否传入了端口号
 if (-not $Port) {
-  Write-Host "用法: .\killport.ps1 <端口号>"
-  Write-Host "示例: .\killport.ps1 8080"
+  Write-Host "用法: .\port.ps1 <端口号> [-Kill]"
+  Write-Host "示例: .\port.ps1 8080          # 仅查看占用进程"
+  Write-Host "      .\port.ps1 8080 -Kill    # 查看 + 确认杀死进程"
   exit 1
 }
 
@@ -32,7 +34,6 @@ function Get-ProcessType {
 
   # Java
   if ($lower -match '\\java\.exe$|\\javaw\.exe$|\\jre\\|\\jdk\\') {
-    # 尝试通过命令行参数找 jar 或 class
     return "Java"
   }
 
@@ -157,7 +158,6 @@ foreach ($procId in $pids) {
   try {
     $workDir = $proc.StartInfo.WorkingDirectory
     if (-not $workDir) {
-      # 通过 WMI 获取
       $wmiProc2 = Get-CimInstance Win32_Process -Filter "ProcessId = $procId" -ErrorAction Stop
       $workDir = $wmiProc2.ExecutablePath | Split-Path -Parent
     }
@@ -194,9 +194,10 @@ if ($processInfos.Count -eq 0) {
 }
 
 # 显示详细信息
+$modeLabel = if ($Kill) { "" } else { "（仅查看）" }
 Write-Host ""
 Write-Host "============================================" -ForegroundColor White
-Write-Host "  端口 $Port 占用进程详情" -ForegroundColor White
+Write-Host "  端口 $Port 占用进程详情$modeLabel" -ForegroundColor White
 Write-Host "============================================" -ForegroundColor White
 Write-Host ""
 
@@ -214,30 +215,31 @@ foreach ($info in $processInfos) {
   Write-Host ""
 }
 
-# 确认是否杀死
-Write-Host "============================================" -ForegroundColor Red
-Write-Host -NoNewline "  是否杀死以上所有进程？(y/n): " -ForegroundColor Red
-$confirm = Read-Host
+# 如果指定了 -Kill，进入确认并杀死流程
+if ($Kill) {
+  Write-Host "============================================" -ForegroundColor Red
+  Write-Host -NoNewline "  是否杀死以上所有进程？(y/n): " -ForegroundColor Red
+  $confirm = Read-Host
 
-if ($confirm -ne 'y' -and $confirm -ne 'Y') {
-  Write-Host "[取消] 操作已取消" -ForegroundColor Yellow
-  exit 0
-}
-
-# 杀死每个进程
-foreach ($info in $processInfos) {
-  $procId = $info.ProcId
-  $procName = $info.Name
-
-  Write-Host "[杀死] PID: $procId  进程: $procName" -ForegroundColor Yellow
-
-  try {
-    Stop-Process -Id $procId -Force -ErrorAction Stop
-    Write-Host "[成功] 进程 $procId ($procName) 已被终止" -ForegroundColor Green
+  if ($confirm -ne 'y' -and $confirm -ne 'Y') {
+    Write-Host "[取消] 操作已取消" -ForegroundColor Yellow
+    exit 0
   }
-  catch {
-    Write-Host "[失败] 无法终止进程 $procId ($procName)，可能需要管理员权限" -ForegroundColor Red
-  }
-}
 
-Write-Host "[完成]" -ForegroundColor Cyan
+  foreach ($info in $processInfos) {
+    $procId = $info.ProcId
+    $procName = $info.Name
+
+    Write-Host "[杀死] PID: $procId  进程: $procName" -ForegroundColor Yellow
+
+    try {
+      Stop-Process -Id $procId -Force -ErrorAction Stop
+      Write-Host "[成功] 进程 $procId ($procName) 已被终止" -ForegroundColor Green
+    }
+    catch {
+      Write-Host "[失败] 无法终止进程 $procId ($procName)，可能需要管理员权限" -ForegroundColor Red
+    }
+  }
+
+  Write-Host "[完成]" -ForegroundColor Cyan
+}
