@@ -1,0 +1,15 @@
+{
+  "name": "m32_print_test",
+  "version": "1.0.0",
+  "description": "打印测试工具 — 57mm 宽、长度可变的热敏小票纸打印测试",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.21"
+  }
+}

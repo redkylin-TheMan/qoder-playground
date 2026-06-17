@@ -1,0 +1,193 @@
+/* =========================================================
+   打印样式 — 57mm 宽、长度可变的热敏小票纸
+   ========================================================= */
+
+/* 打印流程中：隐藏整个屏幕 UI，只显示 #print-mount */
+@media print {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  /* 屏幕上的一切都不进打印 */
+  body > #app {
+    display: none !important;
+  }
+
+  /* 真正要打印的内容区 */
+  #print-mount {
+    display: block !important;
+  }
+
+  /* 57mm 热敏纸关键设置：
+     - size: 57mm auto  —— 宽度固定 57mm，高度自动(连续走纸/可变长)
+     - margin: 0        —— 页边距交给 .receipt 的 padding 处理 */
+  @page {
+    size: 57mm auto;
+    margin: 0;
+  }
+
+  /* 小票本体：宽度填满可打印区，加左右内边距，避免贴边 */
+  .receipt {
+    width: 57mm;
+    box-sizing: border-box;
+    padding: 2mm 2mm 4mm 2mm;
+    margin: 0;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: 'Consolas', 'Courier New', 'Menlo', monospace;
+    font-size: 11px;        /* 小票机常用字号，约 9~12px */
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 防止内容跨页时被截断行 */
+  .receipt * {
+    break-inside: avoid-page;
+  }
+
+  /* 标题 */
+  .receipt h1 {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 2px 0;
+  }
+  .receipt h2 {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    margin: 4px 0 2px 0;
+  }
+  .receipt h3 {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 4px 0 2px 0;
+    border-bottom: 1px dashed #000;
+    padding-bottom: 1px;
+  }
+
+  /* 段落/通用文字 */
+  .receipt p {
+    margin: 1px 0;
+  }
+  .receipt .center { text-align: center; }
+  .receipt .right  { text-align: right; }
+  .receipt .muted  { color: #000; }
+
+  /* 分隔线：用字符或边框，热敏纸效果稳定 */
+  .receipt .hr {
+    border: 0;
+    border-top: 1px dashed #000;
+    margin: 3px 0;
+  }
+  .receipt .hr-solid {
+    border: 0;
+    border-top: 1px solid #000;
+    margin: 3px 0;
+  }
+
+  /* 两列对齐：商品名 .......................... 金额 */
+  .receipt .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .receipt .row .label {
+    flex: 1 1 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .receipt .row .value {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* 商品行：名称在上，数量×单价 金额在下（更接近真实小票） */
+  .receipt .item .name {
+    font-weight: 600;
+  }
+  .receipt .item .sub {
+    display: flex;
+    justify-content: space-between;
+    color: #000;
+    font-size: 10px;
+  }
+
+  /* 大号文字：取件码 */
+  .receipt .big-code {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin: 4px 0;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 4px 0;
+  }
+
+  /* 时间线/状态行 */
+  .receipt .timeline {
+    margin: 2px 0;
+    font-size: 10px;
+  }
+  .receipt .timeline .step {
+    display: flex;
+    justify-content: space-between;
+    padding: 1px 0;
+  }
+
+  /* 条形码占位（纯 CSS 装饰，非真实条码） */
+  .receipt .barcode {
+    height: 36px;
+    margin: 4px 0;
+    background-image: repeating-linear-gradient(
+      to right,
+      #000 0, #000 1px, transparent 1px, transparent 3px,
+      #000 3px, #000 5px, transparent 5px, transparent 6px,
+      #000 6px, #000 7px, transparent 7px, transparent 10px
+    );
+  }
+  .receipt .barcode-text {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  /* 二维码占位（装饰方块，便于测试对位） */
+  .receipt .qr {
+    width: 70px;
+    height: 70px;
+    margin: 4px auto;
+    position: relative;
+    background:
+      linear-gradient(#000,#000) top left/20px 20px no-repeat,
+      linear-gradient(#000,#000) top right/20px 20px no-repeat,
+      linear-gradient(#000,#000) bottom left/20px 20px no-repeat;
+    border: 2px solid #000;
+    box-sizing: border-box;
+  }
+  .receipt .qr::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 22px; height: 22px;
+    transform: translate(-50%,-50%);
+    background: repeating-linear-gradient(45deg, #000 0 2px, #fff 2px 4px);
+  }
+  .receipt .qr-note {
+    text-align: center;
+    font-size: 9px;
+  }
+
+  /* 页脚 */
+  .receipt .footer {
+    text-align: center;
+    margin-top: 4px;
+    font-size: 10px;
+  }
+}
