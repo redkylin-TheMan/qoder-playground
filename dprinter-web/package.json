@@ -1,0 +1,16 @@
+{
+  "name": "dprinter-web",
+  "version": "1.0.0",
+  "description": "得力 DB-618KII 针式打印机网页测试平台 — 网页表单 → 本地 Node 服务 → ESC/P-K 原始指令 → 系统打印队列(RAW)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node -e \"require('./lib/escp').demo()\"",
+    "ps-test": "powershell -ExecutionPolicy Bypass -Command \"& { . '.\\lib\\raw-print.ps1'; Send-RawTest }\""
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "author": "",
+  "license": "MIT"
+}
