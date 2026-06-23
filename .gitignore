@@ -1,3 +1,5 @@
-qoderUseageTest/node_modules/
+
 *.log
-tdesign单元测试/node_modules
+**/node_modules
+Claude-CLI-插件大全介绍.md
+**/dist

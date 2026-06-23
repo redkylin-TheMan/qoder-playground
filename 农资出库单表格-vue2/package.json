@@ -1,0 +1,34 @@
+{
+  "name": "nongzi-outbound-table-vue2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "农资出库单表格 - Vue2 + ant-design-vue v1.7.8 合并单元格演示",
+  "scripts": {
+    "serve": "vue-cli-service serve --port 3120",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "ant-design-vue": "^1.7.8",
+    "core-js": "^3.8.3",
+    "dayjs": "^1.11.7",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "less": "^3.13.1",
+    "less-loader": "^7.3.0",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
