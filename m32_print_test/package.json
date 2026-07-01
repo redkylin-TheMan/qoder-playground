@@ -1,7 +1,7 @@
 {
   "name": "m32_print_test",
-  "version": "1.0.0",
-  "description": "打印测试工具 — 57mm 宽、长度可变的热敏小票纸打印测试",
+  "version": "1.1.0",
+  "description": "打印测试工具 — 58mm 宽、长度可变的热敏小票纸打印测试（通用小票 + 粮食出入库小票）",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "vite": "^5.4.21"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }

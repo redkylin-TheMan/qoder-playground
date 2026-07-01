@@ -1,0 +1,14 @@
+{
+  "name": "oss-upload-test",
+  "version": "1.0.0",
+  "description": "阿里云 OSS 上传连通性测试",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "ali-oss": "^6.20.0"
+  }
+}

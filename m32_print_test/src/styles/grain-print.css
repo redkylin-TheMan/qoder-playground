@@ -1,0 +1,132 @@
+/* =========================================================
+   粮食小票打印样式 — 58mm 卷纸纵向, 长度自适应
+   与主项目 EntryV1.vue receiptPrintCss() / PrintDialog.vue _buildPrintHtml 1:1 对齐
+   ========================================================= */
+
+@media print {
+  /* 58mm 热敏卷纸: 宽固定 58mm, 高自动(连续走纸), 四周 3.5mm 边距 */
+  @page {
+    size: 58mm auto;
+    margin: 3.5mm;
+  }
+
+  /* 粮食小票打印时隐藏通用样例 UI */
+  body > #app {
+    display: none !important;
+  }
+  #print-mount {
+    display: block !important;
+  }
+
+  /* 粮食小票本体 */
+  .grain-receipt {
+    width: 51mm;            /* 58mm - 3.5mm*2 边距 */
+    margin: 0;
+    padding: 0;             /* 边距已由 @page margin 处理 */
+    color: #111 !important;
+    background: #fff !important;
+    font-family: Arial, "Microsoft YaHei", sans-serif;
+    font-size: 10px;
+    line-height: 1.3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .grain-receipt * { box-sizing: border-box; }
+
+  .grain-receipt .rcpt { width: 100%; }
+
+  .grain-receipt .rcpt-head { text-align: center; }
+  .grain-receipt .rcpt-factory { font-size: 15px; font-weight: 900; line-height: 1.25; }
+  .grain-receipt .rcpt-sub { font-size: 11px; font-weight: 700; margin-top: 1mm; }
+  .grain-receipt .rcpt-copy {
+    display: inline-block; margin-top: 1.5mm; border: 1px solid #111;
+    padding: 0.5mm 2mm; font-size: 9px; line-height: 1; font-weight: 700;
+  }
+  .grain-receipt .rcpt-sep { border-top: 1px dashed #555; margin: 2mm 0; }
+
+  .grain-receipt .rcpt-no {
+    font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
+    line-height: 1.3; word-break: break-all;
+  }
+  .grain-receipt .rcpt-time { font-size: 9px; color: #444; margin-top: 0.5mm; }
+
+  .grain-receipt .rcpt-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: 2mm; row-gap: 1.5mm; margin: 1mm 0;
+  }
+  .grain-receipt .rcpt-field {
+    display: grid; grid-template-columns: 9mm minmax(0, 1fr);
+    align-items: baseline; min-width: 0; font-size: 10px; line-height: 1.3;
+  }
+  .grain-receipt .rcpt-field span { color: #555; }
+  .grain-receipt .rcpt-field b {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; font-weight: 700;
+  }
+
+  .grain-receipt .rcpt-weight {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid #111; margin: 1.5mm 0;
+  }
+  .grain-receipt .rcpt-weight > div { min-width: 0; padding: 1mm 1mm 0.8mm; }
+  .grain-receipt .rcpt-weight > div + div { border-left: 1px solid #111; }
+  .grain-receipt .rcpt-weight span,
+  .grain-receipt .rcpt-weight em {
+    display: block; font-size: 8.5px; line-height: 1; color: #555; font-style: normal;
+  }
+  .grain-receipt .rcpt-weight b {
+    display: block; min-width: 0; margin: 0.8mm 0 0.6mm;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 13px; line-height: 1; font-weight: 800;
+  }
+
+  /* 回皮凭证的毛重大字框 */
+  .grain-receipt .rcpt-gross {
+    display: grid; grid-template-columns: 9mm minmax(0, 1fr) 5mm;
+    align-items: baseline; border: 1px solid #111; padding: 1.2mm; margin: 1.5mm 0;
+  }
+  .grain-receipt .rcpt-gross span { font-size: 10px; color: #555; }
+  .grain-receipt .rcpt-gross b {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 18px; line-height: 1; font-weight: 900;
+  }
+  .grain-receipt .rcpt-gross em { font-size: 9px; line-height: 1; font-style: normal; color: #555; }
+
+  .grain-receipt .rcpt-extras {
+    display: flex; justify-content: space-between; gap: 2mm;
+    font-size: 9px; color: #555; padding: 0.5mm 0;
+  }
+  .grain-receipt .rcpt-note {
+    border-top: 1px dashed #555; padding-top: 1.2mm; margin-top: 1mm;
+    font-size: 9px; line-height: 1.2; font-weight: 700;
+  }
+
+  .grain-receipt .rcpt-amount {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 2mm;
+    border: 1.2px solid #111; padding: 1.2mm 2mm; margin-top: 1.5mm;
+  }
+  .grain-receipt .rcpt-amount .lbl { font-size: 10px; font-weight: 700; color: #333; }
+  .grain-receipt .rcpt-amount strong {
+    font-size: 18px; font-weight: 900; line-height: 1; white-space: nowrap;
+  }
+  .grain-receipt .rcpt-amount-cn { font-size: 8.5px; color: #555; text-align: right; padding-top: 0.8mm; }
+
+  .grain-receipt .rcpt-qr {
+    display: flex; flex-direction: column; align-items: center; margin: 2.5mm 0 1mm;
+  }
+  .grain-receipt .rcpt-qr img,
+  .grain-receipt .qr-empty { width: 26mm; height: 26mm; }
+  .grain-receipt .rcpt-qr img { image-rendering: pixelated; }
+  .grain-receipt .qr-empty {
+    border: 1px solid #111; display: flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 700;
+  }
+  .grain-receipt .rcpt-qr-label { margin-top: 1mm; font-size: 9px; line-height: 1; font-weight: 700; }
+
+  .grain-receipt .rcpt-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px dashed #555; margin-top: 2mm; padding-top: 1.2mm;
+    font-size: 9px; color: #555;
+  }
+}
