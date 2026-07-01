@@ -1,10 +1,5 @@
-qoderUseageTest/node_modules/
+
 *.log
-tdesign单元测试/node_modules
-
-# Python 字节码缓存
-__pycache__/
-*.pyc
-
-# Windows 下误用 > nul 重定向生成的名为 nul 的垃圾文件
-nul
+**/node_modules
+Claude-CLI-插件大全介绍.md
+**/dist

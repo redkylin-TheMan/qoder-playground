@@ -9,17 +9,19 @@ echo.
 
 cd /d "%~dp0"
 
-set "PY=C:\Users\Laptop\AppData\Local\Programs\Python\Python314-32\python.exe"
+REM 优先使用项目虚拟环境
+set "PY=.venv\Scripts\python.exe"
 
 if exist "%PY%" goto :found
 
-echo [WARN] Python 3.14 (32-bit) not found, trying default...
+echo [WARN] Virtual environment not found, trying system Python...
 set "PY=python"
 
 :found
 echo [OK] Using: %PY%
 echo [OK] Open browser: http://127.0.0.1:5000
 echo.
+
 "%PY%" app.py
 
 pause
