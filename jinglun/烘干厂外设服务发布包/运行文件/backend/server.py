@@ -20,7 +20,11 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 WEB_DIR = ROOT_DIR / "web"
 HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
-LOCAL_ALLOWED_ORIGINS = ("http://127.0.0.1", "http://localhost")
+LOCAL_ALLOWED_ORIGINS = (
+    "http://127.0.0.1", "http://localhost",
+    # 烘干厂业务域名（生产 HTTPS）— 前端跨域请求本机服务需在白名单内
+    "https://hgc.liangyiagri.com",
+)
 
 
 def _json_bytes(payload: Dict[str, Any]) -> bytes:
@@ -214,13 +218,20 @@ class JinglunHandler(BaseHTTPRequestHandler):
         raise JinglunError("NOT_FOUND", f"未知接口：{method} {route}")
 
     def dispatch_print(self, method: str, route: str, body: Dict[str, Any]) -> Any:
-        """三联针式打印路由分发。响应沿用 {ok, data} 约定。
+        """针式打印路由分发。响应沿用 {ok, data} 约定。
 
-        路由：
-          GET  /api/print/printers     列系统打印机 + 默认机
+        路由（业务用）：
+          GET  /api/print/printers     列系统打印机 + 默认机 + USB硬件ID
           POST /api/print/preview      body {entry, docType, model?} → 预览模型 + hex（不打印）
           POST /api/print/triplicate   body {entry, docType, printerName, copies?, dryRun?, model?, font?} → 打印
-        docType: grain_in | grain_out
+          docType: grain_in | grain_out
+
+        路由（测试台用）：
+          GET  /api/print/models       返回打印机型号清单（得力全系 + 得实 DS-600T + 通用兜底）
+          GET  /api/print/detect       USB 硬件ID 自动探测当前连接的打印机型号
+          POST /api/print/doc          body {type, fields, font?, model?, printerName?, copies?, dryRun?}
+                                       → 通用单据构建（fields 直传，5 种模板），预览或打印
+          type: grainIn | grainOut | invoice | receipt | triplicate
         """
         import time
 
@@ -230,6 +241,83 @@ class JinglunHandler(BaseHTTPRequestHandler):
         # GET /api/print/printers — 列打印机
         if method == "GET" and route == "/api/print/printers":
             return raw_printer.list_printers()
+
+        # GET /api/print/models — 返回打印机型号清单（测试台用）
+        if method == "GET" and route == "/api/print/models":
+            import printer_models
+            return {
+                "models": printer_models.list_models(),
+                "driverIndexPages": printer_models.DRIVER_INDEX_PAGES,
+                "universalDrivers": printer_models.UNIVERSAL_DRIVERS,
+            }
+
+        # GET /api/print/detect — USB 硬件ID 自动探测型号（测试台用）
+        if method == "GET" and route == "/api/print/detect":
+            import printer_models
+            info = raw_printer.list_printers()
+            usb_ids = info.get("usbIds") or []
+            detected_key = printer_models.detect_model(usb_ids)
+            detected_model = printer_models.get_model(detected_key) if detected_key else None
+            return {
+                "detectedModel": detected_key,
+                "detectedInfo": {
+                    "key": detected_key,
+                    "name": detected_model["name"],
+                    "columns": detected_model["columns"],
+                    "copies": detected_model["copies"],
+                    "lineWidth": detected_model["lineWidth"],
+                    "feedLines": detected_model["feedLines"],
+                    "driverUrl": detected_model["driverUrl"],
+                    "notes": detected_model["notes"],
+                } if detected_model else None,
+                "usbIds": usb_ids,
+                "printers": info.get("printers") or [],
+                "defaultPrinter": info.get("defaultPrinter") or "",
+            }
+
+        # POST /api/print/doc — 通用单据构建（测试台用，fields 直传）
+        if method == "POST" and route == "/api/print/doc":
+            import documents
+            doc_type = str(body.get("type") or "")
+            fields = body.get("fields") or {}
+            model = body.get("model") or "DB-618KII"
+            font = body.get("font") or None
+
+            try:
+                builder = documents.build_doc(doc_type, fields, font=font, model=model)
+            except ValueError as exc:
+                raise JinglunError("INVALID_DOC_TYPE", str(exc))
+            script_lines = builder.to_script()
+            data = raw_printer.build_bytes(script_lines)
+
+            printer_name = str(body.get("printerName") or "")
+            copies = int(body.get("copies") or 1)
+            dry_run = bool(body.get("dryRun", True))  # 测试台默认 dryRun
+
+            # 没指定打印机或 dryRun → 只返回预览 + hex
+            if dry_run or not printer_name:
+                return {
+                    "dryRun": True,
+                    "preview": builder.get_preview(),
+                    "bytes": len(data),
+                    "hexHead": " ".join("%02X" % c for c in data[:64]),
+                }
+
+            # 有打印机且非 dryRun → 实际打印
+            result = raw_printer.send_script(script_lines, printer_name, copies=copies, dry_run=False)
+            if not result.get("ok"):
+                err = result.get("error") or "打印失败"
+                code = "PRINTER_FAILED"
+                ret = result.get("win32Code")
+                raise JinglunError(code, err, ret)
+            return {
+                "dryRun": False,
+                "copies": result["copies"],
+                "bytes": result["bytes"],
+                "steps": result["steps"],
+                "hexHead": result.get("hexHead"),
+                "preview": builder.get_preview(),
+            }
 
         # 以下都是 POST，需要 docType
         doc_type = str(body.get("docType") or "")

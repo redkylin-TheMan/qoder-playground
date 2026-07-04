@@ -189,9 +189,9 @@ def send_script(
 
 # ============== 列打印机 ==============
 def list_printers() -> Dict[str, Any]:
-    """列出系统打印机 + 默认打印机。
+    """列出系统打印机 + 默认打印机 + USB 打印机硬件ID（用于型号自动探测）。
 
-    用 PowerShell Get-CimInstance Win32_Printer（与 dprinter-web printer.js 一致），
+    用 PowerShell Get-CimInstance Win32_Printer + Win32_PnPEntity（与 dprinter-web printer.js 一致），
     避免依赖 pywin32。失败返回空列表 + error。
     """
     ps = (
@@ -199,8 +199,13 @@ def list_printers() -> Dict[str, Any]:
         '$all=Get-CimInstance -ClassName Win32_Printer | Select-Object Name,Default;'
         '$d=($all | Where-Object {$_.Default -eq $true} | Select-Object -First 1).Name;'
         '$names=($all | ForEach-Object {$_.Name}) -join "|";'
+        # USB 打印机硬件ID（USBPRINT\...），用于型号自动探测
+        '$usb=(Get-CimInstance -ClassName Win32_PnPEntity | '
+        'Where-Object {$_.PNPDeviceID -like "USBPRINT\\*"} | '
+        'ForEach-Object {$_.PNPDeviceID}) -join "|";'
         'Write-Output ("DEFAULT="+$d);'
         'Write-Output ("NAMES="+$names);'
+        'Write-Output ("USBIDS="+$usb);'
     )
     try:
         # 用 System32 的 PowerShell（64 位，与 Python 位数无关）
@@ -212,12 +217,13 @@ def list_printers() -> Dict[str, Any]:
             capture_output=True, timeout=15,
         )
     except Exception as exc:
-        return {"defaultPrinter": "", "printers": [], "error": "调用 PowerShell 失败：%s" % exc}
+        return {"defaultPrinter": "", "printers": [], "usbIds": [], "error": "调用 PowerShell 失败：%s" % exc}
 
     stdout = (result.stdout or b"").decode("mbcs", errors="replace")
 
     default_printer = ""
     printers: List[str] = []
+    usb_ids: List[str] = []
     for line in stdout.splitlines():
         line = line.strip()
         if line.startswith("DEFAULT="):
@@ -228,7 +234,13 @@ def list_printers() -> Dict[str, Any]:
                 name = name.strip()
                 if name:
                     printers.append(name)
-    return {"defaultPrinter": default_printer, "printers": printers}
+        elif line.startswith("USBIDS="):
+            rest = line[7:]
+            for uid in rest.split("|"):
+                uid = uid.strip()
+                if uid:
+                    usb_ids.append(uid)
+    return {"defaultPrinter": default_printer, "printers": printers, "usbIds": usb_ids}
 
 
 if __name__ == "__main__":

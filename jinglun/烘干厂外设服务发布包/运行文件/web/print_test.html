@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>针式打印机测试台 · 烘干厂外设服务</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #0f1419; color: #c9d1d9;
+    font-size: 14px; line-height: 1.5;
+    min-height: 100vh;
+  }
+  header {
+    background: #161b22; border-bottom: 1px solid #30363d;
+    padding: 12px 20px; display: flex; align-items: center; gap: 16px;
+  }
+  header h1 { font-size: 16px; color: #58a6ff; }
+  header .sub { color: #8b949e; font-size: 12px; }
+  header .badge {
+    background: #1f6feb; color: #fff; padding: 2px 8px;
+    border-radius: 10px; font-size: 11px;
+  }
+  header a.back {
+    margin-left: auto; color: #58a6ff; font-size: 12px; text-decoration: none;
+  }
+  header a.back:hover { text-decoration: underline; }
+  .layout {
+    display: grid; grid-template-columns: 420px 1fr;
+    gap: 0; height: calc(100vh - 53px);
+  }
+  .pane { padding: 16px; overflow-y: auto; }
+  .pane.left { border-right: 1px solid #30363d; background: #0d1117; }
+  .pane.right { background: #0f1419; }
+  h2 {
+    font-size: 13px; color: #8b949e; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid #21262d;
+  }
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
+  .tab {
+    background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
+    padding: 8px 12px; cursor: pointer; border-radius: 6px;
+    font-size: 12px; transition: all 0.15s;
+  }
+  .tab:hover { background: #30363d; border-color: #8b949e; }
+  .tab.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+  .form-group { margin-bottom: 14px; }
+  label { display: block; font-size: 11px; color: #8b949e; margin-bottom: 3px; }
+  input, textarea, select {
+    width: 100%; background: #0d1117; color: #c9d1d9;
+    border: 1px solid #30363d; border-radius: 4px;
+    padding: 6px 8px; font-size: 13px; font-family: inherit;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: #1f6feb; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .item-list { margin-top: 6px; }
+  .item-row {
+    display: grid; gap: 4px; margin-bottom: 6px;
+    grid-template-columns: 1fr 60px 70px 80px 50px 70px 24px;
+    align-items: center;
+  }
+  .item-row.narrow { grid-template-columns: 1fr 50px 70px 24px; }
+  .item-row.trip { grid-template-columns: 100px 1fr 24px; }
+  .item-row input { padding: 4px 6px; font-size: 12px; }
+  .btn-del {
+    background: #da3633; color: #fff; border: none; border-radius: 4px;
+    cursor: pointer; height: 24px; font-size: 12px;
+  }
+  .btn-del:hover { background: #f85149; }
+  .btn-add {
+    background: #238636; color: #fff; border: none; border-radius: 4px;
+    padding: 4px 10px; cursor: pointer; font-size: 12px; margin-top: 4px;
+  }
+  .btn-add:hover { background: #2ea043; }
+  .print-opts {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 6px; padding: 12px; margin-bottom: 12px;
+  }
+  .print-opts label { margin-bottom: 4px; }
+  .actions { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .btn {
+    padding: 9px 16px; border: none; border-radius: 6px;
+    cursor: pointer; font-size: 13px; font-weight: 500;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .btn-primary { background: #1f6feb; color: #fff; }
+  .btn-primary:hover { background: #388bfd; }
+  .btn-success { background: #238636; color: #fff; }
+  .btn-success:hover { background: #2ea043; }
+  .btn-secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+  .btn-secondary:hover { background: #30363d; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .preview-wrap {
+    background: #fff; color: #000; border-radius: 4px;
+    padding: 12px; margin-bottom: 12px; max-height: 45vh; overflow: auto;
+    font-family: "Consolas", "Courier New", monospace;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .preview-line { white-space: pre; height: 1.4em; }
+  .preview-line.center { text-align: center; }
+  .preview-line.bold { font-weight: bold; }
+  .preview-line.dw { letter-spacing: 0.1em; }
+  .preview-empty { color: #8b949e; text-align: center; padding: 40px; }
+  .hex-wrap {
+    background: #0d1117; border: 1px solid #30363d; border-radius: 4px;
+    padding: 10px; margin-bottom: 12px; max-height: 200px; overflow: auto;
+  }
+  .hex-wrap pre {
+    font-family: "Consolas", monospace; font-size: 11px;
+    color: #79c0ff; white-space: pre-wrap; word-break: break-all;
+  }
+  .log {
+    background: #0d1117; border: 1px solid #30363d; border-radius: 4px;
+    padding: 10px; max-height: 220px; overflow-y: auto;
+    font-family: "Consolas", monospace; font-size: 12px;
+  }
+  .log-line { padding: 2px 0; border-bottom: 1px solid #161b22; }
+  .log-line.info { color: #8b949e; }
+  .log-line.ok { color: #3fb950; }
+  .log-line.err { color: #f85149; }
+  .log-line.warn { color: #d29922; }
+  .log-time { color: #484f58; margin-right: 8px; }
+  .check-row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+  .check-row input { width: auto; }
+  .check-row label { margin: 0; color: #c9d1d9; font-size: 13px; }
+  .status-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 6px;
+  }
+  .status-dot.on { background: #3fb950; box-shadow: 0 0 6px #3fb950; }
+  .status-dot.off { background: #f85149; }
+  .meta { font-size: 11px; color: #8b949e; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🖨️ 针式打印机测试台</h1>
+  <span class="badge" id="connStatus"><span class="status-dot off"></span>未连接</span>
+  <span class="sub">表单 → ESC/P-K 指令 → winspool RAW → 系统打印队列</span>
+  <a class="back" href="/index.html">← 返回读卡器诊断页</a>
+</header>
+
+<div class="layout">
+  <div class="pane left">
+    <h2>① 选择单据类型</h2>
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-type="grainIn">粮食入库单</div>
+      <div class="tab" data-type="grainOut">粮食出库单</div>
+      <div class="tab" data-type="invoice">增值税发票</div>
+      <div class="tab" data-type="receipt">小票/收银票</div>
+      <div class="tab" data-type="triplicate">通用三联单</div>
+    </div>
+
+    <h2>② 填写单据内容</h2>
+    <div id="formArea"></div>
+
+    <h2>③ 打印参数</h2>
+    <div class="print-opts">
+      <label>目标打印机</label>
+      <select id="printerSelect"><option value="">加载中...</option></select>
+      <div class="meta" id="defaultPrinter"></div>
+      <label style="margin-top:10px">打印机型号（决定行宽/复写/走纸）</label>
+      <select id="modelSelect"><option value="">加载中...</option></select>
+      <div class="row" style="margin-top:6px">
+        <button class="btn btn-secondary" id="btnDetect" style="font-size:12px;padding:6px 10px">🔍 自动探测</button>
+        <button class="btn btn-secondary" id="btnDriver" style="font-size:12px;padding:6px 10px">⬇ 下载该型号驱动</button>
+      </div>
+      <div class="meta" id="modelInfo"></div>
+      <label style="margin-top:10px">打印份数（每份走纸到撕纸位）</label>
+      <input type="number" id="copies" value="1" min="1" max="99">
+      <label style="margin-top:10px">字体方案（字粗细/清晰度）</label>
+      <select id="fontPreset">
+        <option value="normal">常规（默认，较细）</option>
+        <option value="bold" selected>加粗（推荐，又粗又清晰）</option>
+        <option value="hei">黑体加粗（笔画最粗，适合复写多联）</option>
+        <option value="boldwide">加粗 + 加宽字距（笔画粗+间距大，最清晰）</option>
+        <option value="heiwide">黑体加粗 + 加宽字距（最粗最清晰）</option>
+        <option value="dark">加粗 + 加大击打力（复写深，字迹重）</option>
+      </select>
+      <div class="meta">💡 针打的"字体"是固件点阵，由 ESC/P 指令控制。换方案后重新预览+打印对比效果。</div>
+      <div class="check-row">
+        <input type="checkbox" id="dryRun" checked>
+        <label for="dryRun">模拟模式（dryRun，不实际打印，只看指令）</label>
+      </div>
+      <div class="meta">⚠️ 首次务必勾选模拟，确认指令无误后再取消勾选实际打印。</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" id="btnPreview">👁 预览指令</button>
+      <button class="btn btn-primary" id="btnPrint">🖨 打印</button>
+      <button class="btn btn-success" id="btnBatch">📦 连打3份</button>
+    </div>
+  </div>
+
+  <div class="pane right">
+    <h2>📋 打印预览（等宽近似渲染）</h2>
+    <div class="preview-wrap" id="preview">
+      <div class="preview-empty">点击「预览指令」查看排版效果</div>
+    </div>
+
+    <h2>🔢 ESC/P 指令 (HEX)</h2>
+    <div class="hex-wrap"><pre id="hexView">（预览后显示）</pre></div>
+
+    <h2>📜 操作日志</h2>
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ============== 全局状态 ==============
+var currentType = 'grainIn';
+var modelsList = [];
+var modelsMap = {};
+var currentModelKey = 'DB-618KII';
+
+// ============== 默认字段（内嵌，无需 /api/defaults） ==============
+var DEFAULTS = {
+  grainIn: {
+    companyName: '某某粮油有限公司', no: 'RK20260617-0001', date: '2026-06-17',
+    goods: '小麦(一等)', outWeight: '1500.5', inWeight: '1498.0',
+    deduction: '2.5', unitPrice: '2.80', amount: '4194.40',
+    maker: '张三', driverName: '李四', driverPhone: '138-0000-0001', plateNo: '豫A·12345',
+    payee: '某某粮油有限公司', payeeBank: '中国农业银行 某某支行',
+    payAmount: '4194.40', payMethod: '银行转账'
+  },
+  grainOut: {
+    companyName: '某某粮油有限公司', no: 'CK20260617-0001', date: '2026-06-17',
+    goods: '玉米(二等)', inWeight: '2000.0', outWeight: '2000.0',
+    deduction: '0.0', unitPrice: '2.65', amount: '5300.00',
+    maker: '王五', driverName: '赵六', driverPhone: '139-0000-0002', plateNo: '鲁B·66888',
+    payee: '某某粮油有限公司', payeeBank: '中国农业银行 某某支行',
+    payAmount: '5300.00', payMethod: '银行转账'
+  },
+  invoice: {
+    no: '01100210011112345678', date: '2026-06-17',
+    seller: '某某粮油有限公司  纳税人识别号: 91110100000000000A', buyer: '某某食品有限公司  纳税人识别号: 91110100000000000B',
+    items: [
+      { name: '小麦(一等)', qty: '5000', price: '2.80', amount: '14000.00', rate: '9%', tax: '1260.00' },
+      { name: '玉米(二等)', qty: '3000', price: '2.65', amount: '7950.00', rate: '9%', tax: '715.50' }
+    ],
+    totalAmount: '21950.00', totalTax: '1975.50', total: '23925.50',
+    totalCN: '贰万叁仟玖佰贰拾伍元伍角整', maker: '张三', remark: '本发票为样张测试，不作为报销凭证'
+  },
+  receipt: {
+    store: '某某粮油便利店', addr: '河南省郑州市某某路88号', phone: '0371-88888888',
+    cashier: '001', no: '20260617001', date: '2026-06-17 14:30:00',
+    items: [
+      { name: '东北大米5kg', qty: '2', price: '45.00' },
+      { name: '金龙鱼食用油5L', qty: '1', price: '68.00' }
+    ],
+    payMethod: '微信支付', payAmount: '249.00', change: '0.00', member: '138****0001', points: '1200'
+  },
+  triplicate: {
+    companyName: '某某粮油有限公司', title: '过磅结算单', no: 'GB20260617-0001', date: '2026-06-17',
+    fields: [
+      { k: '货品名称', v: '小麦(一等)' }, { k: '毛重(kg)', v: '1510.0' },
+      { k: '皮重(kg)', v: '9.5' }, { k: '净重(kg)', v: '1500.5' },
+      { k: '单价(元/kg)', v: '2.80' }, { k: '金额(元)', v: '4201.40' }
+    ],
+    remark: '本单一式三联：商户存根(红)/客户存根(蓝)/财务存根(黑)'
+  }
+};
+
+// ============== 工具 ==============
+function el(tag, attrs, children) {
+  var e = document.createElement(tag);
+  if (attrs) {
+    for (var k in attrs) {
+      if (k === 'class') e.className = attrs[k];
+      else if (k === 'html') e.innerHTML = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    }
+  }
+  if (children) {
+    if (typeof children === 'string') e.textContent = children;
+    else if (Array.isArray(children)) children.forEach(function (c) { e.appendChild(c); });
+    else e.appendChild(children);
+  }
+  return e;
+}
+function log(msg, level) {
+  var box = document.getElementById('log');
+  var time = new Date().toLocaleTimeString();
+  var line = el('div', { class: 'log-line ' + (level || 'info') });
+  line.appendChild(el('span', { class: 'log-time' }, time));
+  line.appendChild(document.createTextNode(msg));
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ============== API 封装（适配 8765 Python 后端的 {ok, data} 约定） ==============
+// 同源请求（测试页和 API 都在 8765），fetch 用相对路径
+function apiGet(url) {
+  return fetch(url).then(function (r) { return r.json(); }).then(function (res) {
+    if (!res.ok) throw (res.error && res.error.message) || '请求失败';
+    return res.data;
+  });
+}
+function apiPost(url, body) {
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }).then(function (r) { return r.json(); }).then(function (res) {
+    if (!res.ok) throw (res.error && res.error.message) || '请求失败';
+    return res.data;
+  });
+}
+
+// ============== 加载型号清单 ==============
+function loadModels() {
+  return apiGet('/api/print/models').then(function (data) {
+    modelsList = data.models || [];
+    modelsMap = {};
+    modelsList.forEach(function (m) { modelsMap[m.key] = m; });
+    var sel = document.getElementById('modelSelect');
+    sel.innerHTML = '';
+    var order = { 'DB': 1, 'DL': 2, 'DE': 3, 'DS': 4, 'GENERIC': 9 };
+    modelsList.sort(function (a, b) {
+      return (order[a.series] || 5) - (order[b.series] || 5) || a.name.localeCompare(b.name);
+    });
+    modelsList.forEach(function (m) {
+      var o = el('option', { value: m.key },
+        m.name + ' · ' + m.columns + '列 · 1+' + (m.copies - 1) + '联');
+      if (m.key === currentModelKey) o.selected = true;
+      sel.appendChild(o);
+    });
+    updateModelInfo();
+    log('已加载 ' + modelsList.length + ' 个型号', 'ok');
+  }).catch(function (e) { log('加载型号清单失败: ' + e, 'err'); });
+}
+
+function updateModelInfo() {
+  var m = modelsMap[currentModelKey];
+  var info = document.getElementById('modelInfo');
+  if (!m) { info.textContent = ''; return; }
+  info.innerHTML = '当前: <b>' + m.name + '</b> · 行宽 ' + m.lineWidth +
+    ' 列 · 复写 1+' + (m.copies - 1) + ' · ' + (m.notes || '');
+}
+
+document.getElementById('modelSelect').addEventListener('change', function () {
+  currentModelKey = this.value;
+  updateModelInfo();
+  log('已切换型号: ' + (modelsMap[currentModelKey] ? modelsMap[currentModelKey].name : currentModelKey), 'info');
+});
+
+document.getElementById('btnDetect').addEventListener('click', function () {
+  log('正在自动探测打印机型号...', 'info');
+  apiGet('/api/print/detect').then(function (data) {
+    if (data.detectedModel) {
+      currentModelKey = data.detectedModel;
+      document.getElementById('modelSelect').value = currentModelKey;
+      updateModelInfo();
+      var m = data.detectedInfo;
+      log('✅ 探测到: ' + (m ? m.name : data.detectedModel) + '（行宽' + (m ? m.lineWidth : '?') + '列）', 'ok');
+    } else {
+      log('⚠️ 未识别到已知型号。USB设备: ' + (data.usbIds && data.usbIds.length ? data.usbIds.join(', ') : '无'), 'warn');
+      log('请手动选择型号，或选「通用82列」兜底', 'info');
+    }
+  }).catch(function (e) { log('探测失败: ' + e, 'err'); });
+});
+
+document.getElementById('btnDriver').addEventListener('click', function () {
+  var m = modelsMap[currentModelKey];
+  if (!m) { log('请先选择型号', 'warn'); return; }
+  var url = m.driverUrl;
+  if (!url || url.indexOf('<OSS:') === 0) {
+    log('⚠️ 该型号驱动链接尚未配置（OSS占位符）。请联系管理员上传后替换。', 'warn');
+    log('临时方案：可去第三方站点下载，见下方日志', 'info');
+    log('  驱动天空: https://www.drvsky.com/sort/863_1.htm', 'info');
+    log('  打印机驱动网: https://www.dyjqd.com/driver/deli/list_277_1.html', 'info');
+    return;
+  }
+  log('打开驱动下载: ' + url, 'info');
+  window.open(url, '_blank');
+});
+
+loadModels();
+
+// ============== 加载打印机列表 ==============
+function loadPrinters() {
+  apiGet('/api/print/printers').then(function (info) {
+    var sel = document.getElementById('printerSelect');
+    var list = info.printers || [];
+    sel.innerHTML = '';
+    if (!list.length) {
+      sel.appendChild(el('option', { value: '' }, '（未发现打印机）'));
+      document.getElementById('connStatus').innerHTML = '<span class="status-dot off"></span>无打印机';
+      return;
+    }
+    list.forEach(function (name) {
+      var o = el('option', { value: name }, name);
+      if (name === info.defaultPrinter) o.selected = true;
+      sel.appendChild(o);
+    });
+    document.getElementById('defaultPrinter').textContent =
+      '系统默认打印机: ' + (info.defaultPrinter || '（无）');
+    document.getElementById('connStatus').innerHTML =
+      '<span class="status-dot on"></span>已连接 · ' + list.length + ' 台打印机';
+    log('发现 ' + list.length + ' 台打印机，默认: ' + (info.defaultPrinter || '无'), 'ok');
+  }).catch(function (e) {
+    log('读取打印机列表失败: ' + e, 'err');
+    document.getElementById('connStatus').innerHTML = '<span class="status-dot off"></span>读取失败';
+  });
+}
+loadPrinters();
+
+// ============== Tab 切换 ==============
+document.getElementById('tabs').addEventListener('click', function (e) {
+  var t = e.target.closest('.tab');
+  if (!t) return;
+  document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+  t.classList.add('active');
+  currentType = t.dataset.type;
+  renderForm(currentType);
+});
+
+// ============== 表单渲染 ==============
+renderForm(currentType);
+
+function renderForm(type) {
+  var area = document.getElementById('formArea');
+  area.innerHTML = '';
+  var d = DEFAULTS[type] || {};
+
+  if (type === 'grainIn' || type === 'grainOut') {
+    area.appendChild(field('companyName', '单位名称', d.companyName));
+    area.appendChild(row2('no', '单号', d.no, 'date', '日期', d.date));
+    area.appendChild(field('goods', '货品名称', d.goods));
+    if (type === 'grainIn') {
+      area.appendChild(row2('outWeight', '出库重量(kg)', d.outWeight, 'inWeight', '入库重量(kg)', d.inWeight));
+    } else {
+      area.appendChild(row2('inWeight', '库存重量(kg)', d.inWeight, 'outWeight', '出库重量(kg)', d.outWeight));
+    }
+    area.appendChild(row3('deduction', '扣减(kg)', d.deduction, 'unitPrice', '单价(元/kg)', d.unitPrice, 'amount', '金额(元)', d.amount));
+    area.appendChild(separator('人员与收款'));
+    area.appendChild(row2('maker', '制单人', d.maker, 'driverName', '驾驶员', d.driverName));
+    area.appendChild(row2('driverPhone', '联系电话', d.driverPhone, 'plateNo', '车牌号', d.plateNo));
+    area.appendChild(field('payee', '收款账户', d.payee));
+    area.appendChild(field('payeeBank', '开户银行', d.payeeBank));
+    area.appendChild(row2('payAmount', '收款金额', d.payAmount, 'payMethod', '收款方式', d.payMethod));
+  } else if (type === 'invoice') {
+    area.appendChild(field('no', '发票号码', d.no));
+    area.appendChild(field('date', '开票日期', d.date));
+    area.appendChild(field('seller', '销货方', d.seller));
+    area.appendChild(field('buyer', '购货方', d.buyer));
+    area.appendChild(separator('商品明细（名称/数量/单价/金额/税率/税额）'));
+    area.appendChild(itemList(d.items || [], 'invoice'));
+    area.appendChild(separator('金额合计'));
+    area.appendChild(row2('totalAmount', '合计金额', d.totalAmount, 'totalTax', '合计税额', d.totalTax));
+    area.appendChild(field('total', '价税合计(小写)', d.total));
+    area.appendChild(field('totalCN', '价税合计(大写)', d.totalCN));
+    area.appendChild(field('maker', '开票人', d.maker));
+    area.appendChild(field('remark', '备注', d.remark));
+  } else if (type === 'receipt') {
+    area.appendChild(field('store', '门店名称', d.store));
+    area.appendChild(field('addr', '门店地址', d.addr));
+    area.appendChild(row2('phone', '电话', d.phone, 'cashier', '收银员', d.cashier));
+    area.appendChild(row2('no', '单号', d.no, 'date', '时间', d.date));
+    area.appendChild(separator('商品列表（名称/数量/金额）'));
+    area.appendChild(itemList(d.items || [], 'receipt'));
+    area.appendChild(separator('支付'));
+    area.appendChild(row2('payMethod', '付款方式', d.payMethod, 'payAmount', '实付', d.payAmount));
+    area.appendChild(row2('change', '找零', d.change, 'member', '会员', d.member));
+    area.appendChild(field('points', '积分余额', d.points));
+  } else if (type === 'triplicate') {
+    area.appendChild(field('companyName', '单位名称', d.companyName));
+    area.appendChild(field('title', '单据标题', d.title));
+    area.appendChild(row2('no', '单号', d.no, 'date', '日期', d.date));
+    area.appendChild(separator('字段（键 = 值）'));
+    area.appendChild(itemList(d.fields || [], 'triplicate'));
+    area.appendChild(field('remark', '底部备注', d.remark));
+  }
+}
+
+function field(key, label, val) {
+  var g = el('div', { class: 'form-group' });
+  g.appendChild(el('label', {}, label));
+  g.appendChild(el('input', { type: 'text', 'data-k': key, value: val == null ? '' : val }));
+  return g;
+}
+function row2(k1, l1, v1, k2, l2, v2) {
+  var g = el('div', { class: 'form-group' });
+  var r = el('div', { class: 'row' });
+  var c1 = el('div');
+  c1.appendChild(el('label', {}, l1));
+  c1.appendChild(el('input', { type: 'text', 'data-k': k1, value: v1 == null ? '' : v1 }));
+  var c2 = el('div');
+  c2.appendChild(el('label', {}, l2));
+  c2.appendChild(el('input', { type: 'text', 'data-k': k2, value: v2 == null ? '' : v2 }));
+  r.appendChild(c1); r.appendChild(c2);
+  g.appendChild(r);
+  return g;
+}
+function row3(k1, l1, v1, k2, l2, v2, k3, l3, v3) {
+  var g = el('div', { class: 'form-group' });
+  var r = el('div', { class: 'row3' });
+  [[k1, l1, v1], [k2, l2, v2], [k3, l3, v3]].forEach(function (it) {
+    var c = el('div');
+    c.appendChild(el('label', {}, it[1]));
+    c.appendChild(el('input', { type: 'text', 'data-k': it[0], value: it[2] == null ? '' : it[2] }));
+    r.appendChild(c);
+  });
+  g.appendChild(r);
+  return g;
+}
+function separator(title) {
+  return el('h2', {}, '── ' + title + ' ──');
+}
+
+// ============== 字体预设 ==============
+var FONT_PRESETS = {
+  normal:  {},
+  bold:    { bold: true },
+  hei:     { bold: true, font: 'hei' },
+  boldwide:{ bold: true, spacing: 3 },
+  heiwide: { bold: true, font: 'hei', spacing: 3 },
+  dark:    { bold: true, dark: true }
+};
+function getFontConfig() {
+  var key = document.getElementById('fontPreset').value;
+  return FONT_PRESETS[key] || {};
+}
+
+// ============== 动态列表 ==============
+function itemList(items, kind) {
+  var wrap = el('div', { class: 'item-list' });
+  items.forEach(function (it) { wrap.appendChild(itemRow(it, kind)); });
+  var addBtn = el('button', { class: 'btn-add' }, '+ 添加一行');
+  addBtn.addEventListener('click', function () {
+    var blank = kind === 'invoice'
+      ? { name: '', qty: '', price: '', amount: '', rate: '', tax: '' }
+      : (kind === 'receipt' ? { name: '', qty: '', price: '' } : { k: '', v: '' });
+    wrap.insertBefore(itemRow(blank, kind), addBtn);
+  });
+  wrap.appendChild(addBtn);
+  return wrap;
+}
+function itemRow(item, kind) {
+  var row = el('div', { class: 'item-row' + (kind !== 'invoice' ? ' ' + (kind === 'receipt' ? 'narrow' : 'trip') : '') });
+  if (kind === 'invoice') {
+    ['name', 'qty', 'price', 'amount', 'rate', 'tax'].forEach(function (k) {
+      var ph = { name: '名称', qty: '数量', price: '单价', amount: '金额', rate: '税率', tax: '税额' }[k];
+      var w = k === 'name' ? '120px' : (k === 'qty' ? '50px' : '60px');
+      var inp = el('input', { type: 'text', placeholder: ph, value: item[k] == null ? '' : item[k], style: 'width:' + w });
+      inp.setAttribute('data-ik', k);
+      row.appendChild(inp);
+    });
+  } else if (kind === 'receipt') {
+    ['name', 'qty', 'price'].forEach(function (k) {
+      var ph = { name: '商品', qty: '数量', price: '金额' }[k];
+      var inp = el('input', { type: 'text', placeholder: ph, value: item[k] == null ? '' : item[k] });
+      inp.setAttribute('data-ik', k);
+      row.appendChild(inp);
+    });
+  } else {
+    var kIn = el('input', { type: 'text', placeholder: '键', value: item.k == null ? '' : item.k });
+    kIn.setAttribute('data-ik', 'k');
+    var vIn = el('input', { type: 'text', placeholder: '值', value: item.v == null ? '' : item.v });
+    vIn.setAttribute('data-ik', 'v');
+    row.appendChild(kIn); row.appendChild(vIn);
+  }
+  var del = el('button', { class: 'btn-del', title: '删除' }, '×');
+  del.addEventListener('click', function () { row.remove(); });
+  row.appendChild(del);
+  return row;
+}
+
+// ============== 收集表单 ==============
+function collectFields() {
+  var data = {};
+  document.querySelectorAll('#formArea input[data-k]').forEach(function (inp) {
+    data[inp.dataset.k] = inp.value;
+  });
+  var list = document.querySelector('#formArea .item-list');
+  if (list) {
+    var rows = list.querySelectorAll('.item-row');
+    if (currentType === 'invoice' || currentType === 'receipt') {
+      var arr = [];
+      rows.forEach(function (r) {
+        var obj = {};
+        r.querySelectorAll('input[data-ik]').forEach(function (inp) { obj[inp.dataset.ik] = inp.value; });
+        var has = Object.keys(obj).some(function (k) { return obj[k] !== ''; });
+        if (has) arr.push(obj);
+      });
+      data.items = arr;
+    } else if (currentType === 'triplicate') {
+      var arr2 = [];
+      rows.forEach(function (r) {
+        var obj = {};
+        r.querySelectorAll('input[data-ik]').forEach(function (inp) { obj[inp.dataset.ik] = inp.value; });
+        if (obj.k || obj.v) arr2.push(obj);
+      });
+      data.fields = arr2;
+    }
+  }
+  return data;
+}
+
+// ============== 预览渲染 ==============
+function renderPreview(preview) {
+  var box = document.getElementById('preview');
+  box.innerHTML = '';
+  if (!preview || !preview.length) {
+    box.appendChild(el('div', { class: 'preview-empty' }, '（无内容）'));
+    return;
+  }
+  preview.forEach(function (ln) {
+    var div = el('div', { class: 'preview-line' });
+    if (ln.align === 'center') div.classList.add('center');
+    if (ln.bold) div.classList.add('bold');
+    if (ln.dw || ln.dh) div.classList.add('dw');
+    div.textContent = ln.text === '' ? ' ' : ln.text;
+    box.appendChild(div);
+  });
+}
+
+function renderHex(hexStr) {
+  // hexStr 是空格分隔的十六进制（如 "1B 40 1B 74..."）
+  var bytes = hexStr.trim().split(/\s+/);
+  var lines = [];
+  for (var i = 0; i < bytes.length; i += 32) {
+    var slice = bytes.slice(i, i + 32);
+    var offset = ('0000' + i.toString(16)).slice(-4);
+    lines.push(offset + ': ' + slice.join(' '));
+  }
+  document.getElementById('hexView').textContent = lines.join('\n') + '\n\n（仅显示前 64 字节，完整指令已发往打印机）';
+}
+
+// ============== 预览按钮（调 /api/print/doc，dryRun=true） ==============
+document.getElementById('btnPreview').addEventListener('click', function () {
+  var fields = collectFields();
+  var font = getFontConfig();
+  var fname = document.getElementById('fontPreset').selectedOptions[0].text;
+  log('请求预览 [' + currentType + '] 型号:' + currentModelKey + ' 字体:' + fname + '...', 'info');
+  apiPost('/api/print/doc', {
+    type: currentType, fields: fields, font: font, model: currentModelKey, dryRun: true
+  }).then(function (data) {
+    renderPreview(data.preview);
+    renderHex(data.hexHead || '');
+    log('预览生成成功，共 ' + data.bytes + ' 字节', 'ok');
+  }).catch(function (e) { log('预览失败: ' + e, 'err'); });
+});
+
+// ============== 打印按钮（调 /api/print/doc） ==============
+function doPrint(copies) {
+  var fields = collectFields();
+  var font = getFontConfig();
+  var printerName = document.getElementById('printerSelect').value;
+  var dryRun = document.getElementById('dryRun').checked;
+  var fname = document.getElementById('fontPreset').selectedOptions[0].text;
+  copies = copies || parseInt(document.getElementById('copies').value, 10) || 1;
+
+  if (!dryRun && !printerName) { log('未选择打印机', 'warn'); return; }
+
+  log((dryRun ? '【模拟】' : '【实际】') + '打印 ' + copies + ' 份 [' + currentType + '] 型号:' + currentModelKey + ' 字体:' + fname + ' → ' + (printerName || '无'), 'info');
+
+  apiPost('/api/print/doc', {
+    type: currentType, fields: fields, font: font, model: currentModelKey,
+    printerName: printerName, copies: copies, dryRun: dryRun
+  }).then(function (data) {
+    renderPreview(data.preview);
+    renderHex(data.hexHead || '');
+    log((dryRun ? '模拟成功' : '打印已提交') + ' · ' + data.bytes + ' 字节', 'ok');
+    if (data.steps) data.steps.forEach(function (s) { log('  ' + s, 'info'); });
+  }).catch(function (e) {
+    log('打印失败: ' + e, 'err');
+  });
+}
+
+document.getElementById('btnPrint').addEventListener('click', function () { doPrint(); });
+document.getElementById('btnBatch').addEventListener('click', function () {
+  document.getElementById('copies').value = 3;
+  doPrint(3);
+});
+
+log('页面就绪。默认模拟模式(dryRun)开启，可放心测试。', 'ok');
+</script>
+</body>
+</html>
