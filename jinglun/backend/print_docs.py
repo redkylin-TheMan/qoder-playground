@@ -168,20 +168,25 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     ff = fields.get("fields") or []
 
     # 标题（居中加粗，非 compact 还倍高倍宽）
+    b.separator("═")  # 双横线顶边
     b.title(title)
+    # 表头信息（2列左右分布，窄纸降级单列）
+    header_pairs = []
     if no:
-        b.kv("单　号", no, W)
+        header_pairs.append(("单　号", no))
     if date:
-        b.kv("日　期", date, W)
+        header_pairs.append(("日　期", date))
     if company:
-        b.kv("单　位", company, W)
-    b.separator("-")
+        header_pairs.append(("单　位", company))
+    b.kv_pairs(header_pairs, W)
+    b.separator("─")  # 单横线分隔 表头↔字段
     # 字段区：过滤空值后按 2 列左右分布（窄纸自动降级单列）
     pairs = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
     b.kv_pairs(pairs, W)
-    b.separator("-")
+    b.separator("─")  # 单横线分隔 字段↔签字
     # 签字栏：2 列左右排一行（窄纸降级单列）
     b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
+    b.separator("═")  # 双横线底边
     # 走纸到撕纸位（一份内容结束）
     b.feed_to_tear(rm["feedLines"])
     return b
