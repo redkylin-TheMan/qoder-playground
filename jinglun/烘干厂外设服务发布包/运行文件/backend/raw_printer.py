@@ -166,8 +166,14 @@ def send_script(
                 "steps": steps, "hexHead": hex_head}
 
     if not printer_name:
-        return {"ok": False, "dryRun": False, "copies": copies, "bytes": len(data), "steps": steps,
-                "hexHead": hex_head, "error": "未指定打印机名且非 dryRun 模式"}
+        # 没指定打印机 → 回落到系统默认打印机
+        info = list_printers()
+        default = info.get("defaultPrinter") or ""
+        if not default:
+            return {"ok": False, "dryRun": False, "copies": copies, "bytes": len(data), "steps": steps,
+                    "hexHead": hex_head, "error": "未指定打印机名，且系统无默认打印机"}
+        printer_name = default
+        steps.append("使用系统默认打印机: %s" % printer_name)
 
     # 多份：循环 copies 次发送（物理复写由纸张层数决定，这里 copies 指打印几遍完整脚本）
     for i in range(copies):
