@@ -291,6 +291,53 @@ class EscpBuilder:
             self._push_text_line(line1 + " " * gap + ("%s %s" % (k2, v2)))
         return self
 
+    def kv_triple(
+        self,
+        items: List[Tuple[str, str]],
+        width: Optional[int] = None,
+        min_third: int = 20,
+    ) -> "EscpBuilder":
+        """一行排 3 组 key:value（三列分布），最大化纸宽利用率。
+
+        items: [(k1,v1), (k2,v2), ...] — 每次 3 组排一行，不足 3 组时回退 kv_pairs。
+        min_third: 每区最小可用宽度，不够则降级为 2 列（kv_pairs）。
+        """
+        width = int(width) if width is not None else self.line_width
+        third = width // 3
+        # 区宽不够 → 降级 2 列
+        if third < min_third:
+            return self.kv_pairs(items, width)
+        for i in range(0, len(items), 3):
+            chunk = items[i : i + 3]
+            if len(chunk) <= 2:
+                self.kv_pairs(chunk, width)
+                continue
+            # 3 组排一行：每区填满 third-1 列（留 1 列间距防粘连）
+            cell_w = third - 1
+            # 先检查是否有 cell 超长（超 cell_w 的组单独一行排，不进三列）
+            short_chunk = []
+            long_items = []
+            for k, v in chunk:
+                cell = "%s %s" % (k, v)
+                if disp_width(cell) >= cell_w:
+                    long_items.append((k, v))
+                else:
+                    short_chunk.append((k, v))
+            # 超长的组单独 kv() 一行
+            for k, v in long_items:
+                self.kv(k, v, width)
+            # 剩余的短组排三列（不足 3 个也排一行）
+            if short_chunk:
+                parts = []
+                for k, v in short_chunk:
+                    cell = "%s %s" % (k, v)
+                    cw = disp_width(cell)
+                    if cw < cell_w:
+                        cell += " " * (cell_w - cw)
+                    parts.append(cell)
+                self._push_text_line("".join(parts))
+        return self
+
     def table_row(self, cols: List[Dict[str, Any]]) -> "EscpBuilder":
         """多列对齐行。cols=[{text, align, width}, ...]"""
         cells = []

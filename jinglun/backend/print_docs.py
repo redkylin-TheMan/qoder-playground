@@ -75,8 +75,11 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
 
     fields: List[Tuple[str, str]] = [
         ("农　户", s(entry.get("farmerName")) or "现场散单"),
-        ("品　种", s(entry.get("grainNameSnap"))),
-        ("仓　位", s(entry.get("wareareaNameSnap"))),
+        ("身份证", s(entry.get("farmerIdCardSnap")) or s(entry.get("farmerIdCard"))),
+        ("电　话", s(entry.get("farmerPhone")) or s(entry.get("farmerPhoneSnap"))),
+        ("品　种", s(entry.get("grainNameSnap")) or s(entry.get("grainType"))),
+        ("仓　位", s(entry.get("wareareaNameSnap")) or s(entry.get("wareareaName"))),
+        ("车牌号", s(entry.get("driverPlateSnap")) or s(entry.get("driverPlate"))),
         ("毛重(kg)", s(entry.get("grossWeight"))),
         ("皮重(kg)", s(entry.get("tareWeight"))),
         ("扣重(kg)", s(entry.get("deductWeight")) or "0"),
@@ -155,7 +158,7 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     ⚠️ 三联 = 物理三层复写纸（针头击打一次穿透碳复写），软件只打印一遍。
     早期实现误循环打 3 遍 → 3 倍内容 + 3 倍走纸，已废弃。
 
-    布局：字段按 2 列左右分布（kv_pairs），窄纸（lineWidth<32）自动降级单列。
+    布局：标准纸字段按 3 列分布（kv_triple，占满 82 列纸宽），窄纸自动降级。
     """
     rm = resolve_model(model)
     W = rm["lineWidth"]
@@ -170,19 +173,19 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     # 标题（居中加粗，非 compact 还倍高倍宽）
     b.separator("═")  # 双横线顶边
     b.title(title)
-    # 表头信息（2列左右分布，窄纸降级单列）
-    header_pairs = []
+    # 表头信息（3列分布，窄纸降级 2 列/单列）
+    header_items = []
     if no:
-        header_pairs.append(("单　号", no))
+        header_items.append(("单　号", no))
     if date:
-        header_pairs.append(("日　期", date))
+        header_items.append(("日　期", date))
     if company:
-        header_pairs.append(("单　位", company))
-    b.kv_pairs(header_pairs, W)
+        header_items.append(("单　位", company))
+    b.kv_triple(header_items, W)
     b.separator("─")  # 单横线分隔 表头↔字段
-    # 字段区：过滤空值后按 2 列左右分布（窄纸自动降级单列）
-    pairs = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
-    b.kv_pairs(pairs, W)
+    # 字段区：过滤空值后按 3 列分布（窄纸自动降级）
+    items = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
+    b.kv_triple(items, W)
     b.separator("─")  # 单横线分隔 字段↔签字
     # 签字栏：2 列左右排一行（窄纸降级单列）
     b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
