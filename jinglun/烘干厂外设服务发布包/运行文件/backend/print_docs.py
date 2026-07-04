@@ -213,8 +213,8 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     items = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
     b.kv_triple(items, W)
     b.separator("─")  # 单横线分隔 字段↔签字
-    # 签字栏：3 个签字位，2列布局自动排（窄纸降级单列）
-    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________"), ("客户签字", "____________")], W)
+    # 签字栏：3 个签字位排一行（窄纸自动降级单列）
+    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________"), ("客户签字", "____________")], W, cols=3)
     b.separator("═")  # 双横线底边
     # FF(换页)：按 ESC C 设的页长精确走纸到下一页顶部。
     # 替代 feed_top/feed_to_tear：不再手动数行，零残差对齐穿孔。

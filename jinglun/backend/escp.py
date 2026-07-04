@@ -323,32 +323,41 @@ class EscpBuilder:
         pairs: List[Tuple[str, str]],
         width: Optional[int] = None,
         min_half: int = 16,
+        cols: int = 2,
     ) -> "EscpBuilder":
-        """一行排 2 组 key:value（左右分布），减少空白和行数。
+        """一行排 cols 组 key:value（均匀分布），减少空白和行数。
 
-        pairs: [(k1,v1), (k2,v2), ...] — 每次 2 组排一行，单组时回退单列 kv()。
-        min_half: 每半边最小可用宽度，不够则降级为单列（窄纸避免拥挤）。
+        pairs: [(k1,v1), (k2,v2), ...] — 每次 cols 组排一行，不足 cols 回退单列 kv()。
+        min_half: 每列最小可用宽度，不够则降级为单列（窄纸避免拥挤）。
+        cols: 每行排几组（默认 2=左右分布；签字栏可用 3=三签一行）。
         """
         width = int(width) if width is not None else self.line_width
-        half = width // 2
-        for i in range(0, len(pairs), 2):
-            chunk = pairs[i : i + 2]
+        cols = max(1, int(cols))
+        seg = width // cols  # 每列可用宽度
+        for i in range(0, len(pairs), cols):
+            chunk = pairs[i : i + cols]
             if len(chunk) == 1:
                 self.kv(chunk[0][0], chunk[0][1], width)
                 continue
-            (k1, v1), (k2, v2) = chunk
-            line1 = "%s %s" % (k1, v1)
-            w1 = disp_width(line1)
-            # 半宽不够容纳 → 降级单列
-            if half < min_half or w1 > half:
-                self.kv(k1, v1, width)
-                self.kv(k2, v2, width)
+            # 检查每列宽度够不够
+            cell_w = [disp_width("%s %s" % (k, v)) for k, v in chunk]
+            if seg < min_half or any(w > seg for w in cell_w):
+                # 降级单列
+                for k, v in chunk:
+                    self.kv(k, v, width)
                 continue
-            # 左半边填满 half，右半边紧跟
-            gap = half - w1
-            if gap < 0:
-                gap = 0
-            self._push_text_line(line1 + " " * gap + ("%s %s" % (k2, v2)))
+            # 拼接：每列填满 seg 宽度后接下一列
+            parts: List[str] = []
+            for j, (k, v) in enumerate(chunk):
+                cell = "%s %s" % (k, v)
+                # 最后一列不补空格
+                if j < len(chunk) - 1:
+                    gap = seg - disp_width(cell)
+                    if gap < 0:
+                        gap = 0
+                    cell += " " * gap
+                parts.append(cell)
+            self._push_text_line("".join(parts))
         return self
 
     def kv_triple(
