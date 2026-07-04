@@ -120,7 +120,10 @@ class EscpBuilder:
 
     # ---- 基础控制 ----
     def init(self, font: Optional[Dict[str, Any]] = None) -> "EscpBuilder":
-        """初始化打印机 + 设置中文模式 + 字体方案。
+        """设置中文模式 + 字体方案（不触发硬件初始化，避免退纸）。
+
+        ⚠️ 不发 ESC @！ESC @ 是硬件级初始化，很多针打会退纸到装纸位（纸缩回去）。
+        改用逐条指令重置：关闭加粗/双打/倍宽倍高 + 设置中文字符表 + 字体方案。
 
         font 可选字段：
           bold         : True  正文全局加粗(ESC E)
@@ -132,9 +135,14 @@ class EscpBuilder:
           compact      : True   紧凑模式：title() 不倍高倍宽（仅本类标记，不发指令）
         """
         font = font or {}
-        self.parts.append(("raw", _bytes(ESC, 0x40)))           # ESC @  初始化
-        self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1  选择 GB18030 字符表
-        self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &    选择中文模式
+        # 逐条重置（替代 ESC @，不触发退纸）
+        self.parts.append(("raw", _bytes(ESC, 0x45, 0x00)))     # ESC E 0   关闭加粗
+        self.parts.append(("raw", _bytes(ESC, 0x47, 0x00)))     # ESC G 0   关闭双重打印
+        self.parts.append(("raw", _bytes(GS, 0x21, 0x00)))      # GS ! 0    关闭倍宽倍高
+        self.parts.append(("raw", _bytes(FS, 0x21, 0x00)))      # FS ! 0    关闭中文字体修饰
+        self.parts.append(("raw", _bytes(ESC, 0x61, 0x00)))     # ESC a 0   左对齐
+        self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1   选择 GB18030 字符表
+        self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &      选择中文模式
 
         # compact: 紧凑模式标记，影响 title() 是否倍高倍宽（只在本类生效，不发指令）
         self._compact = bool(font.get("compact"))
