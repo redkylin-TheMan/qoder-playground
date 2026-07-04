@@ -104,6 +104,7 @@ class EscpBuilder:
         self._bold = False
         self._dw = False  # double width
         self._dh = False  # double height
+        self._compact = False  # 紧凑模式: 标题不大字（由 init(font) 的 font.compact 置位）
 
     # 把一段文本同时写入「指令」和「预览」
     def _push_text_line(self, text: Any) -> "EscpBuilder":
@@ -122,16 +123,21 @@ class EscpBuilder:
         """初始化打印机 + 设置中文模式 + 字体方案。
 
         font 可选字段：
-          bold    : True  正文全局加粗(ESC E)
-          font    : 'song'|'hei'|'kai'   FS ! 的黑体位（'hei'=黑体，复写首选）
-          quality : 'draft'|'roman'|'sans'
-          spacing : 0~n    ESC SP n 字符间距(n/180英寸)
-          dark    : True   加大击打力（复写多联时字迹更深）
+          bold         : True  正文全局加粗(ESC E)
+          font         : 'song'|'hei'|'kai'   FS ! 的黑体位（'hei'=黑体，复写首选）
+          quality      : 'draft'|'roman'|'sans'
+          spacing      : 0~n    ESC SP n 字符间距(n/180英寸)
+          dark         : True   加大击打力（ESC 7，部分得力机型私有，复写多联时字迹更深）
+          doubleStrike : True   双重打印(ESC G)，同一字符连打两遍叠加墨量，几乎所有针打通用
+          compact      : True   紧凑模式：title() 不倍高倍宽（仅本类标记，不发指令）
         """
         font = font or {}
         self.parts.append(("raw", _bytes(ESC, 0x40)))           # ESC @  初始化
         self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1  选择 GB18030 字符表
         self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &    选择中文模式
+
+        # compact: 紧凑模式标记，影响 title() 是否倍高倍宽（只在本类生效，不发指令）
+        self._compact = bool(font.get("compact"))
 
         # 中文字体：FS ! 综合位标志
         #   bit0=双宽 bit1=双高 bit2=加粗 bit3=宋/黑(1=黑体) bit4=斜体 bit5=下划线
@@ -162,6 +168,10 @@ class EscpBuilder:
         if font.get("dark"):
             # ESC 7 n 加大击打力（部分得力机型支持；无效会被忽略，无害）
             self.parts.append(("raw", _bytes(ESC, 0x37, 0x02)))
+
+        if font.get("doubleStrike"):
+            # ESC G 1 双重打印：同一字符连打两遍叠加墨量，几乎所有针打通用，加深字迹
+            self.parts.append(("raw", _bytes(ESC, 0x47, 0x01)))
         return self
 
     def set_line_width(self, w: int) -> "EscpBuilder":
@@ -197,6 +207,11 @@ class EscpBuilder:
         self.parts.append(("raw", _bytes(GS, 0x21, 0x00)))
         return self
 
+    def double_strike(self, on: bool) -> "EscpBuilder":
+        """ESC G n 双重打印（n=1 开 / n=0 关）。同一字符连打两遍叠加墨量，通用加深手段。"""
+        self.parts.append(("raw", _bytes(ESC, 0x47, 1 if on else 0)))
+        return self
+
     # ---- 文本输出 ----
     def text(self, t: Any) -> "EscpBuilder":
         return self._push_text_line("" if t is None else str(t))
@@ -212,13 +227,15 @@ class EscpBuilder:
         return self
 
     def feed_to_tear(self, lines: Optional[int] = None) -> "EscpBuilder":
-        """走纸到撕纸位（针打撕纸槽）。lines 默认 5。"""
+        """走纸到撕纸位（针打撕纸槽）。lines 默认 5。
+
+        只发 ESC d n（正向走 n 行）；早期还发 ESC J 0（反向 0 行），
+        部分驱动会把 ESC J 当作 n=1 行的反向回退触发异常走纸，已移除。
+        """
         n = int(lines) if lines else 5
         self.parts.append(("raw", _bytes(ESC, 0x64, n)))  # ESC d n 多走 n 行到撕纸位
         for _ in range(n):
             self.preview.append({"text": "", "align": "left", "blank": True})
-        # 退纸到撕纸位（部分机型支持）
-        self.parts.append(("raw", _bytes(ESC, 0x4A, 0x00)))
         return self
 
     # ---- 高层排版辅助 ----
@@ -258,12 +275,14 @@ class EscpBuilder:
         return self._push_text_line(" ".join(cells))
 
     def title(self, t: Any) -> "EscpBuilder":
-        """居中 + 倍高倍宽 + 粗体标题。"""
+        """居中 + 粗体标题；非 compact 模式下还倍高倍宽。"""
         self.align("center")
         self.bold(True)
-        self.double_height(True).double_width(True)
+        if not self._compact:
+            self.double_height(True).double_width(True)
         self._push_text_line("" if t is None else str(t))
-        self.normal_size()
+        if not self._compact:
+            self.normal_size()
         self.bold(False)
         self.align("left")
         return self

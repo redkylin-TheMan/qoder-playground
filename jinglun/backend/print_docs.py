@@ -94,7 +94,7 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         "no": s(entry.get("entryNo")),
         "date": s(entry.get("printDate")),  # 前端可传，否则服务端用今天
         "fields": [{"k": k, "v": v} for k, v in fields],
-        "remark": "本单一式三联：商户存根(第一联) / 客户存根(第二联) / 财务存根(第三联)",
+        "remark": "",
     }
 
 
@@ -135,18 +135,28 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         "no": s(entry.get("exitNo")),
         "date": s(entry.get("printDate")),
         "fields": [{"k": k, "v": v} for k, v in fields],
-        "remark": "本单一式三联：商户存根(第一联) / 客户存根(第二联) / 财务存根(第三联)",
+        "remark": "",
     }
 
 
 # ============== 三联单构建 ==============
-DEFAULT_FONT = {"bold": True, "font": "hei"}  # 黑体加粗，复写三联最清晰
+# ⚠️ "三联" 指的是物理三层复写纸（针头击打一次穿透碳复写 → 一张纸打出来就自带三联），
+#    软件只需打印一遍。早期实现误把内容循环打 3 遍，会打出 3 倍内容 + 3 倍走纸。
+# 字体预设（由前端 fontPreset 选中后作为 font 传入；未配置时用 DEFAULT_FONT 兜底）：
+#   standard (默认) {bold:true, font:'hei', doubleStrike:true}  粗黑体 + 双重打印，复写穿透力最强
+#   clear          {bold:false, font:'song'}                    清晰宋体，不晕染省墨
+#   compact        {bold:false, font:'song', compact:true}      紧凑：标题也不倍高倍宽，最省纸
+DEFAULT_FONT = {"bold": True, "font": "hei", "doubleStrike": True}  # = standard 预设；测试台/无 font 参数时兜底
 
-TRIPLICATE_COPIES = ["（第一联）商 户 存 根", "（第二联）客 户 存 根", "（第三联）财 务 存 根"]
+TRIPLICATE_NOTE = "（一式三联：商户存根 / 客户存根 / 财务存根）"  # 复写纸自带三联，软件只打一遍
 
 
 def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], model: Optional[Any]) -> EscpBuilder:
-    """通用三联单构建。fields 至少含 title/no/date/companyName/fields/remark。"""
+    """通用三联单构建。fields 至少含 title/no/date/companyName/fields/remark。
+
+    ⚠️ 三联 = 物理三层复写纸（针头击打一次穿透碳复写），软件只打印一遍。
+    早期实现误循环打 3 遍 → 3 倍内容 + 3 倍走纸，已废弃。
+    """
     rm = resolve_model(model)
     W = rm["lineWidth"]
     b = EscpBuilder({"lineWidth": W}).init(font or DEFAULT_FONT)
@@ -158,32 +168,31 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     ff = fields.get("fields") or []
     remark = fields.get("remark") or ""
 
-    for copy_label in TRIPLICATE_COPIES:
-        b.align("center").bold(True).text(copy_label).bold(False).align("left")
-        b.title(title)
-        if no:
-            b.kv("单　号", no, W)
-        if date:
-            b.kv("日　期", date, W)
-        if company:
-            b.kv("单　位", company, W)
-        b.separator("-")
-        for item in ff:
-            k = item.get("k", "")
-            v = item.get("v", "")
-            if v in (None, ""):
-                continue
-            b.kv(k, v, W)
-        b.separator("-")
-        b.kv("经办人签字", "____________", W // 2)
-        b.kv("复核签字", "____________", W // 2)
-        if remark:
-            b.separator()
-            b.text(remark)
-        b.feed(2)
-        b.separator("·")
-        b.feed(2)
-
+    # 标题（居中加粗，非 compact 还倍高倍宽）
+    b.title(title)
+    if no:
+        b.kv("单　号", no, W)
+    if date:
+        b.kv("日　期", date, W)
+    if company:
+        b.kv("单　位", company, W)
+    b.separator("-")
+    for item in ff:
+        k = item.get("k", "")
+        v = item.get("v", "")
+        if v in (None, ""):
+            continue
+        b.kv(k, v, W)
+    b.separator("-")
+    b.kv("经办人签字", "____________", W // 2)
+    b.kv("复核签字", "____________", W // 2)
+    # 底部说明：复写三联（纸自带，软件只打了一遍）
+    b.separator()
+    b.text(TRIPLICATE_NOTE)
+    if remark:
+        b.separator()
+        b.text(remark)
+    # 走纸到撕纸位（一份内容结束）
     b.feed_to_tear(rm["feedLines"])
     return b
 
