@@ -23,15 +23,19 @@ from escp import EscpBuilder
 # ============== 型号解析 ==============
 # 得力 DB-618KII 实测机型参数（lineWidth=48 半角列，feedLines=5 走纸到撕纸位）。
 # 首期只支持这一种；其它型号可在 models 表里追加。
+# pageHeightInch: 连续纸物理页高(英寸)，用于 ESC C 设页长 + FF 精确对齐穿孔。
+#   7.5cm ≈ 3.0 英寸（短三联单）、11cm ≈ 4.3 英寸、标准 11" 连续纸 = 11。
 MODELS: Dict[str, Dict[str, Any]] = {
-    "DB-618KII": {"name": "得力 DB-618KII", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5},
-    "DS-600T": {"name": "得实 DS-600T", "columns": 106, "copies": 4, "lineWidth": 48, "feedLines": 5},
-    "GENERIC_82": {"name": "通用 82列针式打印机", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5},
+    "DB-618KII": {"name": "得力 DB-618KII", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightInch": 3},
+    "DS-600T": {"name": "得实 DS-600T", "columns": 106, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightInch": 3},
+    "GENERIC_82": {"name": "通用 82列针式打印机", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightInch": 3},
 }
 
 
-def resolve_model(model: Optional[Any]) -> Dict[str, int]:
-    """model: 字符串 key / {key, lineWidth, feedLines} / None → {lineWidth, feedLines}"""
+def resolve_model(model: Optional[Any]) -> Dict[str, Any]:
+    """model: 字符串 key / {key, lineWidth, feedLines, pageHeightInch} / None
+    → {lineWidth, feedLines, pageHeightInch}
+    """
     if isinstance(model, str):
         m = MODELS.get(model, MODELS["GENERIC_82"])
         key = model
@@ -41,9 +45,11 @@ def resolve_model(model: Optional[Any]) -> Dict[str, int]:
     else:
         m = MODELS["GENERIC_82"]
         key = "GENERIC_82"
+    d = model if isinstance(model, dict) else {}
     return {
-        "lineWidth": (model.get("lineWidth") if isinstance(model, dict) and model.get("lineWidth") else m["lineWidth"]),
-        "feedLines": (model.get("feedLines") if isinstance(model, dict) and model.get("feedLines") else m["feedLines"]),
+        "lineWidth": (d.get("lineWidth") if d.get("lineWidth") else m["lineWidth"]),
+        "feedLines": (d.get("feedLines") if d.get("feedLines") else m["feedLines"]),
+        "pageHeightInch": (d.get("pageHeightInch") if d.get("pageHeightInch") else m.get("pageHeightInch", 3)),
     }
 
 
@@ -158,11 +164,18 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     ⚠️ 三联 = 物理三层复写纸（针头击打一次穿透碳复写），软件只打印一遍。
     早期实现误循环打 3 遍 → 3 倍内容 + 3 倍走纸，已废弃。
 
+    走纸对齐：用 ESC C 设页长(=物理纸高) + FF 换页，替代手动数行(feed_top/feed_to_tear)。
+    打印机内部走纸计数器保证每页精确对齐穿孔，残差不累积。
+    （7.5cm纸 ≈ 3英寸，旧方案每张走纸19行 vs 物理高17.7行，残差1.3行/张 → 第2张骑纸）
+
     布局：标准纸字段按 3 列分布（kv_triple，占满 82 列纸宽），窄纸自动降级。
     """
     rm = resolve_model(model)
     W = rm["lineWidth"]
+    # 设定页长 = 物理纸高，让 FF(换页)精确走到下页顶部，根治连续打印骑纸。
+    # 必须在 init 之后、内容之前发送（页长作用于后续 FF）。
     b = EscpBuilder({"lineWidth": W}).init(font or DEFAULT_FONT)
+    b.set_page_length(inches=rm.get("pageHeightInch", 3))
 
     title = fields.get("title") or "结算单"
     no = fields.get("no") or ""
@@ -170,8 +183,6 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     company = fields.get("companyName") or ""
     ff = fields.get("fields") or []
 
-    # 顶部预留空行（防页首切纸丢失顶边框/标题）
-    b.feed_top(3)
     # 标题（居中加粗，非 compact 还倍高倍宽）
     b.separator("═")  # 双横线顶边
     b.title(title)
@@ -192,8 +203,9 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     # 签字栏：2 列左右排一行（窄纸降级单列）
     b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
     b.separator("═")  # 双横线底边
-    # 走纸到撕纸位（一份内容结束）
-    b.feed_to_tear(rm["feedLines"])
+    # FF(换页)：按 ESC C 设的页长精确走纸到下一页顶部。
+    # 替代 feed_top/feed_to_tear：不再手动数行，零残差对齐穿孔。
+    b.form_feed()
     return b
 
 

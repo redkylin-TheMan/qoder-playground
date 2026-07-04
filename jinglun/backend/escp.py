@@ -123,7 +123,7 @@ class EscpBuilder:
         """设置中文模式 + 字体方案（不触发硬件初始化，避免退纸）。
 
         ⚠️ 不发 ESC @！ESC @ 是硬件级初始化，很多针打会退纸到装纸位（纸缩回去）。
-        改用逐条指令重置：关闭加粗/双打/倍宽倍高 + 设置中文字符表 + 字体方案。
+        改用逐条指令重置：关闭加粗/双打/倍宽倍高 + 关闭跳过页缝 + 中文字符表 + 字体方案。
 
         font 可选字段：
           bold         : True  正文全局加粗(ESC E)
@@ -141,6 +141,14 @@ class EscpBuilder:
         self.parts.append(("raw", _bytes(GS, 0x21, 0x00)))      # GS ! 0    关闭倍宽倍高
         self.parts.append(("raw", _bytes(FS, 0x21, 0x00)))      # FS ! 0    关闭中文字体修饰
         self.parts.append(("raw", _bytes(ESC, 0x61, 0x00)))     # ESC a 0   左对齐
+        # ⚠️ 关闭"跳过页缝"(Skip Over Perforation)。
+        # ESC/PK2 打印机出厂默认开启此功能：当逻辑页(默认11英寸/66行)走到底部
+        # 附近时，会自动跳过页缝留空行。但三联单是短纸，物理穿孔位与逻辑页边界
+        # 对不上 → 顶部底部大段空白 + 第2张跨两页 + 偶发恢复正常。
+        # ESC N 0 (ESC N n 的 n=0) 等价于 ESC O：取消装订空行/跳缝。
+        # 两指令都发以最大化兼容（部分机型只认其中一个）。
+        self.parts.append(("raw", _bytes(ESC, 0x4E, 0x00)))     # ESC N 0   取消底部装订空行
+        self.parts.append(("raw", _bytes(ESC, 0x4F)))           # ESC O     取消跳过页缝
         self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1   选择 GB18030 字符表
         self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &      选择中文模式
 
@@ -184,6 +192,40 @@ class EscpBuilder:
 
     def set_line_width(self, w: int) -> "EscpBuilder":
         self.line_width = int(w)
+        return self
+
+    def set_page_length(self, lines: Optional[int] = None, inches: Optional[int] = None) -> "EscpBuilder":
+        """ESC C 设定页长（连续针打纸物理穿孔间距，对齐走纸的根本手段）。
+
+        ⚠️ 这是解决"第2张骑两页/上下空白"的关键指令。
+        打印机内部按页长计数，FF(换页)会精确走完一整页到下页顶部，零残差。
+
+        两种单位（二选一）：
+          lines : 按行数设（ESC C n，1≤n≤127），实际物理高 = n × 当前行距
+          inches: 按英寸设（ESC C NUL n，1≤n≤22），与行距无关更精确
+
+        推荐 inches：7.5cm ≈ 3 英寸、11cm ≈ 4.3 英寸。
+        若只能估行数：7.5cm@1/6"行距 ≈ 18 行。
+        """
+        if inches is not None:
+            n = int(round(inches))
+            if 1 <= n <= 22:
+                self.parts.append(("raw", _bytes(ESC, 0x43, 0x00, n)))  # ESC C NUL n
+        elif lines is not None:
+            n = int(lines)
+            if 1 <= n <= 127:
+                self.parts.append(("raw", _bytes(ESC, 0x43, n)))  # ESC C n
+        return self
+
+    def form_feed(self) -> "EscpBuilder":
+        """FF (0x0C) 换页：走纸到下一页顶部（按 set_page_length 设的页长精确对齐）。
+
+        替代手动数行走纸(feed_to_tear)。打印机内部走纸计数器保证每页对齐穿孔，
+        残差不累积——根治"连续打印偶发骑纸/空白"。
+        """
+        self.parts.append(("raw", _bytes(0x0C)))  # FF
+        # 预览只加一个空行占位（实际走纸量由页长决定）
+        self.preview.append({"text": "", "align": "left", "blank": True})
         return self
 
     # ---- 对齐 ----
