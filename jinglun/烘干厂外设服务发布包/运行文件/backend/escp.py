@@ -194,27 +194,25 @@ class EscpBuilder:
         self.line_width = int(w)
         return self
 
-    def set_page_length(self, lines: Optional[int] = None, inches: Optional[int] = None) -> "EscpBuilder":
+    def set_page_length(self, lines: Optional[int] = None, inches: Optional[float] = None) -> "EscpBuilder":
         """ESC C 设定页长（连续针打纸物理穿孔间距，对齐走纸的根本手段）。
 
         ⚠️ 这是解决"第2张骑两页/上下空白"的关键指令。
         打印机内部按页长计数，FF(换页)会精确走完一整页到下页顶部，零残差。
 
-        两种单位（二选一）：
-          lines : 按行数设（ESC C n，1≤n≤127），实际物理高 = n × 当前行距
-          inches: 按英寸设（ESC C NUL n，1≤n≤22），与行距无关更精确
-
-        推荐 inches：7.5cm ≈ 3 英寸、11cm ≈ 4.3 英寸。
-        若只能估行数：7.5cm@1/6"行距 ≈ 18 行。
+        两种单位（优先 lines，精度更高）：
+          lines : 按行数设（ESC C n，1≤n≤127），实际物理高 = n × 当前行距(1/6")
+                  7.5cm ≈ 18 行、9cm ≈ 21 行、11cm ≈ 26 行、14cm ≈ 33 行
+          inches: 按英寸设（ESC C NUL n），会四舍五入到整数英寸，精度低仅做兜底
         """
-        if inches is not None:
-            n = int(round(inches))
-            if 1 <= n <= 22:
-                self.parts.append(("raw", _bytes(ESC, 0x43, 0x00, n)))  # ESC C NUL n
-        elif lines is not None:
+        if lines is not None:
             n = int(lines)
             if 1 <= n <= 127:
-                self.parts.append(("raw", _bytes(ESC, 0x43, n)))  # ESC C n
+                self.parts.append(("raw", _bytes(ESC, 0x43, n)))  # ESC C n（按行）
+        elif inches is not None:
+            n = int(round(inches))
+            if 1 <= n <= 22:
+                self.parts.append(("raw", _bytes(ESC, 0x43, 0x00, n)))  # ESC C NUL n（按英寸）
         return self
 
     def form_feed(self) -> "EscpBuilder":
