@@ -148,14 +148,14 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
 #   compact        {bold:false, font:'song', compact:true}      紧凑：标题也不倍高倍宽，最省纸
 DEFAULT_FONT = {"bold": True, "font": "hei", "doubleStrike": True}  # = standard 预设；测试台/无 font 参数时兜底
 
-TRIPLICATE_NOTE = "（一式三联：商户存根 / 客户存根 / 财务存根）"  # 复写纸自带三联，软件只打一遍
-
 
 def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], model: Optional[Any]) -> EscpBuilder:
     """通用三联单构建。fields 至少含 title/no/date/companyName/fields/remark。
 
     ⚠️ 三联 = 物理三层复写纸（针头击打一次穿透碳复写），软件只打印一遍。
     早期实现误循环打 3 遍 → 3 倍内容 + 3 倍走纸，已废弃。
+
+    布局：字段按 2 列左右分布（kv_pairs），窄纸（lineWidth<32）自动降级单列。
     """
     rm = resolve_model(model)
     W = rm["lineWidth"]
@@ -166,7 +166,6 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     date = fields.get("date") or ""
     company = fields.get("companyName") or ""
     ff = fields.get("fields") or []
-    remark = fields.get("remark") or ""
 
     # 标题（居中加粗，非 compact 还倍高倍宽）
     b.title(title)
@@ -177,21 +176,12 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     if company:
         b.kv("单　位", company, W)
     b.separator("-")
-    for item in ff:
-        k = item.get("k", "")
-        v = item.get("v", "")
-        if v in (None, ""):
-            continue
-        b.kv(k, v, W)
+    # 字段区：过滤空值后按 2 列左右分布（窄纸自动降级单列）
+    pairs = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
+    b.kv_pairs(pairs, W)
     b.separator("-")
-    b.kv("经办人签字", "____________", W // 2)
-    b.kv("复核签字", "____________", W // 2)
-    # 底部说明：复写三联（纸自带，软件只打了一遍）
-    b.separator()
-    b.text(TRIPLICATE_NOTE)
-    if remark:
-        b.separator()
-        b.text(remark)
+    # 签字栏：2 列左右排一行（窄纸降级单列）
+    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
     # 走纸到撕纸位（一份内容结束）
     b.feed_to_tear(rm["feedLines"])
     return b

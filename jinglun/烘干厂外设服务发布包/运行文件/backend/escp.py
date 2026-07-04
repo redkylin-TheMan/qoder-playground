@@ -247,15 +247,49 @@ class EscpBuilder:
         return self._push_text_line(ch * n)
 
     def kv(self, key: Any, value: Any, width: Optional[int] = None) -> "EscpBuilder":
-        """键值对齐行：左对齐键 + 右对齐值。"""
+        """键值紧凑行：左对齐 key + 一个空格 + value（不再推到最右，减少空白）。"""
         width = int(width) if width is not None else self.line_width
         k = "" if key is None else str(key)
         v = "" if value is None else str(value)
         kw, vw = disp_width(k), disp_width(v)
-        if kw + vw <= width:
-            gap = width - kw - vw
-            return self._push_text_line(k + " " * gap + v)
-        return self._push_text_line(k + "  " + truncate(v, width - kw - 2))
+        if kw + 1 + vw <= width:
+            # key 紧凑左对齐，value 紧跟其后
+            return self._push_text_line(k + " " + v)
+        # value 太长，截断到剩余宽度
+        return self._push_text_line(k + " " + truncate(v, max(1, width - kw - 1)))
+
+    def kv_pairs(
+        self,
+        pairs: List[Tuple[str, str]],
+        width: Optional[int] = None,
+        min_half: int = 16,
+    ) -> "EscpBuilder":
+        """一行排 2 组 key:value（左右分布），减少空白和行数。
+
+        pairs: [(k1,v1), (k2,v2), ...] — 每次 2 组排一行，单组时回退单列 kv()。
+        min_half: 每半边最小可用宽度，不够则降级为单列（窄纸避免拥挤）。
+        """
+        width = int(width) if width is not None else self.line_width
+        half = width // 2
+        for i in range(0, len(pairs), 2):
+            chunk = pairs[i : i + 2]
+            if len(chunk) == 1:
+                self.kv(chunk[0][0], chunk[0][1], width)
+                continue
+            (k1, v1), (k2, v2) = chunk
+            line1 = "%s %s" % (k1, v1)
+            w1 = disp_width(line1)
+            # 半宽不够容纳 → 降级单列
+            if half < min_half or w1 > half:
+                self.kv(k1, v1, width)
+                self.kv(k2, v2, width)
+                continue
+            # 左半边填满 half，右半边紧跟
+            gap = half - w1
+            if gap < 0:
+                gap = 0
+            self._push_text_line(line1 + " " * gap + ("%s %s" % (k2, v2)))
+        return self
 
     def table_row(self, cols: List[Dict[str, Any]]) -> "EscpBuilder":
         """多列对齐行。cols=[{text, align, width}, ...]"""
