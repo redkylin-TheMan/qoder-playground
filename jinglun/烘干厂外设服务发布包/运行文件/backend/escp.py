@@ -226,6 +226,18 @@ class EscpBuilder:
             self.preview.append({"text": "", "align": "left", "blank": True})
         return self
 
+    def feed_top(self, n: int = 3) -> "EscpBuilder":
+        """顶部预留空行走纸（防页首切纸丢失前几行）。
+
+        针打初始化后(ESC @)打印头可能停在撕纸位/页边，直接打内容会
+        导致顶部1~3行被物理裁切。先正向走 n 行把内容推到安全区域。
+        """
+        n = int(n) or 3
+        self.parts.append(("raw", _bytes(ESC, 0x64, n)))  # ESC d n 走纸 n 行
+        for _ in range(n):
+            self.preview.append({"text": "", "align": "left", "blank": True})
+        return self
+
     def feed_to_tear(self, lines: Optional[int] = None) -> "EscpBuilder":
         """走纸到撕纸位（针打撕纸槽）。lines 默认 5。
 

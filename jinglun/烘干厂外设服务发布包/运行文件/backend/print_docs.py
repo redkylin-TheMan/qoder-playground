@@ -170,6 +170,8 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     company = fields.get("companyName") or ""
     ff = fields.get("fields") or []
 
+    # 顶部预留空行（防页首切纸丢失顶边框/标题）
+    b.feed_top(3)
     # 标题（居中加粗，非 compact 还倍高倍宽）
     b.separator("═")  # 双横线顶边
     b.title(title)
