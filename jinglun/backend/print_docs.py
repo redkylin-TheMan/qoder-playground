@@ -80,9 +80,14 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
 
+    # 身份证/银行卡：即使为空也要显示字段名（值显示 ---）
+    id_card = s(entry.get("farmerIdCardSnap")) or s(entry.get("farmerIdCard")) or "---"
+    bank_card = s(entry.get("farmerBankAccountSnap")) or s(entry.get("bankAccount")) or s(entry.get("farmerBankAccount")) or "---"
+
     fields: List[Tuple[str, str]] = [
         ("农　户", s(entry.get("farmerName")) or "现场散单"),
-        ("身份证", s(entry.get("farmerIdCardSnap")) or s(entry.get("farmerIdCard"))),
+        ("身份证", id_card),
+        ("银行卡", bank_card),
         ("电　话", s(entry.get("farmerPhone")) or s(entry.get("farmerPhoneSnap"))),
         ("品　种", s(entry.get("grainNameSnap")) or s(entry.get("grainType"))),
         ("仓　位", s(entry.get("wareareaNameSnap")) or s(entry.get("wareareaName"))),
@@ -96,7 +101,7 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         ("结算金额", "￥" + s(amount)),
         ("库管员", s(entry.get("createBy"))),
     ]
-    # 去掉值为空的行（除"农户"外）
+    # 去掉值为空的行（身份证/银行卡已兜底 --- 不会被过滤）
     fields = [(k, v) for k, v in fields if v not in ("", "None")]
     return {
         "companyName": s(entry.get("factoryName")) or "烘干厂",
@@ -125,8 +130,15 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
 
+    # 身份证/银行卡：即使为空也要显示字段名（值显示 ---）
+    # 出库单目前无身份证/银行卡快照字段，有则显示，无则 ---
+    id_card = s(entry.get("customerIdCardSnap")) or "---"
+    bank_card = s(entry.get("customerBankAccountSnap")) or s(entry.get("bankAccount")) or "---"
+
     fields: List[Tuple[str, str]] = [
         ("客　户", s(entry.get("customerNameSnap")) or "现场散单"),
+        ("身份证", id_card),
+        ("银行卡", bank_card),
         ("品　种", s(entry.get("grainNameSnap"))),
         ("仓　位", s(entry.get("wareareaNameSnap"))),
         ("车牌号", s(entry.get("driverPlateSnap"))),
@@ -201,8 +213,8 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     items = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
     b.kv_triple(items, W)
     b.separator("─")  # 单横线分隔 字段↔签字
-    # 签字栏：2 列左右排一行（窄纸降级单列）
-    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
+    # 签字栏：3 个签字位，2列布局自动排（窄纸降级单列）
+    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________"), ("客户签字", "____________")], W)
     b.separator("═")  # 双横线底边
     # FF(换页)：按 ESC C 设的页长精确走纸到下一页顶部。
     # 替代 feed_top/feed_to_tear：不再手动数行，零残差对齐穿孔。
