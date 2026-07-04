@@ -348,7 +348,7 @@ def main() -> int:
     httpd = bind_server(args.port)
     host, port = httpd.server_address
     url = f"http://{host}:{port}"
-    print(f"精伦浏览器读卡服务已启动：{url}")
+    print(f"烘干厂外设服务已启动：{url}")
     print("按 Ctrl+C 停止服务。")
     if not args.no_browser:
         open_browser_later(url)

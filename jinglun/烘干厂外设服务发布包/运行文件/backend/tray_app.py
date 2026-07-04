@@ -163,7 +163,7 @@ class TrayIcon:
         nid.uFlags = self.NIF_ICON | self.NIF_MESSAGE | self.NIF_TIP
         nid.uCallbackMessage = self.WM_TRAYICON
         nid.hIcon = icon
-        nid.szTip = "精伦读卡服务"
+        nid.szTip = "烘干厂外设服务"
         self.shell32.Shell_NotifyIconW(self.NIM_ADD, ctypes.byref(nid))
         self.app.append_log("托盘图标已启动")
 
@@ -188,7 +188,7 @@ class TrayIcon:
 class JinglunTrayApp:
     def __init__(self) -> None:
         self.root = Tk()
-        self.root.title("精伦读卡服务")
+        self.root.title("烘干厂外设服务")
         self.root.withdraw()
         self.root.protocol("WM_DELETE_WINDOW", self.hide_status)
 
@@ -255,7 +255,7 @@ class JinglunTrayApp:
             return
 
         win = Toplevel(self.root)
-        win.title("精伦读卡服务状态")
+        win.title("烘干厂外设服务状态")
         win.geometry("760x520")
         win.protocol("WM_DELETE_WINDOW", self.hide_status)
         self.status_window = win
@@ -311,7 +311,7 @@ class JinglunTrayApp:
             return
 
         win = Toplevel(self.root)
-        win.title("精伦读卡服务设置")
+        win.title("烘干厂外设服务设置")
         win.geometry("420x180")
         self.settings_window = win
         win.protocol("WM_DELETE_WINDOW", win.withdraw)
@@ -334,17 +334,17 @@ class JinglunTrayApp:
             self.settings["autostartPromptAttempts"] = 0
             save_settings(self.settings)
             self.refresh_status_vars()
-            messagebox.showinfo("精伦读卡服务", "已设置为开机自启。")
+            messagebox.showinfo("烘干厂外设服务", "已设置为开机自启。")
         except OSError as exc:
-            messagebox.showerror("精伦读卡服务", f"设置开机自启失败：{exc}")
+            messagebox.showerror("烘干厂外设服务", f"设置开机自启失败：{exc}")
 
     def disable_autostart_from_settings(self) -> None:
         try:
             set_autostart(False)
             self.refresh_status_vars()
-            messagebox.showinfo("精伦读卡服务", "已取消开机自启。")
+            messagebox.showinfo("烘干厂外设服务", "已取消开机自启。")
         except OSError as exc:
-            messagebox.showerror("精伦读卡服务", f"取消开机自启失败：{exc}")
+            messagebox.showerror("烘干厂外设服务", f"取消开机自启失败：{exc}")
 
     def maybe_prompt_autostart(self) -> None:
         if is_autostart_enabled():
@@ -356,8 +356,8 @@ class JinglunTrayApp:
             self.refresh_status_vars()
             return
         answer = messagebox.askyesno(
-            "精伦读卡服务",
-            "是否将精伦读卡服务设置为开机自启？\n未开启时，每次使用业务系统前都需要手动运行 start.bat。",
+            "烘干厂外设服务",
+            "是否将烘干厂外设服务设置为开机自启？\n未开启时，每次使用业务系统前都需要手动运行 start.bat。",
         )
         if answer:
             try:
@@ -366,7 +366,7 @@ class JinglunTrayApp:
                 self.append_log("已设置开机自启")
             except OSError as exc:
                 self.settings["autostartPromptAttempts"] = attempts + 1
-                messagebox.showerror("精伦读卡服务", f"设置开机自启失败：{exc}")
+                messagebox.showerror("烘干厂外设服务", f"设置开机自启失败：{exc}")
         else:
             self.settings["autostartPromptAttempts"] = attempts + 1
             self.append_log(f"用户暂未开启开机自启，累计 {self.settings['autostartPromptAttempts']} 次")
@@ -374,7 +374,7 @@ class JinglunTrayApp:
         self.refresh_status_vars()
 
     def confirm_shutdown(self) -> None:
-        if not messagebox.askyesno("精伦读卡服务", "确定要关闭精伦读卡服务吗？"):
+        if not messagebox.askyesno("烘干厂外设服务", "确定要关闭烘干厂外设服务吗？"):
             return
         self.shutdown()
 
@@ -395,7 +395,7 @@ class JinglunTrayApp:
         try:
             self.start_server()
         except Exception as exc:
-            messagebox.showerror("精伦读卡服务", f"启动服务失败：{exc}")
+            messagebox.showerror("烘干厂外设服务", f"启动服务失败：{exc}")
             return 1
         try:
             self.tray.start()

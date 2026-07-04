@@ -162,6 +162,10 @@ class JinglunHandler(BaseHTTPRequestHandler):
             threading.Thread(target=self.server.shutdown, daemon=True).start()
             return {"stopping": True}
 
+        # ===== 三联针式打印（不需要读卡 SDK，独立分支） =====
+        if route.startswith("/api/print/"):
+            return self.dispatch_print(method, route, body)
+
         sdk = get_sdk()
 
         if method == "GET" and route == "/api/devices":
@@ -208,6 +212,74 @@ class JinglunHandler(BaseHTTPRequestHandler):
             return sdk.nfc_apdu(str(body.get("apdu", "")))
 
         raise JinglunError("NOT_FOUND", f"未知接口：{method} {route}")
+
+    def dispatch_print(self, method: str, route: str, body: Dict[str, Any]) -> Any:
+        """三联针式打印路由分发。响应沿用 {ok, data} 约定。
+
+        路由：
+          GET  /api/print/printers     列系统打印机 + 默认机
+          POST /api/print/preview      body {entry, docType, model?} → 预览模型 + hex（不打印）
+          POST /api/print/triplicate   body {entry, docType, printerName, copies?, dryRun?, model?, font?} → 打印
+        docType: grain_in | grain_out
+        """
+        import time
+
+        import print_docs
+        import raw_printer
+
+        # GET /api/print/printers — 列打印机
+        if method == "GET" and route == "/api/print/printers":
+            return raw_printer.list_printers()
+
+        # 以下都是 POST，需要 docType
+        doc_type = str(body.get("docType") or "")
+        entry = body.get("entry") or {}
+        model = body.get("model") or "DB-618KII"
+        font = body.get("font") or None
+
+        # 给 entry 补打印日期（前端没传就用今天）
+        if not entry.get("printDate"):
+            entry = dict(entry)
+            entry["printDate"] = time.strftime("%Y-%m-%d")
+
+        # 构建单据（共用一份指令，preview 和 print 都用）
+        try:
+            builder = print_docs.build_doc(doc_type, entry, font=font, model=model)
+        except ValueError as exc:
+            raise JinglunError("INVALID_DOC_TYPE", str(exc))
+        script_lines = builder.to_script()
+
+        # POST /api/print/preview — 只返回预览，不打印
+        if method == "POST" and route == "/api/print/preview":
+            data = raw_printer.build_bytes(script_lines)
+            return {
+                "preview": builder.get_preview(),
+                "bytes": len(data),
+                "hexHead": " ".join("%02X" % c for c in data[:64]),
+            }
+
+        # POST /api/print/triplicate — 实际打印
+        if method == "POST" and route == "/api/print/triplicate":
+            printer_name = str(body.get("printerName") or "")
+            copies = int(body.get("copies") or 1)
+            dry_run = bool(body.get("dryRun"))
+            result = raw_printer.send_script(script_lines, printer_name, copies=copies, dry_run=dry_run)
+            if not result.get("ok"):
+                err = result.get("error") or "打印失败"
+                code = "PRINTER_FAILED"
+                ret = result.get("win32Code")
+                raise JinglunError(code, err, ret)
+            # 只返回 data 部分（外层 handle_api 会包 {ok:true, data:...}）
+            return {
+                "dryRun": result["dryRun"],
+                "copies": result["copies"],
+                "bytes": result["bytes"],
+                "steps": result["steps"],
+                "hexHead": result.get("hexHead"),
+                "preview": builder.get_preview(),
+            }
+
+        raise JinglunError("NOT_FOUND", f"未知打印接口：{method} {route}")
 
     def serve_static(self) -> None:
         path = self.path.split("?", 1)[0]
@@ -276,7 +348,7 @@ def main() -> int:
     httpd = bind_server(args.port)
     host, port = httpd.server_address
     url = f"http://{host}:{port}"
-    print(f"精伦浏览器读卡服务已启动：{url}")
+    print(f"烘干厂外设服务已启动：{url}")
     print("按 Ctrl+C 停止服务。")
     if not args.no_browser:
         open_browser_later(url)

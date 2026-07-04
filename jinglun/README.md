@@ -1,6 +1,9 @@
-# 精伦 iDR210 浏览器读卡
+# 烘干厂外设服务（NFC 读卡 + 针式打印）
 
-本目录是一个本机浏览器方案：浏览器页面负责操作界面，`backend/server.py` 负责在 `127.0.0.1` 启动 HTTP 服务，并通过 32 位 Python `ctypes` 调用精伦 `Sdtapi.dll`。
+本目录是一个本机浏览器方案：浏览器页面负责操作界面，`backend/server.py` 负责在 `127.0.0.1` 启动 HTTP 服务，对外提供两类能力：
+
+- **NFC/身份证读卡**：通过 32 位 Python `ctypes` 调用精伦 `Sdtapi.dll`（iDR210 读卡器）
+- **针式打印**：通过 winspool RAW 直送 ESC/P 指令（适配得力 DB-618KII / 得实 DS-600T 等 82~106 列针打）
 
 ## 快速启动
 
