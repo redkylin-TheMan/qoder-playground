@@ -200,6 +200,12 @@ class JinglunTrayApp:
         self.ui_queue: "queue.Queue[Any]" = queue.Queue()
         self.status_window: Optional[Toplevel] = None
         self.settings_window: Optional[Toplevel] = None
+
+        # [T-151] 自动更新: 当前版本号 + 更新中标志 (避免并发触发)
+        import updater
+        self.current_version = updater.read_version(ROOT_DIR)
+        self.version_var = StringVar(value=self.current_version or "未知")
+        self.update_in_progress = False
         self.status_var = StringVar(value="启动中")
         self.port_var = StringVar(value="-")
         self.autostart_var = StringVar(value="-")
@@ -266,10 +272,13 @@ class JinglunTrayApp:
         Label(top, textvariable=self.status_var).pack(side=LEFT)
         Label(top, text="  端口：").pack(side=LEFT)
         Label(top, textvariable=self.port_var).pack(side=LEFT)
+        Label(top, text="  当前版本：").pack(side=LEFT)
+        Label(top, textvariable=self.version_var).pack(side=LEFT)
 
         actions = Frame(win)
         actions.pack(fill="x", padx=14)
         Button(actions, text="打开诊断页", command=self.open_diagnostic_page).pack(side=LEFT, padx=(0, 8))
+        Button(actions, text="检查更新", command=self.check_update_manual).pack(side=LEFT, padx=(0, 8))
         Button(actions, text="设置", command=self.show_settings).pack(side=LEFT, padx=(0, 8))
         Button(actions, text="关闭服务", command=self.confirm_shutdown).pack(side=RIGHT)
 
@@ -391,6 +400,158 @@ class JinglunTrayApp:
         self.tray.stop()
         self.enqueue_ui(lambda: self.root.after(400, self.root.quit))
 
+    # ============================================================
+    # [T-151] 自动更新
+    # ============================================================
+
+    # 启动后首次检查延迟 (30s) 和后续间隔 (6h)
+    UPDATE_FIRST_DELAY_MS = 30 * 1000
+    UPDATE_INTERVAL_MS = 6 * 3600 * 1000
+
+    def _check_update_background(self) -> None:
+        """后台线程: 调云端 manifest, 有新版本则 enqueue UI 弹窗."""
+        if self.update_in_progress:
+            return
+        # 用户在 settings 里关了自动检查 → 跳过 (手动按钮不受此限)
+        if not bool(self.settings.get("autoCheckUpdate", True)):
+            self._reschedule_update_check()
+            return
+
+        def _worker() -> None:
+            import updater
+            current = updater.read_version(ROOT_DIR)
+            self.current_version = current
+            try:
+                self.enqueue_ui(lambda: self.version_var.set(current or "未知"))
+            except Exception:
+                pass
+            manifest = updater.fetch_manifest(current, logger=self.append_log)
+            if manifest is None:
+                self._reschedule_update_check()
+                return
+            latest = manifest.get("latestVersion")
+            if not latest:
+                self._reschedule_update_check()
+                return
+            # 跳过用户主动忽略的版本 (避免反复弹)
+            skipped = self.settings.get("skippedVersion")
+            if not manifest.get("forced") and skipped == latest:
+                self._reschedule_update_check()
+                return
+            if latest == current and not manifest.get("forced"):
+                self._reschedule_update_check()
+                return
+            # 有新版本或强制更新 → UI 线程弹窗
+            self.enqueue_ui(lambda: self._prompt_update(manifest))
+            self._reschedule_update_check()
+
+        threading.Thread(target=_worker, name="JinglunUpdater", daemon=True).start()
+
+    def _reschedule_update_check(self) -> None:
+        """6 小时后再检查一次."""
+        try:
+            self.root.after(self.UPDATE_INTERVAL_MS, self._check_update_background)
+        except Exception:
+            pass
+
+    def check_update_manual(self) -> None:
+        """状态窗口'检查更新'按钮: 立即检查 (忽略自动开关)."""
+        if self.update_in_progress:
+            messagebox.showinfo("烘干厂外设服务", "正在更新中，请稍候。")
+            return
+        self.append_log("手动检查更新...")
+        # 直接调一次后台逻辑, 但绕过 autoCheckUpdate 开关
+        saved = self.settings.get("autoCheckUpdate")
+        self.settings["autoCheckUpdate"] = True
+        try:
+            self._check_update_background()
+        finally:
+            if saved is not None:
+                self.settings["autoCheckUpdate"] = saved
+
+    def _prompt_update(self, manifest: dict) -> None:
+        """发现新版本 → 弹窗. forced 时只能升级."""
+        latest = manifest.get("latestVersion") or ""
+        notes = manifest.get("releaseNotes") or ""
+        forced = bool(manifest.get("forced"))
+
+        if forced:
+            # 强制: 不可取消
+            messagebox.showinfo(
+                "烘干厂外设服务 - 必须升级",
+                f"当前版本 {self.current_version or '未知'} 过低，必须升级到 {latest}。\n\n{notes}",
+            )
+            self._do_update(manifest)
+            return
+
+        # 非强制: 三选一 (立即升级 / 本次跳过 / 暂不)
+        answer = messagebox.askyesnocancel(
+            "烘干厂外设服务 - 发现新版本",
+            f"新版本 {latest} 已发布。\n\n{notes}\n\n是否立即升级？\n（是=升级，否=跳过此版本，取消=下次再说）",
+        )
+        if answer is None:
+            return  # 取消: 下次再说
+        if answer is False:
+            # 否: 记录跳过的版本, 不再弹 (除非强制)
+            self.settings["skippedVersion"] = latest
+            save_settings(self.settings)
+            self.append_log(f"用户跳过版本 {latest}")
+            return
+        self._do_update(manifest)
+
+    def _do_update(self, manifest: dict) -> None:
+        """执行更新: 下载 → 应用 → 重启. 全程异步, 日志写状态窗口."""
+        if self.update_in_progress:
+            return
+        self.update_in_progress = True
+
+        latest = manifest.get("latestVersion") or ""
+        package_url = manifest.get("packageUrl") or ""
+        sha256 = manifest.get("sha256") or ""
+        size = int(manifest.get("size") or 0)
+
+        if not package_url:
+            self.append_log("更新失败: 未拿到下载地址")
+            self.update_in_progress = False
+            return
+
+        def _worker() -> None:
+            import updater
+            import tempfile
+            try:
+                # 1. 下载到临时目录
+                tmp_dir = Path(tempfile.gettempdir())
+                zip_path = tmp_dir / ("jinglun_peripheral_" + latest + ".zip")
+                self.append_log(f"开始下载 {latest} ({size} bytes)...")
+                ok = updater.download_zip(package_url, sha256, size, zip_path, logger=self.append_log)
+                if not ok:
+                    self.enqueue_ui(lambda: messagebox.showerror("烘干厂外设服务", f"下载 {latest} 失败，请稍后重试。"))
+                    return
+                self.append_log(f"下载完成, 开始应用更新...")
+
+                # 2. 应用 (备份+解压+清缓存)
+                ok = updater.apply_update(zip_path, ROOT_DIR, logger=self.append_log)
+                if not ok:
+                    self.enqueue_ui(lambda: messagebox.showerror("烘干厂外设服务", f"应用更新失败，已回滚。请检查日志。"))
+                    return
+                self.append_log("更新应用成功，即将重启服务...")
+
+                # 3. 清理下载的 zip
+                try:
+                    zip_path.unlink()
+                except Exception:
+                    pass
+
+                # 4. 重启 (会调本机 shutdown 接口 + 启动 start.bat + 自杀)
+                self.enqueue_ui(lambda: updater.restart_self(START_BAT, logger=self.append_log))
+            except Exception as e:
+                self.append_log(f"更新异常: {e}")
+                self.enqueue_ui(lambda: messagebox.showerror("烘干厂外设服务", f"更新异常: {e}"))
+            finally:
+                self.update_in_progress = False
+
+        threading.Thread(target=_worker, name="JinglunUpdateApply", daemon=True).start()
+
     def run(self) -> int:
         try:
             self.start_server()
@@ -404,6 +565,8 @@ class JinglunTrayApp:
         self.root.after(200, self.poll_ui_queue)
         if os.environ.get("JINGLUN_SKIP_AUTOSTART_PROMPT") != "1":
             self.root.after(800, self.maybe_prompt_autostart)
+        # [T-151] 启动 30s 后检查更新, 之后每 6h 一次
+        self.root.after(self.UPDATE_FIRST_DELAY_MS, self._check_update_background)
         self.root.mainloop()
         return 0
 
