@@ -84,11 +84,16 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     id_card = s(entry.get("farmerIdCardSnap")) or s(entry.get("farmerIdCard")) or "---"
     bank_card = s(entry.get("farmerBankAccountSnap")) or s(entry.get("bankAccount")) or s(entry.get("farmerBankAccount")) or "---"
 
+    # 农户名后加括号显示电话（有电话才加，没电话不加括号）
+    farmer_name = s(entry.get("farmerName")) or "现场散单"
+    farmer_phone = s(entry.get("farmerPhone")) or s(entry.get("farmerPhoneSnap"))
+    if farmer_phone and farmer_name != "现场散单":
+        farmer_name = "%s(%s)" % (farmer_name, farmer_phone)
+
     fields: List[Tuple[str, str]] = [
-        ("农　户", s(entry.get("farmerName")) or "现场散单"),
+        ("农　户", farmer_name),
         ("身份证", id_card),
         ("银行卡", bank_card),
-        ("电　话", s(entry.get("farmerPhone")) or s(entry.get("farmerPhoneSnap"))),
         ("品　种", s(entry.get("grainNameSnap")) or s(entry.get("grainType"))),
         ("仓　位", s(entry.get("wareareaNameSnap")) or s(entry.get("wareareaName"))),
         ("车牌号", s(entry.get("driverPlateSnap")) or s(entry.get("driverPlate"))),
@@ -135,8 +140,14 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     id_card = s(entry.get("customerIdCardSnap")) or "---"
     bank_card = s(entry.get("customerBankAccountSnap")) or s(entry.get("bankAccount")) or "---"
 
+    # 客户名后加括号显示电话（有电话才加）
+    customer_name = s(entry.get("customerNameSnap")) or "现场散单"
+    customer_phone = s(entry.get("customerPhoneSnap"))
+    if customer_phone and customer_name != "现场散单":
+        customer_name = "%s(%s)" % (customer_name, customer_phone)
+
     fields: List[Tuple[str, str]] = [
-        ("客　户", s(entry.get("customerNameSnap")) or "现场散单"),
+        ("客　户", customer_name),
         ("身份证", id_card),
         ("银行卡", bank_card),
         ("品　种", s(entry.get("grainNameSnap"))),
