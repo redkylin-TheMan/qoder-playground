@@ -103,6 +103,7 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         ("净重(kg)", s(entry.get("netWeight"))),
         ("水分/杂质", "%s%% / %s%%" % (s(entry.get("moisture")) or "-", s(entry.get("impurity")) or "-")),
         ("单价(元/kg)", s(entry.get("unitPrice"))),
+        ("重金属Cd", "%s mg/kg" % (s(entry.get("heavyMetalCd")) or "---")),
         ("结算金额", "￥" + s(amount)),
         ("库管员", s(entry.get("createBy"))),
     ]
@@ -159,6 +160,7 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         ("净重(kg)", s(entry.get("netWeight"))),
         ("单价(元/kg)", s(entry.get("unitPrice"))),
         ("应收金额", "￥" + s(amount)),
+        ("重金属Cd", "%s mg/kg" % (s(entry.get("heavyMetalCd")) or "---")),
         ("库管员", s(entry.get("createBy"))),
     ]
     fields = [(k, v) for k, v in fields if v not in ("", "None")]
