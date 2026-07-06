@@ -23,15 +23,20 @@ from escp import EscpBuilder
 # ============== 型号解析 ==============
 # 得力 DB-618KII 实测机型参数（lineWidth=48 半角列，feedLines=5 走纸到撕纸位）。
 # 首期只支持这一种；其它型号可在 models 表里追加。
+# pageHeightLines: 连续纸物理页高(行数, 1/6"行距)，用于 ESC C 设页长 + FF 精确对齐穿孔。
+#   7.5cm ≈ 18 行、9cm ≈ 21 行、11cm ≈ 26 行、14cm ≈ 33 行。
+#   调参口诀：间距太大→数字调小，间距太小→数字调大。每次调 1~2 行试。
 MODELS: Dict[str, Dict[str, Any]] = {
-    "DB-618KII": {"name": "得力 DB-618KII", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5},
-    "DS-600T": {"name": "得实 DS-600T", "columns": 106, "copies": 4, "lineWidth": 48, "feedLines": 5},
-    "GENERIC_82": {"name": "通用 82列针式打印机", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5},
+    "DB-618KII": {"name": "得力 DB-618KII", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
+    "DS-600T": {"name": "得实 DS-600T", "columns": 106, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
+    "GENERIC_82": {"name": "通用 82列针式打印机", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
 }
 
 
-def resolve_model(model: Optional[Any]) -> Dict[str, int]:
-    """model: 字符串 key / {key, lineWidth, feedLines} / None → {lineWidth, feedLines}"""
+def resolve_model(model: Optional[Any]) -> Dict[str, Any]:
+    """model: 字符串 key / {key, lineWidth, feedLines, pageHeightLines} / None
+    → {lineWidth, feedLines, pageHeightLines}
+    """
     if isinstance(model, str):
         m = MODELS.get(model, MODELS["GENERIC_82"])
         key = model
@@ -41,9 +46,11 @@ def resolve_model(model: Optional[Any]) -> Dict[str, int]:
     else:
         m = MODELS["GENERIC_82"]
         key = "GENERIC_82"
+    d = model if isinstance(model, dict) else {}
     return {
-        "lineWidth": (model.get("lineWidth") if isinstance(model, dict) and model.get("lineWidth") else m["lineWidth"]),
-        "feedLines": (model.get("feedLines") if isinstance(model, dict) and model.get("feedLines") else m["feedLines"]),
+        "lineWidth": (d.get("lineWidth") if d.get("lineWidth") else m["lineWidth"]),
+        "feedLines": (d.get("feedLines") if d.get("feedLines") else m["feedLines"]),
+        "pageHeightLines": (d.get("pageHeightLines") if d.get("pageHeightLines") else m.get("pageHeightLines", 18)),
     }
 
 
@@ -73,20 +80,34 @@ def build_grain_in_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
 
+    # 身份证/银行卡：即使为空也要显示字段名（值显示 ---）
+    id_card = s(entry.get("farmerIdCardSnap")) or s(entry.get("farmerIdCard")) or "---"
+    bank_card = s(entry.get("farmerBankAccountSnap")) or s(entry.get("bankAccount")) or s(entry.get("farmerBankAccount")) or "---"
+
+    # 农户名后加括号显示电话（有电话才加，没电话不加括号）
+    farmer_name = s(entry.get("farmerName")) or "现场散单"
+    farmer_phone = s(entry.get("farmerPhone")) or s(entry.get("farmerPhoneSnap"))
+    if farmer_phone and farmer_name != "现场散单":
+        farmer_name = "%s(%s)" % (farmer_name, farmer_phone)
+
     fields: List[Tuple[str, str]] = [
-        ("农　户", s(entry.get("farmerName")) or "现场散单"),
-        ("品　种", s(entry.get("grainNameSnap"))),
-        ("仓　位", s(entry.get("wareareaNameSnap"))),
+        ("农　户", farmer_name),
+        ("身份证", id_card),
+        ("银行卡", bank_card),
+        ("品　种", s(entry.get("grainNameSnap")) or s(entry.get("grainType"))),
+        ("仓　位", s(entry.get("wareareaNameSnap")) or s(entry.get("wareareaName"))),
+        ("车牌号", s(entry.get("driverPlateSnap")) or s(entry.get("driverPlate"))),
         ("毛重(kg)", s(entry.get("grossWeight"))),
         ("皮重(kg)", s(entry.get("tareWeight"))),
         ("扣重(kg)", s(entry.get("deductWeight")) or "0"),
         ("净重(kg)", s(entry.get("netWeight"))),
         ("水分/杂质", "%s%% / %s%%" % (s(entry.get("moisture")) or "-", s(entry.get("impurity")) or "-")),
         ("单价(元/kg)", s(entry.get("unitPrice"))),
+        ("重金属Cd", "%s mg/kg" % (s(entry.get("heavyMetalCd")) or "---")),
         ("结算金额", "￥" + s(amount)),
         ("库管员", s(entry.get("createBy"))),
     ]
-    # 去掉值为空的行（除"农户"外）
+    # 去掉值为空的行（身份证/银行卡已兜底 --- 不会被过滤）
     fields = [(k, v) for k, v in fields if v not in ("", "None")]
     return {
         "companyName": s(entry.get("factoryName")) or "烘干厂",
@@ -115,8 +136,21 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
 
+    # 身份证/银行卡：即使为空也要显示字段名（值显示 ---）
+    # 出库单目前无身份证/银行卡快照字段，有则显示，无则 ---
+    id_card = s(entry.get("customerIdCardSnap")) or "---"
+    bank_card = s(entry.get("customerBankAccountSnap")) or s(entry.get("bankAccount")) or "---"
+
+    # 客户名后加括号显示电话（有电话才加）
+    customer_name = s(entry.get("customerNameSnap")) or "现场散单"
+    customer_phone = s(entry.get("customerPhoneSnap"))
+    if customer_phone and customer_name != "现场散单":
+        customer_name = "%s(%s)" % (customer_name, customer_phone)
+
     fields: List[Tuple[str, str]] = [
-        ("客　户", s(entry.get("customerNameSnap")) or "现场散单"),
+        ("客　户", customer_name),
+        ("身份证", id_card),
+        ("银行卡", bank_card),
         ("品　种", s(entry.get("grainNameSnap"))),
         ("仓　位", s(entry.get("wareareaNameSnap"))),
         ("车牌号", s(entry.get("driverPlateSnap"))),
@@ -126,6 +160,7 @@ def build_grain_out_fields(entry: Dict[str, Any]) -> Dict[str, Any]:
         ("净重(kg)", s(entry.get("netWeight"))),
         ("单价(元/kg)", s(entry.get("unitPrice"))),
         ("应收金额", "￥" + s(amount)),
+        ("重金属Cd", "%s mg/kg" % (s(entry.get("heavyMetalCd")) or "---")),
         ("库管员", s(entry.get("createBy"))),
     ]
     fields = [(k, v) for k, v in fields if v not in ("", "None")]
@@ -155,11 +190,18 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     ⚠️ 三联 = 物理三层复写纸（针头击打一次穿透碳复写），软件只打印一遍。
     早期实现误循环打 3 遍 → 3 倍内容 + 3 倍走纸，已废弃。
 
-    布局：字段按 2 列左右分布（kv_pairs），窄纸（lineWidth<32）自动降级单列。
+    走纸对齐：用 ESC C 设页长(=物理纸高) + FF 换页，替代手动数行(feed_top/feed_to_tear)。
+    打印机内部走纸计数器保证每页精确对齐穿孔，残差不累积。
+    （7.5cm纸 ≈ 3英寸，旧方案每张走纸19行 vs 物理高17.7行，残差1.3行/张 → 第2张骑纸）
+
+    布局：标准纸字段按 3 列分布（kv_triple，占满 82 列纸宽），窄纸自动降级。
     """
     rm = resolve_model(model)
     W = rm["lineWidth"]
+    # 设定页长 = 物理纸高，让 FF(换页)精确走到下页顶部，根治连续打印骑纸。
+    # 必须在 init 之后、内容之前发送（页长作用于后续 FF）。
     b = EscpBuilder({"lineWidth": W}).init(font or DEFAULT_FONT)
+    b.set_page_length(lines=rm.get("pageHeightLines", 18))
 
     title = fields.get("title") or "结算单"
     no = fields.get("no") or ""
@@ -170,25 +212,26 @@ def _build_triplicate(fields: Dict[str, Any], font: Optional[Dict[str, Any]], mo
     # 标题（居中加粗，非 compact 还倍高倍宽）
     b.separator("═")  # 双横线顶边
     b.title(title)
-    # 表头信息（2列左右分布，窄纸降级单列）
-    header_pairs = []
+    # 表头信息（3列分布，窄纸降级 2 列/单列）
+    header_items = []
     if no:
-        header_pairs.append(("单　号", no))
+        header_items.append(("单　号", no))
     if date:
-        header_pairs.append(("日　期", date))
+        header_items.append(("日　期", date))
     if company:
-        header_pairs.append(("单　位", company))
-    b.kv_pairs(header_pairs, W)
+        header_items.append(("单　位", company))
+    b.kv_triple(header_items, W)
     b.separator("─")  # 单横线分隔 表头↔字段
-    # 字段区：过滤空值后按 2 列左右分布（窄纸自动降级单列）
-    pairs = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
-    b.kv_pairs(pairs, W)
+    # 字段区：过滤空值后按 3 列分布（窄纸自动降级）
+    items = [(item.get("k", ""), item.get("v", "")) for item in ff if item.get("v") not in (None, "")]
+    b.kv_triple(items, W)
     b.separator("─")  # 单横线分隔 字段↔签字
-    # 签字栏：2 列左右排一行（窄纸降级单列）
-    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________")], W)
+    # 签字栏：3 个签字位排一行（窄纸自动降级单列）
+    b.kv_pairs([("经办人签字", "____________"), ("复核签字", "____________"), ("客户签字", "____________")], W, cols=3)
     b.separator("═")  # 双横线底边
-    # 走纸到撕纸位（一份内容结束）
-    b.feed_to_tear(rm["feedLines"])
+    # FF(换页)：按 ESC C 设的页长精确走纸到下一页顶部。
+    # 替代 feed_top/feed_to_tear：不再手动数行，零残差对齐穿孔。
+    b.form_feed()
     return b
 
 

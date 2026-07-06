@@ -120,7 +120,10 @@ class EscpBuilder:
 
     # ---- 基础控制 ----
     def init(self, font: Optional[Dict[str, Any]] = None) -> "EscpBuilder":
-        """初始化打印机 + 设置中文模式 + 字体方案。
+        """设置中文模式 + 字体方案（不触发硬件初始化，避免退纸）。
+
+        ⚠️ 不发 ESC @！ESC @ 是硬件级初始化，很多针打会退纸到装纸位（纸缩回去）。
+        改用逐条指令重置：关闭加粗/双打/倍宽倍高 + 关闭跳过页缝 + 中文字符表 + 字体方案。
 
         font 可选字段：
           bold         : True  正文全局加粗(ESC E)
@@ -132,9 +135,22 @@ class EscpBuilder:
           compact      : True   紧凑模式：title() 不倍高倍宽（仅本类标记，不发指令）
         """
         font = font or {}
-        self.parts.append(("raw", _bytes(ESC, 0x40)))           # ESC @  初始化
-        self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1  选择 GB18030 字符表
-        self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &    选择中文模式
+        # 逐条重置（替代 ESC @，不触发退纸）
+        self.parts.append(("raw", _bytes(ESC, 0x45, 0x00)))     # ESC E 0   关闭加粗
+        self.parts.append(("raw", _bytes(ESC, 0x47, 0x00)))     # ESC G 0   关闭双重打印
+        self.parts.append(("raw", _bytes(GS, 0x21, 0x00)))      # GS ! 0    关闭倍宽倍高
+        self.parts.append(("raw", _bytes(FS, 0x21, 0x00)))      # FS ! 0    关闭中文字体修饰
+        self.parts.append(("raw", _bytes(ESC, 0x61, 0x00)))     # ESC a 0   左对齐
+        # ⚠️ 关闭"跳过页缝"(Skip Over Perforation)。
+        # ESC/PK2 打印机出厂默认开启此功能：当逻辑页(默认11英寸/66行)走到底部
+        # 附近时，会自动跳过页缝留空行。但三联单是短纸，物理穿孔位与逻辑页边界
+        # 对不上 → 顶部底部大段空白 + 第2张跨两页 + 偶发恢复正常。
+        # ESC N 0 (ESC N n 的 n=0) 等价于 ESC O：取消装订空行/跳缝。
+        # 两指令都发以最大化兼容（部分机型只认其中一个）。
+        self.parts.append(("raw", _bytes(ESC, 0x4E, 0x00)))     # ESC N 0   取消底部装订空行
+        self.parts.append(("raw", _bytes(ESC, 0x4F)))           # ESC O     取消跳过页缝
+        self.parts.append(("raw", _bytes(ESC, 0x74, 0x01)))     # ESC t 1   选择 GB18030 字符表
+        self.parts.append(("raw", _bytes(FS, 0x26)))            # FS &      选择中文模式
 
         # compact: 紧凑模式标记，影响 title() 是否倍高倍宽（只在本类生效，不发指令）
         self._compact = bool(font.get("compact"))
@@ -176,6 +192,38 @@ class EscpBuilder:
 
     def set_line_width(self, w: int) -> "EscpBuilder":
         self.line_width = int(w)
+        return self
+
+    def set_page_length(self, lines: Optional[int] = None, inches: Optional[float] = None) -> "EscpBuilder":
+        """ESC C 设定页长（连续针打纸物理穿孔间距，对齐走纸的根本手段）。
+
+        ⚠️ 这是解决"第2张骑两页/上下空白"的关键指令。
+        打印机内部按页长计数，FF(换页)会精确走完一整页到下页顶部，零残差。
+
+        两种单位（优先 lines，精度更高）：
+          lines : 按行数设（ESC C n，1≤n≤127），实际物理高 = n × 当前行距(1/6")
+                  7.5cm ≈ 18 行、9cm ≈ 21 行、11cm ≈ 26 行、14cm ≈ 33 行
+          inches: 按英寸设（ESC C NUL n），会四舍五入到整数英寸，精度低仅做兜底
+        """
+        if lines is not None:
+            n = int(lines)
+            if 1 <= n <= 127:
+                self.parts.append(("raw", _bytes(ESC, 0x43, n)))  # ESC C n（按行）
+        elif inches is not None:
+            n = int(round(inches))
+            if 1 <= n <= 22:
+                self.parts.append(("raw", _bytes(ESC, 0x43, 0x00, n)))  # ESC C NUL n（按英寸）
+        return self
+
+    def form_feed(self) -> "EscpBuilder":
+        """FF (0x0C) 换页：走纸到下一页顶部（按 set_page_length 设的页长精确对齐）。
+
+        替代手动数行走纸(feed_to_tear)。打印机内部走纸计数器保证每页对齐穿孔，
+        残差不累积——根治"连续打印偶发骑纸/空白"。
+        """
+        self.parts.append(("raw", _bytes(0x0C)))  # FF
+        # 预览只加一个空行占位（实际走纸量由页长决定）
+        self.preview.append({"text": "", "align": "left", "blank": True})
         return self
 
     # ---- 对齐 ----
@@ -226,6 +274,18 @@ class EscpBuilder:
             self.preview.append({"text": "", "align": "left", "blank": True})
         return self
 
+    def feed_top(self, n: int = 3) -> "EscpBuilder":
+        """顶部预留空行走纸（防页首切纸丢失前几行）。
+
+        针打初始化后(ESC @)打印头可能停在撕纸位/页边，直接打内容会
+        导致顶部1~3行被物理裁切。先正向走 n 行把内容推到安全区域。
+        """
+        n = int(n) or 3
+        self.parts.append(("raw", _bytes(ESC, 0x64, n)))  # ESC d n 走纸 n 行
+        for _ in range(n):
+            self.preview.append({"text": "", "align": "left", "blank": True})
+        return self
+
     def feed_to_tear(self, lines: Optional[int] = None) -> "EscpBuilder":
         """走纸到撕纸位（针打撕纸槽）。lines 默认 5。
 
@@ -263,32 +323,88 @@ class EscpBuilder:
         pairs: List[Tuple[str, str]],
         width: Optional[int] = None,
         min_half: int = 16,
+        cols: int = 2,
     ) -> "EscpBuilder":
-        """一行排 2 组 key:value（左右分布），减少空白和行数。
+        """一行排 cols 组 key:value（均匀分布），减少空白和行数。
 
-        pairs: [(k1,v1), (k2,v2), ...] — 每次 2 组排一行，单组时回退单列 kv()。
-        min_half: 每半边最小可用宽度，不够则降级为单列（窄纸避免拥挤）。
+        pairs: [(k1,v1), (k2,v2), ...] — 每次 cols 组排一行，不足 cols 回退单列 kv()。
+        min_half: 每列最小可用宽度，不够则降级为单列（窄纸避免拥挤）。
+        cols: 每行排几组（默认 2=左右分布；签字栏可用 3=三签一行）。
         """
         width = int(width) if width is not None else self.line_width
-        half = width // 2
-        for i in range(0, len(pairs), 2):
-            chunk = pairs[i : i + 2]
+        cols = max(1, int(cols))
+        seg = width // cols  # 每列可用宽度
+        for i in range(0, len(pairs), cols):
+            chunk = pairs[i : i + cols]
             if len(chunk) == 1:
                 self.kv(chunk[0][0], chunk[0][1], width)
                 continue
-            (k1, v1), (k2, v2) = chunk
-            line1 = "%s %s" % (k1, v1)
-            w1 = disp_width(line1)
-            # 半宽不够容纳 → 降级单列
-            if half < min_half or w1 > half:
-                self.kv(k1, v1, width)
-                self.kv(k2, v2, width)
+            # 检查每列宽度够不够
+            cell_w = [disp_width("%s %s" % (k, v)) for k, v in chunk]
+            if seg < min_half or any(w > seg for w in cell_w):
+                # 降级单列
+                for k, v in chunk:
+                    self.kv(k, v, width)
                 continue
-            # 左半边填满 half，右半边紧跟
-            gap = half - w1
-            if gap < 0:
-                gap = 0
-            self._push_text_line(line1 + " " * gap + ("%s %s" % (k2, v2)))
+            # 拼接：每列填满 seg 宽度后接下一列
+            parts: List[str] = []
+            for j, (k, v) in enumerate(chunk):
+                cell = "%s %s" % (k, v)
+                # 最后一列不补空格
+                if j < len(chunk) - 1:
+                    gap = seg - disp_width(cell)
+                    if gap < 0:
+                        gap = 0
+                    cell += " " * gap
+                parts.append(cell)
+            self._push_text_line("".join(parts))
+        return self
+
+    def kv_triple(
+        self,
+        items: List[Tuple[str, str]],
+        width: Optional[int] = None,
+        min_third: int = 20,
+    ) -> "EscpBuilder":
+        """一行排 3 组 key:value（三列分布），最大化纸宽利用率。
+
+        items: [(k1,v1), (k2,v2), ...] — 每次 3 组排一行，不足 3 组时回退 kv_pairs。
+        min_third: 每区最小可用宽度，不够则降级为 2 列（kv_pairs）。
+        """
+        width = int(width) if width is not None else self.line_width
+        third = width // 3
+        # 区宽不够 → 降级 2 列
+        if third < min_third:
+            return self.kv_pairs(items, width)
+        for i in range(0, len(items), 3):
+            chunk = items[i : i + 3]
+            if len(chunk) <= 2:
+                self.kv_pairs(chunk, width)
+                continue
+            # 3 组排一行：每区填满 third-1 列（留 1 列间距防粘连）
+            cell_w = third - 1
+            # 先检查是否有 cell 超长（超 cell_w 的组单独一行排，不进三列）
+            short_chunk = []
+            long_items = []
+            for k, v in chunk:
+                cell = "%s %s" % (k, v)
+                if disp_width(cell) >= cell_w:
+                    long_items.append((k, v))
+                else:
+                    short_chunk.append((k, v))
+            # 超长的组单独 kv() 一行
+            for k, v in long_items:
+                self.kv(k, v, width)
+            # 剩余的短组排三列（不足 3 个也排一行）
+            if short_chunk:
+                parts = []
+                for k, v in short_chunk:
+                    cell = "%s %s" % (k, v)
+                    cw = disp_width(cell)
+                    if cw < cell_w:
+                        cell += " " * (cell_w - cw)
+                    parts.append(cell)
+                self._push_text_line("".join(parts))
         return self
 
     def table_row(self, cols: List[Dict[str, Any]]) -> "EscpBuilder":
