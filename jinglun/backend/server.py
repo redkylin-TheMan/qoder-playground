@@ -170,6 +170,10 @@ class JinglunHandler(BaseHTTPRequestHandler):
         if route.startswith("/api/print/"):
             return self.dispatch_print(method, route, body)
 
+        # ===== GDI 图形表格打印（与 ESC/P 完全独立，不影响字符打印） =====
+        if route.startswith("/api/gdi/"):
+            return self.dispatch_gdi(method, route, body)
+
         sdk = get_sdk()
 
         if method == "GET" and route == "/api/devices":
@@ -368,6 +372,85 @@ class JinglunHandler(BaseHTTPRequestHandler):
             }
 
         raise JinglunError("NOT_FOUND", f"未知打印接口：{method} {route}")
+
+    def dispatch_gdi(self, method: str, route: str, body: Dict[str, Any]) -> Any:
+        """GDI 图形表格打印路由（与 ESC/P 的 /api/print/* 完全独立，互不影响）。
+
+        路由：
+          GET  /api/gdi/papers   返回纸张预设清单（7.5cm 三联纸等）
+          POST /api/gdi/preview  body {entry, docType, model?, font?} → 布局 + 预览（不打印）
+          POST /api/gdi/print    body {entry, docType, printerName, copies?, dryRun?, model?, font?, paperMm?}
+                                 → GDI 渲染打印
+          docType: grain_in | grain_out
+
+        与 ESC/P 的区别：GDI 走 Windows 图形驱动渲染实线表格（像 Excel），
+        不产出 hexHead（无原始字节流概念），改用 bytes=格子数。
+        """
+        import gdi_docs
+        import gdi_tables
+
+        # GET /api/gdi/papers — 纸张预设清单
+        if method == "GET" and route == "/api/gdi/papers":
+            return {"papers": gdi_tables.PAPER_PRESETS}
+
+        # POST 路由需要 docType + entry
+        doc_type = str(body.get("docType") or "")
+        entry = body.get("entry") or {}
+        model = body.get("model") or "DB-618KII"
+        font = body.get("font") or None
+
+        if not entry.get("printDate"):
+            entry = dict(entry)
+            entry["printDate"] = time.strftime("%Y-%m-%d")
+
+        # 构建 Table 模型 + 预览（preview/print 共用）
+        try:
+            table, preview = gdi_docs.build_doc(doc_type, entry, font=font, model=model)
+        except ValueError as exc:
+            raise JinglunError("INVALID_DOC_TYPE", str(exc))
+
+        # POST /api/gdi/preview — 只返回预览，不打印
+        if method == "POST" and route == "/api/gdi/preview":
+            paper_key = str(body.get("paperKey") or "75x100")
+            paper_mm = gdi_tables.resolve_paper(paper_key)
+            page_w_mm = paper_mm[0] if paper_mm else 75.0
+            laid = gdi_tables.layout(table, dpi=180, page_w_mm=page_w_mm,
+                                     font_default=float((font or {}).get("size", 9.0)))
+            return {
+                "preview": preview,
+                "rows": len(laid.grid_cells),
+                "cols": len(table.col_ratios),
+                "cells": len(laid.rects),
+                "widthPx": laid.width,
+                "heightPx": laid.height,
+            }
+
+        # POST /api/gdi/print — GDI 渲染打印（dryRun 默认 False，测试台可显式传 True）
+        if method == "POST" and route == "/api/gdi/print":
+            printer_name = str(body.get("printerName") or "")
+            copies = int(body.get("copies") or 1)
+            dry_run = bool(body.get("dryRun", False))
+            paper_key = str(body.get("paperKey") or "75x100")
+            paper_mm = gdi_tables.resolve_paper(paper_key)
+
+            result = gdi_docs.send(
+                table, printer_name=printer_name, copies=copies, dry_run=dry_run,
+                paper_mm=paper_mm, model=model, font=font, preview=preview,
+            )
+            if not result.get("ok"):
+                err = result.get("error") or "GDI 打印失败"
+                code = "GDI_FAILED"
+                ret = result.get("win32Code")
+                raise JinglunError(code, err, ret)
+            return {
+                "dryRun": result["dryRun"],
+                "copies": result["copies"],
+                "bytes": result["bytes"],  # GDI 没有字节流概念，这里是格子数
+                "steps": result["steps"],
+                "preview": result["preview"],
+            }
+
+        raise JinglunError("NOT_FOUND", f"未知 GDI 接口：{method} {route}")
 
     def serve_static(self) -> None:
         path = self.path.split("?", 1)[0]

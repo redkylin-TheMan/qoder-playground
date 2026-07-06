@@ -248,10 +248,14 @@ def restart_self(start_bat: Path, logger=None) -> None:
 
     # 2. 启动新 start.bat (独立进程, 脱离本进程)
     try:
+        # CREATE_NO_WINDOW: 避免 pythonw 父进程启动 cmd 子进程时弹出空白控制台黑框
+        # CREATE_NEW_PROCESS_GROUP: 让新进程组独立, Ctrl+C 不互相干扰
+        no_window = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+        new_group = getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200) if os.name == "nt" else 0
         subprocess.Popen(
             ["cmd", "/c", str(start_bat)],
             cwd=str(start_bat.parent),
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
+            creationflags=no_window | new_group,
             close_fds=True,
         )
     except Exception as e:

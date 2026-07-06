@@ -21,6 +21,11 @@ import sys
 from ctypes import byref, c_char_p, c_int, c_void_p, sizeof
 from typing import Any, Dict, List, Optional, Tuple
 
+# ⚠️ 子进程不弹控制台黑框（pythonw 启动服务时，powershell/curl 等控制台程序会弹空白窗口）。
+# CREATE_NO_WINDOW = 0x08000000（Win32 进程创建标志）。
+# Python 3.7+ 才有 subprocess.CREATE_NO_WINDOW 常量，老版本回落到原始值。
+_NO_WINDOW_FLAGS = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+
 # ============== winspool.drv P/Invoke ==============
 # 注意：DLL 名必须是小写 "winspool.drv"（参考 dprinter-web README，改回 winspool.Dll 会报 HRESULT 0x8007007E）
 # use_last_error=True 让 ctypes.get_last_error() 能取到 GetLastError 的值（需配合 argtypes）
@@ -218,9 +223,13 @@ def list_printers() -> Dict[str, Any]:
         # PowerShell stdout 默认是系统 ANSI 代码页（中文 Windows 是 GBK/936），
         # 不能用 text=True（默认 utf-8 解码会因中文打印机名乱码失败），
         # 改成拿 bytes 再按 mbcs 解码。
+        # ⚠️ CREATE_NO_WINDOW: 服务用 pythonw.exe（无控制台）启动，若不给子进程加此标志，
+        # Windows 会为 powershell.exe 自动弹一个空白控制台黑框（用户看到的"powershell 弹窗"）。
+        # capture_output 只重定向管道，拦不住控制台窗口创建——两者是独立机制。
         result = subprocess.run(
             ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", ps],
             capture_output=True, timeout=15,
+            creationflags=_NO_WINDOW_FLAGS,
         )
     except Exception as exc:
         return {"defaultPrinter": "", "printers": [], "usbIds": [], "error": "调用 PowerShell 失败：%s" % exc}

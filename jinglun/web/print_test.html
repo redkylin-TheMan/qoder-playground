@@ -153,6 +153,8 @@
       <div class="tab" data-type="invoice">增值税发票</div>
       <div class="tab" data-type="receipt">小票/收银票</div>
       <div class="tab" data-type="triplicate">通用三联单</div>
+      <div class="tab" data-type="gdiGrainIn">📐 图形表格(入库)</div>
+      <div class="tab" data-type="gdiGrainOut">📐 图形表格(出库)</div>
     </div>
 
     <h2>② 填写单据内容</h2>
@@ -182,6 +184,11 @@
         <option value="dark">加粗 + 加大击打力（复写深，字迹重）</option>
       </select>
       <div class="meta">💡 针打的"字体"是固件点阵，由 ESC/P 指令控制。换方案后重新预览+打印对比效果。</div>
+      <div id="gdiPaperOpts" style="display:none">
+        <label style="margin-top:10px">纸张尺寸（GDI 图形表格专用，决定走纸页长）</label>
+        <select id="paperSelect"><option value="75x100">加载中...</option></select>
+        <div class="meta">📐 GDI 图形表格走 Windows 图形驱动渲染实线边框，效果等同 Excel。纸张页长决定换页走纸位置。</div>
+      </div>
       <div class="check-row">
         <input type="checkbox" id="dryRun" checked>
         <label for="dryRun">模拟模式（dryRun，不实际打印，只看指令）</label>
@@ -264,6 +271,23 @@ var DEFAULTS = {
       { k: '单价(元/kg)', v: '2.80' }, { k: '金额(元)', v: '4201.40' }
     ],
     remark: '本单一式三联：商户存根(红)/客户存根(蓝)/财务存根(黑)'
+  },
+  // GDI 图形表格（走 Windows 图形驱动，实线边框，效果等同 Excel；与上面 ESC/P 模板互不影响）
+  gdiGrainIn: {
+    entryNo: 'RK20260706-0001', factoryName: '某某粮油烘干厂',
+    farmerName: '张三', farmerPhone: '138-0000-0001',
+    grainNameSnap: '小麦(一等)', wareareaNameSnap: '1号仓', driverPlateSnap: '豫A·12345',
+    grossWeight: '1510.5', tareWeight: '9.5', deductWeight: '0.5', netWeight: '1500.5',
+    moisture: '13.2', impurity: '1.0', unitPrice: '2.80', adjustedAmount: '4201.40',
+    heavyMetalCd: '0.08', createBy: '库管员A'
+  },
+  gdiGrainOut: {
+    exitNo: 'CK20260706-0001', factoryName: '某某粮油烘干厂',
+    customerNameSnap: '某某食品有限公司', customerPhoneSnap: '139-0000-0002',
+    grainNameSnap: '玉米(二等)', wareareaNameSnap: '2号仓', driverPlateSnap: '鲁B·66888',
+    grossWeight: '2000.0', tareWeight: '200.0', deductWeight: '0', netWeight: '1800.0',
+    unitPrice: '2.65', adjustedAmount: '4770.00',
+    heavyMetalCd: '0.05', createBy: '库管员B'
   }
 };
 
@@ -411,6 +435,22 @@ function loadPrinters() {
 }
 loadPrinters();
 
+// ============== 加载纸张预设（GDI 图形表格用） ==============
+function loadPapers() {
+  apiGet('/api/gdi/papers').then(function (data) {
+    var sel = document.getElementById('paperSelect');
+    sel.innerHTML = '';
+    (data.papers || []).forEach(function (p) {
+      var o = el('option', { value: p.key }, p.name);
+      if (p.key === '75x100') o.selected = true;
+      sel.appendChild(o);
+    });
+  }).catch(function (e) {
+    document.getElementById('paperSelect').innerHTML = '<option value="default">驱动默认</option>';
+  });
+}
+loadPapers();
+
 // ============== Tab 切换 ==============
 document.getElementById('tabs').addEventListener('click', function (e) {
   var t = e.target.closest('.tab');
@@ -419,6 +459,9 @@ document.getElementById('tabs').addEventListener('click', function (e) {
   t.classList.add('active');
   currentType = t.dataset.type;
   renderForm(currentType);
+  // GDI 图形表格模板：显示纸张选择；ESC/P 模板：隐藏
+  var isGdi = currentType.indexOf('gdi') === 0;
+  document.getElementById('gdiPaperOpts').style.display = isGdi ? '' : 'none';
 });
 
 // ============== 表单渲染 ==============
@@ -476,6 +519,26 @@ function renderForm(type) {
     area.appendChild(separator('字段（键 = 值）'));
     area.appendChild(itemList(d.fields || [], 'triplicate'));
     area.appendChild(field('remark', '底部备注', d.remark));
+  } else if (type === 'gdiGrainIn' || type === 'gdiGrainOut') {
+    // GDI 图形表格：填 entry 字段（后端 /api/gdi/* 吃 entry）
+    area.appendChild(field('factoryName', '单位名称', d.factoryName));
+    if (type === 'gdiGrainIn') {
+      area.appendChild(field('entryNo', '入库单号', d.entryNo));
+      area.appendChild(row2('farmerName', '农户姓名', d.farmerName, 'farmerPhone', '农户电话', d.farmerPhone));
+    } else {
+      area.appendChild(field('exitNo', '出库单号', d.exitNo));
+      area.appendChild(row2('customerNameSnap', '客户名称', d.customerNameSnap, 'customerPhoneSnap', '客户电话', d.customerPhoneSnap));
+    }
+    area.appendChild(row2('grainNameSnap', '品种', d.grainNameSnap, 'wareareaNameSnap', '仓位', d.wareareaNameSnap));
+    area.appendChild(row2('driverPlateSnap', '车牌号', d.driverPlateSnap, 'createBy', '库管员', d.createBy));
+    area.appendChild(separator('称重'));
+    area.appendChild(row2('grossWeight', '毛重(kg)', d.grossWeight, 'tareWeight', '皮重(kg)', d.tareWeight));
+    area.appendChild(row2('deductWeight', '扣重(kg)', d.deductWeight, 'netWeight', '净重(kg)', d.netWeight));
+    if (type === 'gdiGrainIn') {
+      area.appendChild(row2('moisture', '水分(%)', d.moisture, 'impurity', '杂质(%)', d.impurity));
+    }
+    area.appendChild(row2('unitPrice', '单价(元/kg)', d.unitPrice, 'adjustedAmount', '结算金额(元)', d.adjustedAmount));
+    area.appendChild(field('heavyMetalCd', '重金属Cd(mg/kg)', d.heavyMetalCd));
   }
 }
 
@@ -633,12 +696,32 @@ function renderHex(hexStr) {
   document.getElementById('hexView').textContent = lines.join('\n') + '\n\n（仅显示前 64 字节，完整指令已发往打印机）';
 }
 
-// ============== 预览按钮（调 /api/print/doc，dryRun=true） ==============
+// ============== 预览按钮 ==============
+// ESC/P 模板调 /api/print/doc（dryRun=true）；GDI 图形表格调 /api/gdi/preview
 document.getElementById('btnPreview').addEventListener('click', function () {
   var fields = collectFields();
   var font = getFontConfig();
   var fname = document.getElementById('fontPreset').selectedOptions[0].text;
   log('请求预览 [' + currentType + '] 型号:' + currentModelKey + ' 字体:' + fname + '...', 'info');
+
+  if (currentType.indexOf('gdi') === 0) {
+    // ===== GDI 图形表格预览 =====
+    var docType = currentType === 'gdiGrainIn' ? 'grain_in' : 'grain_out';
+    var paperKey = document.getElementById('paperSelect').value;
+    apiPost('/api/gdi/preview', {
+      docType: docType, entry: fields, font: font, model: currentModelKey, paperKey: paperKey
+    }).then(function (data) {
+      renderPreview(data.preview);
+      document.getElementById('hexView').textContent =
+        '📐 GDI 图形表格 · 不产出 ESC/P 字节流\n' +
+        '布局: ' + data.widthPx + '×' + data.heightPx + ' px · ' + data.cells + ' 个格子 · ' + data.rows + ' 行 × ' + data.cols + ' 列\n' +
+        '实际打印为 Windows GDI 渲染的实线边框表格（等同 Excel）。';
+      log('GDI 预览生成成功，' + data.cells + ' 格子 ' + data.rows + '×' + data.cols, 'ok');
+    }).catch(function (e) { log('GDI 预览失败: ' + e, 'err'); });
+    return;
+  }
+
+  // ===== ESC/P 字符打印预览（原有逻辑，不动） =====
   apiPost('/api/print/doc', {
     type: currentType, fields: fields, font: font, model: currentModelKey, dryRun: true
   }).then(function (data) {
@@ -648,7 +731,8 @@ document.getElementById('btnPreview').addEventListener('click', function () {
   }).catch(function (e) { log('预览失败: ' + e, 'err'); });
 });
 
-// ============== 打印按钮（调 /api/print/doc） ==============
+// ============== 打印按钮 ==============
+// ESC/P 模板调 /api/print/doc；GDI 图形表格调 /api/gdi/print
 function doPrint(copies) {
   var fields = collectFields();
   var font = getFontConfig();
@@ -661,6 +745,25 @@ function doPrint(copies) {
 
   log((dryRun ? '【模拟】' : '【实际】') + '打印 ' + copies + ' 份 [' + currentType + '] 型号:' + currentModelKey + ' 字体:' + fname + ' → ' + (printerName || '无'), 'info');
 
+  if (currentType.indexOf('gdi') === 0) {
+    // ===== GDI 图形表格打印 =====
+    var docType = currentType === 'gdiGrainIn' ? 'grain_in' : 'grain_out';
+    var paperKey = document.getElementById('paperSelect').value;
+    apiPost('/api/gdi/print', {
+      docType: docType, entry: fields, font: font, model: currentModelKey,
+      printerName: printerName, copies: copies, dryRun: dryRun, paperKey: paperKey
+    }).then(function (data) {
+      renderPreview(data.preview);
+      document.getElementById('hexView').textContent =
+        '📐 GDI 图形表格 · ' + (data.dryRun ? '【模拟】' : '【已打印】') + '\n' +
+        '共 ' + data.bytes + ' 个格子 · ' + data.copies + ' 份';
+      log((data.dryRun ? 'GDI 模拟成功' : 'GDI 打印已提交') + ' · ' + data.bytes + ' 格子', 'ok');
+      if (data.steps) data.steps.forEach(function (s) { log('  ' + s, 'info'); });
+    }).catch(function (e) { log('GDI 打印失败: ' + e, 'err'); });
+    return;
+  }
+
+  // ===== ESC/P 字符打印（原有逻辑，不动） =====
   apiPost('/api/print/doc', {
     type: currentType, fields: fields, font: font, model: currentModelKey,
     printerName: printerName, copies: copies, dryRun: dryRun
