@@ -155,6 +155,8 @@
       <div class="tab" data-type="triplicate">通用三联单</div>
       <div class="tab" data-type="gdiGrainIn">📐 图形表格(入库)</div>
       <div class="tab" data-type="gdiGrainOut">📐 图形表格(出库)</div>
+      <div class="tab" data-type="boxGrainIn">▦ 制表符表格(入库)</div>
+      <div class="tab" data-type="boxGrainOut">▦ 制表符表格(出库)</div>
     </div>
 
     <h2>② 填写单据内容</h2>
@@ -282,6 +284,24 @@ var DEFAULTS = {
     heavyMetalCd: '0.08', createBy: '库管员A'
   },
   gdiGrainOut: {
+    exitNo: 'CK20260706-0001', factoryName: '某某粮油烘干厂',
+    customerNameSnap: '某某食品有限公司', customerPhoneSnap: '139-0000-0002',
+    grainNameSnap: '玉米(二等)', wareareaNameSnap: '2号仓', driverPlateSnap: '鲁B·66888',
+    grossWeight: '2000.0', tareWeight: '200.0', deductWeight: '0', netWeight: '1800.0',
+    unitPrice: '2.65', adjustedAmount: '4770.00',
+    heavyMetalCd: '0.05', createBy: '库管员B'
+  },
+  // 制表符表格（box-drawing，走 ESC/P 通道用 ┌─┐│ 画框，无需驱动 GDI）
+  // entry 字段与 GDI 一致（后端 /api/box/* 吃 entry），复用同样默认数据
+  boxGrainIn: {
+    entryNo: 'RK20260706-0001', factoryName: '某某粮油烘干厂',
+    farmerName: '张三', farmerPhone: '138-0000-0001',
+    grainNameSnap: '小麦(一等)', wareareaNameSnap: '1号仓', driverPlateSnap: '豫A·12345',
+    grossWeight: '1510.5', tareWeight: '9.5', deductWeight: '0.5', netWeight: '1500.5',
+    moisture: '13.2', impurity: '1.0', unitPrice: '2.80', adjustedAmount: '4201.40',
+    heavyMetalCd: '0.08', createBy: '库管员A'
+  },
+  boxGrainOut: {
     exitNo: 'CK20260706-0001', factoryName: '某某粮油烘干厂',
     customerNameSnap: '某某食品有限公司', customerPhoneSnap: '139-0000-0002',
     grainNameSnap: '玉米(二等)', wareareaNameSnap: '2号仓', driverPlateSnap: '鲁B·66888',
@@ -519,10 +539,11 @@ function renderForm(type) {
     area.appendChild(separator('字段（键 = 值）'));
     area.appendChild(itemList(d.fields || [], 'triplicate'));
     area.appendChild(field('remark', '底部备注', d.remark));
-  } else if (type === 'gdiGrainIn' || type === 'gdiGrainOut') {
-    // GDI 图形表格：填 entry 字段（后端 /api/gdi/* 吃 entry）
+  } else if (type === 'gdiGrainIn' || type === 'gdiGrainOut' || type === 'boxGrainIn' || type === 'boxGrainOut') {
+    // GDI 图形表格 / 制表符表格：填 entry 字段（后端 /api/gdi/* 和 /api/box/* 都吃 entry）
+    var isInbound = type.indexOf('In') > 0; // gdiGrainIn / boxGrainIn
     area.appendChild(field('factoryName', '单位名称', d.factoryName));
-    if (type === 'gdiGrainIn') {
+    if (isInbound) {
       area.appendChild(field('entryNo', '入库单号', d.entryNo));
       area.appendChild(row2('farmerName', '农户姓名', d.farmerName, 'farmerPhone', '农户电话', d.farmerPhone));
     } else {
@@ -534,7 +555,7 @@ function renderForm(type) {
     area.appendChild(separator('称重'));
     area.appendChild(row2('grossWeight', '毛重(kg)', d.grossWeight, 'tareWeight', '皮重(kg)', d.tareWeight));
     area.appendChild(row2('deductWeight', '扣重(kg)', d.deductWeight, 'netWeight', '净重(kg)', d.netWeight));
-    if (type === 'gdiGrainIn') {
+    if (isInbound) {
       area.appendChild(row2('moisture', '水分(%)', d.moisture, 'impurity', '杂质(%)', d.impurity));
     }
     area.appendChild(row2('unitPrice', '单价(元/kg)', d.unitPrice, 'adjustedAmount', '结算金额(元)', d.adjustedAmount));
@@ -721,6 +742,19 @@ document.getElementById('btnPreview').addEventListener('click', function () {
     return;
   }
 
+  if (currentType.indexOf('box') === 0) {
+    // ===== 制表符表格预览（走 ESC/P 通道，但用 ┌─┐│ 画框） =====
+    var docType = currentType === 'boxGrainIn' ? 'grain_in' : 'grain_out';
+    apiPost('/api/box/preview', {
+      docType: docType, entry: fields, font: font, model: currentModelKey
+    }).then(function (data) {
+      renderPreview(data.preview);
+      renderHex(data.hexHead || '');
+      log('制表符表格预览生成，共 ' + data.bytes + ' 字节', 'ok');
+    }).catch(function (e) { log('制表符预览失败: ' + e, 'err'); });
+    return;
+  }
+
   // ===== ESC/P 字符打印预览（原有逻辑，不动） =====
   apiPost('/api/print/doc', {
     type: currentType, fields: fields, font: font, model: currentModelKey, dryRun: true
@@ -760,6 +794,21 @@ function doPrint(copies) {
       log((data.dryRun ? 'GDI 模拟成功' : 'GDI 打印已提交') + ' · ' + data.bytes + ' 格子', 'ok');
       if (data.steps) data.steps.forEach(function (s) { log('  ' + s, 'info'); });
     }).catch(function (e) { log('GDI 打印失败: ' + e, 'err'); });
+    return;
+  }
+
+  if (currentType.indexOf('box') === 0) {
+    // ===== 制表符表格打印（走 ESC/P 通道，用 ┌─┐│ 画框） =====
+    var docType = currentType === 'boxGrainIn' ? 'grain_in' : 'grain_out';
+    apiPost('/api/box/print', {
+      docType: docType, entry: fields, font: font, model: currentModelKey,
+      printerName: printerName, copies: copies, dryRun: dryRun
+    }).then(function (data) {
+      renderPreview(data.preview);
+      renderHex(data.hexHead || '');
+      log((dryRun ? '制表符模拟成功' : '制表符打印已提交') + ' · ' + data.bytes + ' 字节', 'ok');
+      if (data.steps) data.steps.forEach(function (s) { log('  ' + s, 'info'); });
+    }).catch(function (e) { log('制表符打印失败: ' + e, 'err'); });
     return;
   }
 

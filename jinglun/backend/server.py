@@ -174,6 +174,10 @@ class JinglunHandler(BaseHTTPRequestHandler):
         if route.startswith("/api/gdi/"):
             return self.dispatch_gdi(method, route, body)
 
+        # ===== 制表符模拟表格（box-drawing，走 ESC/P 通道，不影响其他打印） =====
+        if route.startswith("/api/box/"):
+            return self.dispatch_box(method, route, body)
+
         sdk = get_sdk()
 
         if method == "GET" and route == "/api/devices":
@@ -451,6 +455,73 @@ class JinglunHandler(BaseHTTPRequestHandler):
             }
 
         raise JinglunError("NOT_FOUND", f"未知 GDI 接口：{method} {route}")
+
+    def dispatch_box(self, method: str, route: str, body: Dict[str, Any]) -> Any:
+        """制表符模拟表格（box-drawing）路由。
+
+        走 ESC/P 通道（复用 raw_printer winspool RAW），内容用 ┌─┐│└┘ 制表符画框，
+        无需打印机驱动支持 GDI——只要能正常打中文就能用。
+
+        路由：
+          POST /api/box/preview  body {entry, docType, model?, font?} → 预览 + hexHead（不打印）
+          POST /api/box/print    body {entry, docType, printerName, copies?, dryRun?, model?, font?}
+                                 → 实际打印
+          docType: grain_in | grain_out
+
+        与 /api/print/* （ESC/P 字符）和 /api/gdi/* （GDI 实线）三者并列，互不影响。
+        """
+        import box_docs
+        import raw_printer
+
+        doc_type = str(body.get("docType") or "")
+        entry = body.get("entry") or {}
+        model = body.get("model") or "DB-618KII"
+        font = body.get("font") or None
+
+        if not entry.get("printDate"):
+            entry = dict(entry)
+            entry["printDate"] = time.strftime("%Y-%m-%d")
+
+        # 构建（preview/print 共用）
+        try:
+            builder, preview = box_docs.build_doc(doc_type, entry, font=font, model=model)
+        except ValueError as exc:
+            raise JinglunError("INVALID_DOC_TYPE", str(exc))
+
+        script_lines = builder.to_script()
+
+        # POST /api/box/preview — 只返回预览，不打印
+        if method == "POST" and route == "/api/box/preview":
+            data = raw_printer.build_bytes(script_lines)
+            return {
+                "preview": preview,
+                "bytes": len(data),
+                "hexHead": " ".join("%02X" % c for c in data[:64]),
+            }
+
+        # POST /api/box/print — 实际打印（dryRun 默认 False）
+        if method == "POST" and route == "/api/box/print":
+            printer_name = str(body.get("printerName") or "")
+            copies = int(body.get("copies") or 1)
+            dry_run = bool(body.get("dryRun", False))
+
+            result = box_docs.send(builder, printer_name, copies=copies,
+                                   dry_run=dry_run, preview=preview)
+            if not result.get("ok"):
+                err = result.get("error") or "制表符表格打印失败"
+                code = "PRINTER_FAILED"
+                ret = result.get("win32Code")
+                raise JinglunError(code, err, ret)
+            return {
+                "dryRun": result["dryRun"],
+                "copies": result["copies"],
+                "bytes": result["bytes"],
+                "steps": result["steps"],
+                "hexHead": result.get("hexHead"),
+                "preview": result["preview"],
+            }
+
+        raise JinglunError("NOT_FOUND", f"未知制表符接口：{method} {route}")
 
     def serve_static(self) -> None:
         path = self.path.split("?", 1)[0]
