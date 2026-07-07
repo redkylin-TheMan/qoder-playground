@@ -84,6 +84,9 @@ def build_doc(
         fields["title"], fields["company"], fields["meta"],
         fields["field_rows"], fields["footer_lines"],
         total_width=total_width,
+        # 宽幅（total_width ≥ 90，即 96 列横版）用 6 列布局（3 组键值/行），
+        # 窄版继续 4 列（2 组/行）。阈值 90 留余量，避免 82 列机 64 lineWidth 误判。
+        cols_per_row=6 if total_width >= 90 else 4,
     )
     preview = to_preview(lines)
 

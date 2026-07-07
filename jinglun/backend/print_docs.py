@@ -30,6 +30,10 @@ MODELS: Dict[str, Dict[str, Any]] = {
     "DB-618KII": {"name": "得力 DB-618KII", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
     "DS-600T": {"name": "得实 DS-600T", "columns": 106, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
     "GENERIC_82": {"name": "通用 82列针式打印机", "columns": 82, "copies": 4, "lineWidth": 48, "feedLines": 5, "pageHeightLines": 18},
+    # 宽幅横版：25cm(宽) × 14cm(走纸方向) 三联纸。
+    # lineWidth=96 → 单据铺满 25cm 纸宽（25cm ÷ 2.54 × 10cpi ≈ 98，取偶数 96）。
+    # pageHeightLines=33 → 14cm 走纸方向的页长（14cm ÷ 1/6" ÷ 2.54 ≈ 33 行），FF 精确对齐穿孔。
+    "GENERIC_WIDE_96": {"name": "通用宽幅 96列", "columns": 106, "copies": 4, "lineWidth": 96, "feedLines": 5, "pageHeightLines": 33},
 }
 
 

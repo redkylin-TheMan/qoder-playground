@@ -407,16 +407,19 @@ class JinglunHandler(BaseHTTPRequestHandler):
             entry = dict(entry)
             entry["printDate"] = time.strftime("%Y-%m-%d")
 
+        # 纸张预设提前解析（build_doc 需要按纸宽判定 4列/6列布局）
+        paper_key = str(body.get("paperKey") or "75x100")
+        paper_mm = gdi_tables.resolve_paper(paper_key)
+
         # 构建 Table 模型 + 预览（preview/print 共用）
+        # paper_mm 传入用于宽幅判定：纸宽≥200mm（25cm横版）走 6 列，否则 4 列窄版
         try:
-            table, preview = gdi_docs.build_doc(doc_type, entry, font=font, model=model)
+            table, preview = gdi_docs.build_doc(doc_type, entry, font=font, model=model, paper_mm=paper_mm)
         except ValueError as exc:
             raise JinglunError("INVALID_DOC_TYPE", str(exc))
 
         # POST /api/gdi/preview — 只返回预览，不打印
         if method == "POST" and route == "/api/gdi/preview":
-            paper_key = str(body.get("paperKey") or "75x100")
-            paper_mm = gdi_tables.resolve_paper(paper_key)
             page_w_mm = paper_mm[0] if paper_mm else 75.0
             laid = gdi_tables.layout(table, dpi=180, page_w_mm=page_w_mm,
                                      font_default=float((font or {}).get("size", 9.0)))
@@ -434,8 +437,6 @@ class JinglunHandler(BaseHTTPRequestHandler):
             printer_name = str(body.get("printerName") or "")
             copies = int(body.get("copies") or 1)
             dry_run = bool(body.get("dryRun", False))
-            paper_key = str(body.get("paperKey") or "75x100")
-            paper_mm = gdi_tables.resolve_paper(paper_key)
 
             result = gdi_docs.send(
                 table, printer_name=printer_name, copies=copies, dry_run=dry_run,

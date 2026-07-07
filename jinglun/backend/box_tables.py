@@ -113,24 +113,37 @@ def render_box_table(
     total_width: int = 48,  # 半角列，与 escp.lineWidth 一致
     label_align: str = "left",
     value_align: str = "left",
+    cols_per_row: int = 4,  # 列数（偶数：4=窄版2组键值/行，6=宽幅3组键值/行）
 ) -> List[str]:
     """把单据数据渲染成制表符表格的文本行列表。
 
-    布局（4 列网格：label|value|label|value）：
-      ┌──────────────────────────────────┐
-      │       粮食入库结算单（标题）     │
-      ├──────┬────────┬──────┬──────────┤
-      │ 单号 │ RK001  │ 日期 │ 2026...  │
-      ├──────┼────────┼──────┼──────────┤
-      │ 农户 │ 张三   │ 身份证│ ---     │
-      │ ...  │        │      │          │
-      ├──────┴────────┴──────┴──────────┤
-      │ 经办人签字___   客户签字___      │
-      └──────────────────────────────────┘
+    布局（cols_per_row 列网格，每个 [label|value] 是一组）：
+      窄版 cols_per_row=4（2 组/行，total_width=48）：
+        ┌──────────────────────────────────┐
+        │       粮食入库结算单（标题）     │
+        ├──────┬────────┬──────┬──────────┤
+        │ 单号 │ RK001  │ 日期 │ 2026...  │
+        ├──────┼────────┼──────┼──────────┤
+        │ 农户 │ 张三   │ 身份证│ ---     │
+        ├──────┴────────┴──────┴──────────┤
+        │ 经办人签字___   客户签字___      │
+        └──────────────────────────────────┘
+      宽幅 cols_per_row=6（3 组/行，total_width=96）：
+        ┌──┬──────┬──┬──────┬──┬──────┐
+        │       粮食入库结算单            │
+        ├──┼──────┼──┼──────┼──┼──────┤
+        │农户│张三 │身份证│...│品种│...  │
+        └──┴──────┴──┴──────┴──┴──────┘
 
     列宽策略：扫描所有 label/value 实际宽度动态分配。
     label 优先保宽（标签截断会看不懂），value 超长则截断。
+    cols_per_row 必须是偶数（label|value 成对）。窄版传 4，宽幅传 6。
     """
+    # 列数必须是偶数且 ≥ 2（label|value 至少一对）
+    if cols_per_row < 2 or cols_per_row % 2 != 0:
+        cols_per_row = 4
+    n_groups = cols_per_row // 2  # 一行排几组键值
+
     # 1. 扫描所有 label / value 的最大宽度
     all_labels: List[str] = []
     all_values: List[str] = []
@@ -143,19 +156,19 @@ def render_box_table(
         all_values.append(v)
 
     label_max = max([box_width(x) for x in all_labels] + [2])
-    # 2. 4 列约束：2*label_w + 2*value_w + 5*2(border) = total_width
-    border_width = 5 * 2  # 4 列有 5 个 │
-    half_content = (total_width - border_width) / 2  # 一组 label+value 可用宽度
-    # label 优先：label_w = min(label_max, half_content 的一半)，剩余给 value
-    label_w = min(label_max, int(half_content * 0.45))
-    value_w = int(half_content - label_w)
-    # 凑偶数（制表符对齐要求）
-    col_widths = [
-        _even_up(label_w),
-        _even_up(value_w),
-        _even_up(label_w),
-        _even_up(value_w),
-    ]
+    # 2. 列宽约束：n_groups 组（每组 label+value）+ (cols_per_row+1) 个 │ 边框 = total_width
+    border_width = (cols_per_row + 1) * 2  # N 列有 N+1 个 │（每个 2 列）
+    group_w = (total_width - border_width) / n_groups  # 一组 label+value 可用宽度
+    # label 优先：label_w = min(label_max, group_w 的 0.35)，剩余给 value
+    # （宽幅 6 列下组更窄，label 占比略降，给 value 留更多空间放身份证号等长值）
+    label_ratio = 0.45 if n_groups <= 2 else 0.35
+    label_w = min(label_max, int(group_w * label_ratio))
+    value_w = int(group_w - label_w)
+    # 凑偶数（制表符对齐要求），按 [label, value] 重复 n_groups 组
+    col_widths: List[int] = []
+    for _ in range(n_groups):
+        col_widths.append(_even_up(label_w))
+        col_widths.append(_even_up(value_w))
     # 修正最后一列凑满 total_width
     diff = total_width - border_width - sum(col_widths)
     if diff:
@@ -173,35 +186,44 @@ def render_box_table(
     if company:
         lines.append("│" + _pad(_truncate_to_width(company, full_inner), full_inner, "center") + "│")
 
-    # ---- meta（作为 4 列数据行）----
+    # ---- meta（作为 cols_per_row 列数据行）----
     if meta:
         lines.append(_separator(col_widths, "├", "┼", "┤"))
         meta_cells: List[Tuple[str, str]] = []
         for k, v in meta:
             meta_cells.append((k, v))
-        if len(meta_cells) % 2:
+        # 按 n_groups 组补齐（每组是 label+value 一对）
+        while len(meta_cells) % n_groups:
             meta_cells.append(("", ""))
-        for i in range(0, len(meta_cells), 2):
-            pair = meta_cells[i:i + 2]
-            texts = [pair[0][0], pair[0][1], pair[1][0], pair[1][1]]
-            aligns = [label_align, value_align, label_align, value_align]
+        for i in range(0, len(meta_cells), n_groups):
+            group = meta_cells[i:i + n_groups]
+            texts: List[str] = []
+            aligns: List[str] = []
+            for k, v in group:
+                texts.extend([k, v])
+                aligns.extend([label_align, value_align])
             lines.append(_data_line(texts, aligns, col_widths))
 
     # ---- 字段网格 ----
+    # 把所有 field_rows 扁平化成一个 (k,v) 流，再按 n_groups 组/行重新分组。
+    # 这样数据层（extract_*_fields 每行放几组）与布局层（cols_per_row）解耦：
+    # 数据按 2 组/行组织、布局改 6 列（3 组/行）时，会自动重排填满，不留空组。
     if field_rows:
         lines.append(_separator(col_widths, "├", "┼", "┤"))
+        flat: List[Tuple[str, str]] = []
         for row in field_rows:
-            cells = list(row)
-            if len(cells) % 2:
-                cells.append(("", ""))
+            for k, v in row:
+                flat.append((k, v))
+        # 按 n_groups 组补齐到整行（不足补空对，避免末行留半行空白错位）
+        while len(flat) % n_groups:
+            flat.append(("", ""))
+        for i in range(0, len(flat), n_groups):
+            group = flat[i:i + n_groups]
             texts: List[str] = []
             aligns: List[str] = []
-            for k, v in cells[:2]:
+            for k, v in group:
                 texts.extend([k, v])
                 aligns.extend([label_align, value_align])
-            while len(texts) < 4:
-                texts.append("")
-                aligns.append(value_align)
             lines.append(_data_line(texts, aligns, col_widths))
 
     # ---- 签字栏（全宽单行）----
@@ -329,7 +351,7 @@ def to_preview(lines: List[str]) -> List[Dict[str, Any]]:
 
 
 if __name__ == "__main__":
-    # 自检：渲染入库单制表符表格
+    # 自检：渲染入库单制表符表格（窄版 4 列 + 宽幅 6 列两种布局都验证）
     entry = {
         "entryNo": "RK260706001",
         "farmerName": "张三",
@@ -349,12 +371,16 @@ if __name__ == "__main__":
         "printDate": "2026-07-06",
     }
     fields = extract_fields("grain_in", entry)
-    lines = render_box_table(
-        fields["title"], fields["company"], fields["meta"],
-        fields["field_rows"], fields["footer_lines"], total_width=48,
-    )
-    print("制表符表格（每行 box_width 应均为 %d）：" % 48)
-    for ln in lines:
-        w = box_width(ln)
-        mark = "✓" if w == 48 else ("✗ w=" + str(w))
-        print("  %s | %s" % (mark, ln))
+
+    for width, cols in [(48, 4), (96, 6)]:
+        lines = render_box_table(
+            fields["title"], fields["company"], fields["meta"],
+            fields["field_rows"], fields["footer_lines"],
+            total_width=width, cols_per_row=cols,
+        )
+        print("===== 制表符表格 %d 列布局（每行 box_width 应均为 %d）=====" % (cols, width))
+        for ln in lines:
+            w = box_width(ln)
+            mark = "✓" if w == width else ("✗ w=" + str(w))
+            print("  %s | %s" % (mark, ln))
+        print()

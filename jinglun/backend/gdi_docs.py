@@ -51,16 +51,22 @@ def build_doc(
     entry: Dict[str, Any],
     font: Optional[Dict[str, Any]] = None,
     model: Optional[Any] = None,
+    paper_mm: Optional[Tuple[float, float]] = None,
 ) -> Tuple[Table, List[Dict[str, Any]]]:
     """构建 Table 模型 + 预览。不碰打印机，dryRun 也用这个。
 
     与 print_docs.build_doc 同名同语义，但产出 Table 而非 EscpBuilder。
     entry 缺 printDate 时补今天。
+
+    paper_mm 用于判定宽幅：纸宽 ≥ 200mm（即 25cm 宽幅横版纸）时走 6 列布局，
+    否则走 4 列窄版。宽幅标识固化进 Table.col_ratios，send 时按它布局。
     """
     if not entry.get("printDate"):
         entry = dict(entry)
         entry["printDate"] = time.strftime("%Y-%m-%d")
-    table = build_table(doc_type, entry)
+    # 宽幅判定：纸宽 ≥ 200mm（25cm 纸 = 250mm）走 6 列，其余走 4 列窄版
+    wide = bool(paper_mm and paper_mm[0] >= 200.0)
+    table = build_table(doc_type, entry, wide=wide)
     preview = to_preview(table)
     return table, preview
 
@@ -248,7 +254,7 @@ def send(
 
 
 if __name__ == "__main__":
-    # 自检：dryRun 全流程（不碰打印机）
+    # 自检：dryRun 全流程（不碰打印机）。窄版 4 列 + 宽幅 6 列两种都验证。
     entry = {
         "entryNo": "RK260706001",
         "farmerName": "张三",
@@ -265,8 +271,9 @@ if __name__ == "__main__":
         "createBy": "库管员A",
         "factoryName": "某某粮油烘干厂",
     }
-    table, preview = build_doc("grain_in", entry)
-    res = send(table, printer_name="", copies=1, dry_run=True, paper_mm=(75.0, 100.0))
-    print("dryRun 结果:", "ok=%s bytes=%s" % (res["ok"], res["bytes"]))
-    for s in res["steps"]:
-        print("  ", s)
+    for paper_mm, label in [((75.0, 100.0), "窄版4列 7.5cm"), ((250.0, 140.0), "宽幅6列 25cm")]:
+        table, preview = build_doc("grain_in", entry, paper_mm=paper_mm)
+        res = send(table, printer_name="", copies=1, dry_run=True, paper_mm=paper_mm)
+        print("===== %s：dryRun ok=%s bytes=%s =====" % (label, res["ok"], res["bytes"]))
+        for s in res["steps"]:
+            print("  ", s)

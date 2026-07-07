@@ -115,6 +115,17 @@ MODELS: Dict[str, Dict[str, Any]] = {
         "lineWidth": 64, "feedLines": 5, "hwIds": [],
         "driverUrl": "<OSS:UNIVERSAL_X64>", "notes": "未知型号兜底，106列宽幅",
     },
+    # ==================== 宽幅横版（25cm 纸，专用）====================
+    # 25cm × 14cm 连续三联纸：纸宽 25cm 走纸方向 14cm。
+    # 25cm ÷ 2.54 × 10cpi ≈ 98，取偶数 96 半角列（全角 48 字）。
+    # columns=106 只是给前端型号下拉显示用（box/print_docs 不读 columns 算宽度）。
+    # lineWidth=96 让 ESC/P 字符和制表符表格铺满纸宽；
+    # pageHeightLines 在 print_docs.py 自己的 MODELS 表里定（此表无此字段）。
+    "GENERIC_WIDE_96": {
+        "name": "通用宽幅 96列（25cm横版）", "series": "GENERIC", "columns": 106, "copies": 4,
+        "lineWidth": 96, "feedLines": 5, "hwIds": [],
+        "driverUrl": "<OSS:UNIVERSAL_X64>", "notes": "25cm×14cm 宽幅横版三联纸，一行96半角列（全角48字）",
+    },
 }
 
 # 综合驱动索引页（网页"查看全部驱动"按钮用）

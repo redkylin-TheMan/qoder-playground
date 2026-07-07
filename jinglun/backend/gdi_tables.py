@@ -270,11 +270,67 @@ def _align_map(a: str) -> str:
     return {"left": "left", "center": "center", "right": "right"}.get(a, "left")
 
 
+def _disp_w(text: Any) -> int:
+    """计算显示宽度：中文/CJK=2，ASCII=1。
+
+    GDI 预览对齐用（与 box_tables.box_width 一致逻辑，但不把制表符算 2 列——
+    GDI 预览不含制表符画框，只有文本和 │ 分隔符，│ 在等宽字体里是 1 列）。
+    """
+    if text is None:
+        return 0
+    s = str(text)
+    w = 0
+    for ch in s:
+        c = ord(ch)
+        if (
+            0x2E80 <= c <= 0xA4CF     # 中日韩部首/笔划
+            or 0xAC00 <= c <= 0xD7A3     # 韩文音节
+            or 0xF900 <= c <= 0xFAFF     # 兼容汉字
+            or 0xFE30 <= c <= 0xFE4F     # CJK 兼容形式
+            or 0xFF00 <= c <= 0xFF60     # 全角符号/字母
+            or 0xFFE0 <= c <= 0xFFE6     # 全角货币
+            or 0x3000 <= c <= 0x303F     # CJK 标点
+            or 0x3040 <= c <= 0x33FF     # 假名/注音/CJK 符号
+        ):
+            w += 2
+        else:
+            w += 1
+    return w
+
+
+def _pad_cell(text: Any, width: int, align: str = "left") -> str:
+    """按 _disp_w 把 text 填充/截断到 width 列。"""
+    s = "" if text is None else str(text)
+    tw = _disp_w(s)
+    if tw >= width:
+        # 超宽则截断（按字符逐个累加，避免半个中文字符）
+        out = ""
+        w = 0
+        for ch in s:
+            cw = _disp_w(ch)
+            if w + cw > width:
+                break
+            out += ch
+            w += cw
+        return out
+    pad = width - tw
+    if align == "center":
+        left = pad // 2
+        return " " * left + s + " " * (pad - left)
+    if align == "right":
+        return " " * pad + s
+    return s + " " * pad
+
+
 def to_preview(table: Table) -> List[Dict[str, Any]]:
-    """生成文本近似预览（用 +—+ 表示网格），结构与 escp.get_preview() 一致。
+    """生成文本近似预览（用 │ 分隔的网格），结构与 escp.get_preview() 一致。
 
     前端 renderPreview 接收 [{text, align, bold, dw, dh}]，这里照此产出。
-    网格用 ASCII 近似（实际打印是 GDI 实线）。
+    用等宽字体下的列对齐模拟 GDI 实线网格（实际打印是 GDI 像素矩形）。
+
+    列对齐原理：扫描每个逻辑列在所有行(rows+footer)中的最大显示宽度
+    （中文=2、ASCII=1），每列统一 pad 到该宽度，│ 就对齐了。
+    横线和签字栏都按"网格总宽"拉满，不再写死 40。
     """
     lines: List[Dict[str, Any]] = []
 
@@ -287,34 +343,82 @@ def to_preview(table: Table) -> List[Dict[str, Any]]:
     if table.company_name:
         push(table.company_name, "center", False)
 
-    # 横向分隔（用 +---+ 表示）
-    def hline(cols: int, label: str = "") -> str:
-        if label:
-            return "─" * 40
-        return "─" * 40
+    n_cols = len(table.col_ratios) if table.col_ratios else 1
 
-    # meta
+    # ---- 第一步：扫描 rows + footer 所有行，算出统一的列宽数组 col_max ----
+    # 这样数据行和签字栏共用同一套列宽，横线贯穿全表宽度一致。
+    col_max = [2] * n_cols
+    all_rows = list(table.rows) + list(table.footer)
+    for row in all_rows:
+        col_idx = 0
+        for cell in row.cells:
+            if col_idx >= n_cols:
+                break
+            span = min(cell.colspan, n_cols - col_idx) or 1
+            w = _disp_w(cell.text)
+            if span == 1:
+                if w > col_max[col_idx]:
+                    col_max[col_idx] = w
+            else:
+                # colspan>1：内容宽度与"所跨列已有宽度和"比较，不足则加到末列撑开
+                merged_w = sum(col_max[col_idx:col_idx + span])
+                if w > merged_w:
+                    col_max[col_idx + span - 1] += w - merged_w
+            col_idx += span
+
+    # 网格总宽 = 各列宽之和 + (n_cols+1) 个 │（每个 1 列）
+    grid_total_w = sum(col_max) + n_cols + 1
+
+    def hline() -> str:
+        """横线拉满到网格总宽。"""
+        return "─" * grid_total_w
+
+    def render_grid(rows_data: List[Row]) -> None:
+        """按 col_max 渲染一组行。colspan 单元格 pad 到合并列宽总和（拉满）。
+
+        末尾 pad 到 grid_total_w：colspan 行的 │ 比数据行少（合并格内无线），
+        补尾随空格让所有行视觉等宽，与横线对齐。
+        """
+        for row in rows_data:
+            parts: List[str] = []
+            col_idx = 0
+            for cell in row.cells:
+                if col_idx >= n_cols:
+                    break
+                span = min(cell.colspan, n_cols - col_idx) or 1
+                # colspan 单元格宽度 = 所跨列宽总和（拉满，不留半格空）
+                cell_w = sum(col_max[col_idx:col_idx + span])
+                parts.append(_pad_cell(cell.text, cell_w, cell.align))
+                col_idx += span
+            # 行末没填满所有列时补齐（防 │ 数量不一致）
+            while col_idx < n_cols:
+                parts.append(_pad_cell("", col_max[col_idx]))
+                col_idx += 1
+            line_text = "│" + "│".join(parts) + "│"
+            # 尾随空格补到网格总宽（colspan 行 │ 少，补齐后视觉与横线等宽）
+            gap = grid_total_w - _disp_w(line_text)
+            if gap > 0:
+                line_text += " " * gap
+            push(line_text, "left", row.header)
+
+    # meta（表头信息：单行 k + v，左对齐，不画框）
     if table.meta:
-        push(hline(1))
+        push(hline(), "left", False)
         for k, v in table.meta:
             push("%s  %s" % (k, v), "left", False)
 
-    # 数据网格（用表格近似）
+    # 数据网格
     if table.rows:
-        push(hline(1))
-        for row in table.rows:
-            texts = [c.text for c in row.cells]
-            push(" │ ".join(texts), "left", row.header)
+        push(hline(), "left", False)
+        render_grid(table.rows)
 
-    # footer
+    # footer（签字栏，含 colspan）——用同一套 col_max，colspan 自然拉满
     if table.footer:
-        push(hline(1))
-        for row in table.footer:
-            texts = [c.text for c in row.cells]
-            push(" │ ".join(texts), "left")
+        push(hline(), "left", False)
+        render_grid(table.footer)
 
-    push(hline(1))
-    push("[ GDI 图形表格 · 实线边框预览（实际打印为实线网格）]", "center", False)
+    push(hline(), "left", False)
+    push("[ GDI 图形表格 · 实线边框预览（实际打印为 GDI 像素实线网格）]", "center", False)
     return lines
 
 
@@ -325,8 +429,13 @@ def _s(v: Any) -> str:
     return "" if v is None or v == "" else str(v)
 
 
-def build_grain_in_table(entry: Dict[str, Any]) -> Table:
-    """粮食入库 → Table（字段映射对齐 print_docs.build_grain_in_fields，但产出 Table 模型）。"""
+def build_grain_in_table(entry: Dict[str, Any], wide: bool = False) -> Table:
+    """粮食入库 → Table（字段映射对齐 print_docs.build_grain_in_fields，但产出 Table 模型）。
+
+    wide=False（默认）：4 列网格（2 组键值/行），适配窄纸（7.5~9cm）。
+    wide=True：6 列网格（3 组键值/行），适配 25cm 宽幅横版纸，一行排更多字段更省纸。
+    两种布局字段内容完全一致，只是分行方式不同。
+    """
     amount = entry.get("adjustedAmount")
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
@@ -337,27 +446,54 @@ def build_grain_in_table(entry: Dict[str, Any]) -> Table:
     if farmer_phone and farmer_name != "现场散单":
         farmer_name = "%s(%s)" % (farmer_name, farmer_phone)
 
-    # 三列布局：标签 | 值 | （第三列容纳并排的两组）
-    rows = [
-        Row([Cell("农户", bold=True), Cell(farmer_name), Cell("身份证", bold=True), Cell(id_card)]),
-        Row([Cell("银行卡", bold=True), Cell(bank_card), Cell("品种", bold=True),
-             Cell(_s(entry.get("grainNameSnap")) or _s(entry.get("grainType")))]),
-        Row([Cell("仓位", bold=True),
-             Cell(_s(entry.get("wareareaNameSnap")) or _s(entry.get("wareareaName"))),
-             Cell("车牌号", bold=True),
-             Cell(_s(entry.get("driverPlateSnap")) or _s(entry.get("driverPlate")))]),
-        Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
-             Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight")))]),
-        Row([Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0"),
-             Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight")))]),
-        Row([Cell("水分/杂质", bold=True),
-             Cell("%s%% / %s%%" % (_s(entry.get("moisture")) or "-", _s(entry.get("impurity")) or "-")),
-             Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice")))]),
-        Row([Cell("重金属Cd", bold=True),
-             Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
-             Cell("结算金额", bold=True), Cell("￥" + _s(amount))]),
-        Row([Cell("库管员", bold=True), Cell(_s(entry.get("createBy"))), Cell("", colspan=2)]),
-    ]
+    if wide:
+        # 宽幅 6 列：3 组键值/行（label|value|label|value|label|value）
+        rows = [
+            Row([Cell("农户", bold=True), Cell(farmer_name),
+                 Cell("身份证", bold=True), Cell(id_card),
+                 Cell("品种", bold=True),
+                 Cell(_s(entry.get("grainNameSnap")) or _s(entry.get("grainType")))]),
+            Row([Cell("银行卡", bold=True), Cell(bank_card),
+                 Cell("仓位", bold=True),
+                 Cell(_s(entry.get("wareareaNameSnap")) or _s(entry.get("wareareaName"))),
+                 Cell("车牌号", bold=True),
+                 Cell(_s(entry.get("driverPlateSnap")) or _s(entry.get("driverPlate")))]),
+            Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
+                 Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight"))),
+                 Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0")]),
+            Row([Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight"))),
+                 Cell("水分", bold=True), Cell(_s(entry.get("moisture")) or "-"),
+                 Cell("杂质", bold=True), Cell(_s(entry.get("impurity")) or "-")]),
+            Row([Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice"))),
+                 Cell("重金属Cd", bold=True),
+                 Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
+                 Cell("结算金额", bold=True), Cell("￥" + _s(amount))]),
+            Row([Cell("库管员", bold=True), Cell(_s(entry.get("createBy"))), Cell("", colspan=4)]),
+        ]
+        col_ratios = [1.0, 1.6, 1.0, 1.6, 1.0, 1.6]
+    else:
+        # 窄版 4 列：2 组键值/行（原有布局，不动）
+        rows = [
+            Row([Cell("农户", bold=True), Cell(farmer_name), Cell("身份证", bold=True), Cell(id_card)]),
+            Row([Cell("银行卡", bold=True), Cell(bank_card), Cell("品种", bold=True),
+                 Cell(_s(entry.get("grainNameSnap")) or _s(entry.get("grainType")))]),
+            Row([Cell("仓位", bold=True),
+                 Cell(_s(entry.get("wareareaNameSnap")) or _s(entry.get("wareareaName"))),
+                 Cell("车牌号", bold=True),
+                 Cell(_s(entry.get("driverPlateSnap")) or _s(entry.get("driverPlate")))]),
+            Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
+                 Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight")))]),
+            Row([Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0"),
+                 Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight")))]),
+            Row([Cell("水分/杂质", bold=True),
+                 Cell("%s%% / %s%%" % (_s(entry.get("moisture")) or "-", _s(entry.get("impurity")) or "-")),
+                 Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice")))]),
+            Row([Cell("重金属Cd", bold=True),
+                 Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
+                 Cell("结算金额", bold=True), Cell("￥" + _s(amount))]),
+            Row([Cell("库管员", bold=True), Cell(_s(entry.get("createBy"))), Cell("", colspan=2)]),
+        ]
+        col_ratios = [1.0, 1.6, 1.0, 1.6]
 
     meta: List[Tuple[str, str]] = []
     no = _s(entry.get("entryNo"))
@@ -367,9 +503,11 @@ def build_grain_in_table(entry: Dict[str, Any]) -> Table:
     if date:
         meta.append(("日期", date))
 
+    # footer colspan 按列数定：窄版 4 列各占一半(colspan=2)，宽幅 6 列各占一半(colspan=3)
+    sign_colspan = 3 if wide else 2
     footer = [
-        Row([Cell("经办人签字：____________", colspan=2),
-             Cell("客户签字：____________", colspan=2)]),
+        Row([Cell("经办人签字：____________", colspan=sign_colspan),
+             Cell("客户签字：____________", colspan=sign_colspan)]),
     ]
 
     return Table(
@@ -378,12 +516,16 @@ def build_grain_in_table(entry: Dict[str, Any]) -> Table:
         meta=meta,
         rows=rows,
         footer=footer,
-        col_ratios=[1.0, 1.6, 1.0, 1.6],
+        col_ratios=col_ratios,
     )
 
 
-def build_grain_out_table(entry: Dict[str, Any]) -> Table:
-    """粮食出库 → Table。"""
+def build_grain_out_table(entry: Dict[str, Any], wide: bool = False) -> Table:
+    """粮食出库 → Table。
+
+    wide=False（默认）：4 列网格（2 组键值/行），适配窄纸（7.5~9cm）。
+    wide=True：6 列网格（3 组键值/行），适配 25cm 宽幅横版纸。
+    """
     amount = entry.get("adjustedAmount")
     if amount in (None, "", 0, "0"):
         amount = entry.get("originalAmount")
@@ -394,22 +536,46 @@ def build_grain_out_table(entry: Dict[str, Any]) -> Table:
     if customer_phone and customer_name != "现场散单":
         customer_name = "%s(%s)" % (customer_name, customer_phone)
 
-    rows = [
-        Row([Cell("客户", bold=True), Cell(customer_name), Cell("身份证", bold=True), Cell(id_card)]),
-        Row([Cell("银行卡", bold=True), Cell(bank_card), Cell("品种", bold=True),
-             Cell(_s(entry.get("grainNameSnap")))]),
-        Row([Cell("仓位", bold=True), Cell(_s(entry.get("wareareaNameSnap"))),
-             Cell("车牌号", bold=True), Cell(_s(entry.get("driverPlateSnap")))]),
-        Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
-             Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight")))]),
-        Row([Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0"),
-             Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight")))]),
-        Row([Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice"))),
-             Cell("应收金额", bold=True), Cell("￥" + _s(amount))]),
-        Row([Cell("重金属Cd", bold=True),
-             Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
-             Cell("库管员", bold=True), Cell(_s(entry.get("createBy")))]),
-    ]
+    if wide:
+        # 宽幅 6 列：3 组键值/行
+        rows = [
+            Row([Cell("客户", bold=True), Cell(customer_name),
+                 Cell("身份证", bold=True), Cell(id_card),
+                 Cell("品种", bold=True), Cell(_s(entry.get("grainNameSnap")))]),
+            Row([Cell("银行卡", bold=True), Cell(bank_card),
+                 Cell("仓位", bold=True), Cell(_s(entry.get("wareareaNameSnap"))),
+                 Cell("车牌号", bold=True), Cell(_s(entry.get("driverPlateSnap")))]),
+            Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
+                 Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight"))),
+                 Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0")]),
+            Row([Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight"))),
+                 Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice"))),
+                 Cell("应收金额", bold=True), Cell("￥" + _s(amount))]),
+            Row([Cell("重金属Cd", bold=True),
+                 Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
+                 Cell("库管员", bold=True), Cell(_s(entry.get("createBy"))),
+                 Cell("", colspan=2)]),
+        ]
+        col_ratios = [1.0, 1.6, 1.0, 1.6, 1.0, 1.6]
+    else:
+        # 窄版 4 列：2 组键值/行（原有布局，不动）
+        rows = [
+            Row([Cell("客户", bold=True), Cell(customer_name), Cell("身份证", bold=True), Cell(id_card)]),
+            Row([Cell("银行卡", bold=True), Cell(bank_card), Cell("品种", bold=True),
+                 Cell(_s(entry.get("grainNameSnap")))]),
+            Row([Cell("仓位", bold=True), Cell(_s(entry.get("wareareaNameSnap"))),
+                 Cell("车牌号", bold=True), Cell(_s(entry.get("driverPlateSnap")))]),
+            Row([Cell("毛重(kg)", bold=True), Cell(_s(entry.get("grossWeight"))),
+                 Cell("皮重(kg)", bold=True), Cell(_s(entry.get("tareWeight")))]),
+            Row([Cell("扣重(kg)", bold=True), Cell(_s(entry.get("deductWeight")) or "0"),
+                 Cell("净重(kg)", bold=True), Cell(_s(entry.get("netWeight")))]),
+            Row([Cell("单价(元/kg)", bold=True), Cell(_s(entry.get("unitPrice"))),
+                 Cell("应收金额", bold=True), Cell("￥" + _s(amount))]),
+            Row([Cell("重金属Cd", bold=True),
+                 Cell("%s mg/kg" % (_s(entry.get("heavyMetalCd")) or "---")),
+                 Cell("库管员", bold=True), Cell(_s(entry.get("createBy")))]),
+        ]
+        col_ratios = [1.0, 1.6, 1.0, 1.6]
 
     meta: List[Tuple[str, str]] = []
     no = _s(entry.get("exitNo"))
@@ -419,9 +585,11 @@ def build_grain_out_table(entry: Dict[str, Any]) -> Table:
     if date:
         meta.append(("日期", date))
 
+    # footer colspan 按列数定：窄版 4 列各占一半(colspan=2)，宽幅 6 列各占一半(colspan=3)
+    sign_colspan = 3 if wide else 2
     footer = [
-        Row([Cell("经办人签字：____________", colspan=2),
-             Cell("客户签字：____________", colspan=2)]),
+        Row([Cell("经办人签字：____________", colspan=sign_colspan),
+             Cell("客户签字：____________", colspan=sign_colspan)]),
     ]
 
     return Table(
@@ -430,7 +598,7 @@ def build_grain_out_table(entry: Dict[str, Any]) -> Table:
         meta=meta,
         rows=rows,
         footer=footer,
-        col_ratios=[1.0, 1.6, 1.0, 1.6],
+        col_ratios=col_ratios,
     )
 
 
@@ -441,6 +609,9 @@ PAPER_PRESETS = [
     {"key": "75x100", "name": "7.5cm × 10cm（连续三联纸）", "width_mm": 75.0, "length_mm": 100.0},
     {"key": "75x140", "name": "7.5cm × 14cm（连续三联纸）", "width_mm": 75.0, "length_mm": 140.0},
     {"key": "90x140", "name": "9cm × 14cm（连续三联纸）", "width_mm": 90.0, "length_mm": 140.0},
+    # 宽幅横版：25cm(宽) × 14cm(走纸方向)。纸宽 250mm 对应 ~96 半角列，
+    # GDI 按 6 列网格布局（3 组键值/行）更舒展。与 ESC/P 的 GENERIC_WIDE_96 型号配套。
+    {"key": "250x140", "name": "25cm × 14cm（宽幅横版三联纸）", "width_mm": 250.0, "length_mm": 140.0},
     {"key": "A4", "name": "A4（210 × 297mm）", "width_mm": 210.0, "length_mm": 297.0},
     {"key": "default", "name": "驱动默认（不指定）", "width_mm": 0, "length_mm": 0},
 ]
@@ -467,15 +638,18 @@ TABLE_BUILDERS = {
 }
 
 
-def build_table(doc_type: str, entry: Dict[str, Any]) -> Table:
-    """分发入口：doc_type → 对应表格组装函数。未知类型 raise ValueError。"""
+def build_table(doc_type: str, entry: Dict[str, Any], wide: bool = False) -> Table:
+    """分发入口：doc_type → 对应表格组装函数。未知类型 raise ValueError。
+
+    wide 透传给 build_grain_*_table：True 走 6 列宽幅布局，False 走 4 列窄版。
+    """
     if doc_type not in TABLE_BUILDERS:
         raise ValueError("未知单据类型: %s（GDI 表格支持 %s）" % (doc_type, " / ".join(TABLE_BUILDERS.keys())))
-    return TABLE_BUILDERS[doc_type](entry)
+    return TABLE_BUILDERS[doc_type](entry, wide=wide)
 
 
 if __name__ == "__main__":
-    # 自检：布局 + 预览（不碰打印机）
+    # 自检：布局 + 预览（不碰打印机）。窄版 4 列 + 宽幅 6 列两种都验证。
     entry = {
         "entryNo": "RK260706001",
         "farmerName": "张三",
@@ -494,9 +668,11 @@ if __name__ == "__main__":
         "factoryName": "某某粮油烘干厂",
         "printDate": "2026-07-06",
     }
-    t = build_table("grain_in", entry)
-    laid = layout(t, dpi=180, page_w_mm=75.0)
-    print("布局: %dx%d px, %d 个格子框" % (laid.width, laid.height, len(laid.rects)))
-    print("--- 预览 ---")
-    for ln in to_preview(t):
-        print("  [%s] %s" % (ln.get("align", "l")[0].upper(), ln.get("text") or "(空)"))
+    for wide, paper_w, label in [(False, 75.0, "窄版4列 7.5cm"), (True, 250.0, "宽幅6列 25cm")]:
+        t = build_table("grain_in", entry, wide=wide)
+        laid = layout(t, dpi=180, page_w_mm=paper_w)
+        print("===== %s：布局 %dx%d px, %d 个格子框, %d 列 =====" %
+              (label, laid.width, laid.height, len(laid.rects), len(t.col_ratios)))
+        for ln in to_preview(t):
+            print("  [%s] %s" % (ln.get("align", "l")[0].upper(), ln.get("text") or "(空)"))
+        print()
